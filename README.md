@@ -1,66 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistema de Gestión de Archivos y Notificaciones
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Desarrollo de una aplicación web para el acceso y gestión
+de usuarios internos y clientes, con funcionalidades de autenticación, gestión de
+documentos, paneles de notificaciones, administración de solicitudes y reportes,
+entre otros.
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Datos de acceso
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Email** : admin@gmail.com
+- **Password** :  admin
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Características
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Autenticación y Autorización:** Controla el acceso a las rutas de la aplicación en función de los roles de los usuarios.
+- **Interfaz de Usuario Intuitiva:** Proporciona una interfaz de usuario amigable para administrar roles y rutas.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## Herramientas, Lenguajes y Tecnologías Utilizadas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Este sistema de gestión de rutas y roles ha sido desarrollado utilizando diversas herramientas, lenguajes y tecnologías para proporcionar una solución robusta y eficiente. A continuación, se detallan las principales tecnologías utilizadas:
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- **Laravel:** Backend de la aplicación, proporciona autenticación, enrutamiento y seguridad.
 
-## Contributing
+- **React:** Biblioteca de JavaScript para la interfaz de usuario interactiva.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Tailwind CSS:** Framework de diseño para la interfaz de usuario.
 
-## Code of Conduct
+- **JWT (JSON Web Tokens):** Autenticación y autorización de usuarios.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **SQL:** Base de datos para almacenar y gestionar datos.
 
-## Security Vulnerabilities
+- **Node.js y npm:** Gestión de dependencias y tareas de desarrollo en el frontend.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Git y GitHub:** Control de versiones y alojamiento del código fuente.
 
-## License
+- **Variables de Entorno (.env):** Gestión de configuraciones sensibles.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Estas tecnologías se combinan para crear un sistema de gestión de rutas y roles potente y seguro.
+
+## Requisitos previos
+
+Asegúrate de tener instalado lo siguiente en tu sistema antes de comenzar:
+
+- **PHP**: Lenguaje de programación utilizado en el backend.
+- **Composer**: Gestor de paquetes de PHP.
+- **Node.js**: Motor de JavaScript utilizado para ejecutar React en el frontend.
+- **npm**: Gestor de paquetes de Node.js.
+- **Git**: Sistema de control de versiones.
+- **MySQL** u otro sistema de gestión de bases de datos de tu elección.
+
+## Configuración del Proyecto
+
+1. Clona el repositorio
+2. Instala las dependencias de Laravel
+3. Copia el archivo .env.example a .env
+4. Genera una nueva clave de aplicación 
+5. Genera una nueva clave de JWT 
+6. Ejecuta las migraciones para crear la estructura de la base de datos
+7. (Opcional) Corre los datos de prueva (seeders)
+8. Inicia el servidor de desarrollo de Laravel junto a su dependencia react:
+        
+        git clone https://github.com/Joregesosa/Tesoria
+        composer install
+        cp .env.example .env
+        php artisan key:generate
+        php artisan jwt:secret
+        php artisan migrate
+        php artisan db:seed
+
+        php artisan serve | npm run dev
+
+### El proyecto esrá disponible en http://localhost ###
+
+
+## Autores
+
+
+- **Jorge Sosa**: [LinkedIn](https://github.com/Joregesosa/Tesoria)
+- **Benjamin Tavarez**: [LinkedIn](https://www.linkedin.com/in/benjamin-tavarez-cruceta-052aa623b/)

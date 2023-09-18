@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@inertiajs/react';
 // import Image from 'next/image'
 import logo from "/public/assets/whiteLogo.png"
 import Dropdown from './Dropdown'
@@ -35,7 +36,7 @@ export default function NavBar({user}) {
       </div>
 
       <div className='flex justify-end px-10 text-gray-300 '>
-        <span className='relative cursor-pointer'>
+        <Link href={route('notificaciones')} className='relative cursor-pointer'>
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
@@ -43,7 +44,7 @@ export default function NavBar({user}) {
           <span className='absolute bg-red-600 rounded-full w-5 h-5 text-center text-xs font-semibold text-gray-50 flex items-center justify-center top-[15px] right-[-10px]'>
             1
           </span>
-        </span>
+        </Link>
       </div>
 
       <div className="hidden sm:flex sm:items-center sm:ml-6">

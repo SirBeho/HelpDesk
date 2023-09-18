@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Link } from '@inertiajs/react';
 const navItems = [
 
@@ -11,9 +11,9 @@ const navItems = [
 
     {
         id: 2,
-        icon: "/assets/svg/bell.svg",
-        title: "NOTIFICACIONES",
-        route: route('notificaciones')
+        icon: "/assets/svg/board.svg",
+        title: "Administración de solicitudes",
+        route: route('admsolicitudes')
     },
 
     {
