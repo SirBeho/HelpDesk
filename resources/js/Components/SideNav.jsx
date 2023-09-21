@@ -64,8 +64,6 @@ export default function SideNav() {
                     </li>
                 ))}
 
-
-
             </ul>
         </nav>
     )
