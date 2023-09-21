@@ -48,7 +48,7 @@ export default function NavBar({user}) {
           </svg>
           </span>
 
-          <input type="text" name="search" id="search" placeholder='Buscar documento' className='outline-transparent border-none bg bg-transparent placeholder:text-gray-400' />
+          <input type="text" name="search" id="search" placeholder='Buscar documento' className='outline-transparent border-none bg bg-transparent placeholder:text-gray-400 focus:ring-0'   />
 
         </div>
       </div>

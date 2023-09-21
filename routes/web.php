@@ -9,6 +9,7 @@ use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -59,8 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/admsolicitudes', function () {
         return Inertia::render('Admsolicitudes/Index',[
-            'datos' => Solicitud::with('user', 'tipo','status')->get(),
-          
+            'datos' => Solicitud::where("user_id",Auth::user()->id)->with('user', 'tipo','status')->get(),
         ]);
     })->name('admsolicitudes');
 
@@ -76,8 +76,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'datos' => TipoSolicitud::all(),
             'msj' => $mensaje,
         ]);
-
-        
     })->name('solicitudes');
 
     Route::get('/panel', function () {
