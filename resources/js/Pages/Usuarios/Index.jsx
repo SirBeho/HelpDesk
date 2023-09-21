@@ -74,15 +74,17 @@ export default function Usuarios({ auth }) {
   const [searchValue, setSearchValue] = useState();
   const [isCliente, setIsCliente] = useState(false);
   const [show, setShow] = useState()
+
   const changeRol = (e) => {
 
     let value = e.target.value;
-
+    setData('rol_id', e.target.value)
     if (value == 1) {
       setIsCliente(true)
     } else {
       setIsCliente(false)
     }
+
   }
 
   function search(keyword) {
@@ -99,8 +101,8 @@ export default function Usuarios({ auth }) {
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     email: '',
-    password: '',
-    password_confirmation: '',
+    telefono: '',
+    rol_id: 0
   });
 
   useEffect(() => {
@@ -111,7 +113,7 @@ export default function Usuarios({ auth }) {
 
   const submit = (e) => {
     e.preventDefault();
-
+ 
     post(route('register'));
   };
 
@@ -130,20 +132,26 @@ export default function Usuarios({ auth }) {
         show={show}
       >
 
-        <form className="flex flex-col gap-4 text-textgray">
+        <form onSubmit={submit} className="flex flex-col gap-4 text-textgray">
           <div className='flex gap-8'>
             <div className="flex flex-col w-3/5">
               <label htmlFor="company" className="text-xs">
                 Nombre Completo
               </label>
-              <input type="text" name="company" id="company" className="h-9 rounded-md w-full outline-none" />
+              <input type="text" name="name" id="name" className="h-9 rounded-md w-full outline-none"
+                value={data.name}
+                onChange={(e) => setData('name', e.target.value)}
+              />
             </div>
 
             <div className="flex flex-col w-2/5">
               <label htmlFor="phone" className="text-xs">
                 Número contacto
               </label>
-              <input type="text" name="phone" id="phone" className="h-9 rounded-md full outline-none px-2" />
+              <input type="tel" name="telefono" id="telefono" className="h-9 rounded-md full outline-none px-2"
+                value={data.telefono}
+                onChange={(e) => setData('telefono', e.target.value)}
+              />
             </div>
           </div>
 
@@ -152,7 +160,10 @@ export default function Usuarios({ auth }) {
               <label htmlFor="email" className="text-xs">
                 Correo electrónico
               </label>
-              <input type="text" name="email" id="email" className="h-9 rounded-md w-full outline-none px-2" />
+              <input type="text" name="email" id="email" className="h-9 rounded-md w-full outline-none px-2"
+                value={data.email}
+                onChange={(e) => setData('email', e.target.value)}
+              />
             </div>
 
             <div className="flex flex-col w-2/5">
@@ -160,10 +171,10 @@ export default function Usuarios({ auth }) {
                 Asignar Rol
               </label>
 
-              <select name="services" id="services" className="w-full p-1 bg-white rounded-md outline-none"
+              <select name="rol_id" id="rol_id" className="w-full p-1 bg-white rounded-md outline-none"
                 onChange={changeRol}
               >
-                <option>
+                <option value="">
                   Seleccione Rol
                 </option>
                 <option value={1}>

@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'password' => 'admin', 
             'remember_token' => Str::random(10),
             'telefono'=> fake()->phoneNumber(),
-            'rol_id'=> Rol::inRandomOrder()->first()->id,  
+            'rol_id'=> 1,  
 
         ];
     }

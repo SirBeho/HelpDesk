@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -66,6 +67,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reportes', function () {
         return Inertia::render('Reportes/Index');
     })->name('reportes');
+
+    // Route::get('register', [RegisteredUserController::class, 'create'])
+    //     ->name('register');
+
+    Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 });
 
 Route::middleware('auth')->group(function () {
