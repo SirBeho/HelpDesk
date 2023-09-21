@@ -2,9 +2,15 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SolicitudController;
+use App\Models\Solicitud;
+use App\Models\TipoSolicitud;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 /*
@@ -29,14 +35,33 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 //     ]);
 // });
 
+// Route::post('upload', [FileController::class, 'form'])->name('upload');
+Route::get('download/{fileName}', [FileController::class, 'download'])->name('download');
+
+
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::match(['get', 'post'], 'upload', function (Request $request) {
+            if ($request->hasFile('file')) {
+                return Inertia::render('Subir/Index', [
+                    'file' => $request->file('file'),
+                ]);
+            } else {
+                return Inertia::render('Subir/Index', [
+                    'file' => null, 
+                ]);
+            }
+    })->name('upload');
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
     Route::get('/admsolicitudes', function () {
-        return Inertia::render('Admsolicitudes/Index');
+        return Inertia::render('Admsolicitudes/Index',[
+            'datos' => Solicitud::with('user', 'tipo','status')->get(),
+          
+        ]);
     })->name('admsolicitudes');
 
     Route::get('/notificaciones', function () {
@@ -44,7 +69,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('notificaciones');
 
     Route::get('/solicitudes', function () {
-        return Inertia::render('Solicitudes/Index');
+        $mensaje = session('msj');
+        Session::forget('msj');
+
+        return Inertia::render('Solicitudes/Index', [
+            'datos' => TipoSolicitud::all(),
+            'msj' => $mensaje,
+        ]);
+
+        
     })->name('solicitudes');
 
     Route::get('/panel', function () {
@@ -66,6 +99,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reportes', function () {
         return Inertia::render('Reportes/Index');
     })->name('reportes');
+
+    
+    Route::post('/solicitudes', [SolicitudController::class, 'create'])->name('solicitud.create');
+   
 });
 
 Route::middleware('auth')->group(function () {

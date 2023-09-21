@@ -13,6 +13,7 @@ class TipoSolicitud extends Model
 
     protected $fillable = [
         'nombre',
+        'tipo',
         'status',
     ];
 

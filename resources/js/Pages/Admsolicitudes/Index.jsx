@@ -3,8 +3,8 @@ import { Fragment } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Notifications } from "@/Components/Notifications";
 import { Head } from "@inertiajs/react";
-export default function admsolicitudes({ auth }) {
-
+export default function admsolicitudes({ auth,datos }) {
+  
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -18,12 +18,15 @@ export default function admsolicitudes({ auth }) {
 
                 <ul className="flex flex-col gap-4 overflow-hidden hover:overflow-y-scroll w-full h-full max-h-[740px]">
 
-                    <Notifications />
-                    <Notifications />
-                    <Notifications />
-                    <Notifications />
-                    <Notifications />
-                    <Notifications />
+
+                {datos.map((solicitud) => (
+
+                        <Notifications data={solicitud} />
+                           
+                        ))}
+
+                    
+                   
 
                 </ul>
 

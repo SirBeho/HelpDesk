@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LogSolicitud;
+use App\Models\Solicitud;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
@@ -51,14 +52,14 @@ class LogSolicitudController extends Controller
     {               
         try {
 
-            if($request->status_ant){
+            if( $request->status_ant){
                 $request->merge([
-                    'description' => "Se ah actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
+                    'descripcion' => "Se ah actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
                 ]);
             }else{
-
+                $soli = Solicitud::find($request->solicitud_id);
                 $request->merge([
-                    'description' => "Se ah creado la solicitud Id :".$request->status_ant,
+                    'descripcion' => "Se ah creado la solicitud Numero: ".$soli->numero,
                 ]);
 
             }
@@ -66,7 +67,7 @@ class LogSolicitudController extends Controller
             $validator = validator($request->all(), [
                 'solicitud_id'=> 'required',
                 'user_id'=> 'required|exists:users,id',
-                'description'=> 'required'
+                'descripcion'=> 'required'
                 
             ]);
     
@@ -76,7 +77,7 @@ class LogSolicitudController extends Controller
             LogSolicitud::create($request->all());
            
           
-            return response()->json(['msj' =>  $request->description], 200);
+            return response()->json(['msj' =>  $request->descripcion], 200);
         
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'No se pudo registrar el LogSolicitud'.$e->getMessage()], 404);
