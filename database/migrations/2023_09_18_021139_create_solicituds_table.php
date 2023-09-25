@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer('numero');
             $table->unsignedBigInteger('tipo_id');
-            $table->string('empresa');
-            $table->string('rnc');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('status_id');
             $table->text('comentario');

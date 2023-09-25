@@ -24,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'empresa', 
+        'rnc',
         'rol_id',
         'status',
 

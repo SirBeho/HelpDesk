@@ -1,4 +1,4 @@
-"use client"
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useState } from 'react';
 import axios from 'axios';

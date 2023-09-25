@@ -22,11 +22,12 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->email(),
             'email_verified_at' => now(),
+            'empresa'  => fake()->name(),
+            'rnc'  => fake()->name(),
             'password' => 'admin', 
             'remember_token' => Str::random(10),
             'telefono'=> fake()->phoneNumber(),
             'rol_id'=> Rol::inRandomOrder()->first()->id,  
-
         ];
     }
 

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tipo_solicitudes', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->integer('tipo');
             $table->string('status')->default(1);
             $table->timestamps();
         });

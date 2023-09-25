@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Solicitud;
+use App\Models\TipoSolicitud;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 
 class SolicitudController extends Controller
 {
@@ -50,12 +54,23 @@ class SolicitudController extends Controller
 
     public function create(Request $request)
     {
+
+
+      
         try {
+            
+                   
+            $request->merge([
+                'user_id' => Auth::user()->id,
+                'status_id' => 1,
+            ]);
+
+
             $validator = validator($request->all(), [
-                'numero'=> 'required',
+                // 'numero'=> 'required',
                 'tipo_id'=> 'exists:tipo_Solicitudes,id',
-                'empresa'=> 'required',
-                'rnc' => 'required',
+                // 'empresa'=> 'required',
+                // 'rnc' => 'required',
                 'user_id'=> 'exists:users,id',
                 'status_id'=> 'exists:estado_Solicitudes,id',
                 'comentario'=> 'required',
@@ -65,7 +80,6 @@ class SolicitudController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
     
-           
             $Solicitud = Solicitud::create($request->all());
 
             $request->merge([
@@ -74,8 +88,12 @@ class SolicitudController extends Controller
                       
 
             $log = new LogSolicitudController();
-            $respuesta = $log->create($request);
-            return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
+            $respuesta = $log->create($request); 
+        
+            session()->put('msj', $respuesta->original['msj']);
+            return redirect('solicitudes');
+            
+            //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'No se pudo registrar el Solicitud'.$e->getMessage()], 404);
