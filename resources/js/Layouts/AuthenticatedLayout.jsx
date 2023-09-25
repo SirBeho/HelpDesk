@@ -8,10 +8,8 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className="min-h-screen bg-white">
 
-            <NavBar
-                user={user}
-            />
-            <SideNav />
+            <NavBar user={user} />
+            <SideNav user={user} />
 
 
             <div className='absolute w-[calc(100%-7rem)] right-0 min-h-[calc(100vh-61px)] top-[61px]'>

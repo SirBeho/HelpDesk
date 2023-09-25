@@ -17,16 +17,26 @@ class EstadoSolicitudSeeder extends Seeder
             'nombre'=> "Enviado",
             'status'=> 1 
         ]);
-
         EstadoSolicitud::factory()->create([
             'nombre'=> "En proceso",
             'status'=> 1 
         ]);
-
         EstadoSolicitud::factory()->create([
-            'nombre'=> "Finalizado",
+            'nombre'=> "A espera de corrección ",
             'status'=> 1 
         ]);
-
+        EstadoSolicitud::factory()->create([
+            'nombre'=> "Completada",
+            'status'=> 1 
+        ]);
+        EstadoSolicitud::factory()->create([
+            'nombre'=> "Cancelada",
+            'status'=> 1 
+        ]);
+        EstadoSolicitud::factory()->create([
+            'nombre'=> "Detenida",
+            'status'=> 1 
+        ]);
+        
     }
 }

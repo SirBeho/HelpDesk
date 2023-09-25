@@ -1,4 +1,4 @@
-"use client"
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Head, Link, useForm } from "@inertiajs/react";

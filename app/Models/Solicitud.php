@@ -15,14 +15,24 @@ class Solicitud extends Model
        
         'numero',
         'tipo_id',
-        'empresa', 
-        'rnc' ,
+
         'user_id',      
         'status_id',      
         'comentario',
         'status',
       
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($solicitud) {
+
+            $ultimoRegistro = Solicitud::latest()->first();
+            $solicitud->numero = $ultimoRegistro ? ($ultimoRegistro->numero + 1) : 10000;
+        });
+    }
 
 
   
