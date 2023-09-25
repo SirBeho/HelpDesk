@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,14 +22,6 @@ use Inertia\Inertia;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -52,9 +45,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Panel/Index');
     })->name('panel');
 
-    Route::get('/usuarios', function () {
-        return Inertia::render('Usuarios/Index');
-    })->name('usuarios');
+
+    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+    Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
+    Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
 
     Route::get('/archivos', function () {
         return Inertia::render('Archivos/Index');
@@ -67,9 +61,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reportes', function () {
         return Inertia::render('Reportes/Index');
     })->name('reportes');
-
-    // Route::get('register', [RegisteredUserController::class, 'create'])
-    //     ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 });

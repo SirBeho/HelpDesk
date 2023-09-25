@@ -34,7 +34,7 @@ const navItems = [
         id: 6,
         icon: "/assets/svg/user.svg",
         title: "USUARIOS",
-        route:  route('usuarios')
+        route:  route('usuarios.index')
     },
 
     {

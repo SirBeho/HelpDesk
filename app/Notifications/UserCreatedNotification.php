@@ -36,7 +36,6 @@ class UserCreatedNotification extends Notification
     {
 
         return (new UserCreatedMail($this->password))
-            ->from('the_firegod@hotmail.com')
             ->view('emails-templates.user-created', [
                 'email' => $notifiable->email,
                 'password' => $this->password,

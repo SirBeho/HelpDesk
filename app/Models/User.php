@@ -27,8 +27,6 @@ class User extends Authenticatable
         'rol_id',
         'status',
         'telefono'
- 
-
     ];
 
     /**
@@ -53,11 +51,7 @@ class User extends Authenticatable
 
     public function rol(): BelongsTo
     {
-        return $this->BelongsTo(Rol::class,'rol_id');
+        return $this->BelongsTo(Rol::class)->select('id','nombre');
     }
-
-    public function chirps(): HasMany
-    {
-        return $this->hasMany(Chirp::class);
-    }
+ 
 }
