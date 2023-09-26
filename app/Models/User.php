@@ -28,7 +28,7 @@ class User extends Authenticatable
         'rnc',
         'rol_id',
         'status',
-
+        'telefono'
     ];
 
     /**
@@ -50,13 +50,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function rol(): BelongsTo
-    {
-        return $this->BelongsTo(Rol::class,'rol_id');
-    }
-
-    public function solicitudes(): HasMany
+  
+   public function solicitudes(): HasMany
     {
         return $this->hasMany(Solicitud::class,'user_id');
     }
@@ -66,9 +61,14 @@ class User extends Authenticatable
         return $this->hasMany(File::class,'user_id');
     }
 
+    public function rol(): BelongsTo
+    {
+        return $this->BelongsTo(Rol::class)->select('id','nombre');
+    }
 
     public function chirps(): HasMany
     {
         return $this->hasMany(Chirp::class);
     }
+ 
 }

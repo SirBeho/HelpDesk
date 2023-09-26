@@ -1,13 +1,18 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ProfileController;
+ 
+use App\Http\Controllers\UserController;
+ 
 use App\Http\Controllers\SolicitudController;
 use App\Models\File;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
+ 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -29,8 +34,6 @@ use Inertia\Inertia;
 */
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
-
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -62,9 +65,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Panel/Index');
     })->name('panel');
 
-    Route::get('/usuarios', function () {
-        return Inertia::render('Usuarios/Index');
-    })->name('usuarios');
+
+    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+    Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
+    Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
 
     Route::get('/archivos', function () {
         return Inertia::render('Archivos/Index');
@@ -77,12 +81,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reportes', function () {
         return Inertia::render('Reportes/Index');
     })->name('reportes');
+  
 
-    // apis
     Route::post('upload', [FileController::class, 'upload'])->name('upload');
     Route::post('/solicitudes', [SolicitudController::class, 'create'])->name('solicitud.create');
     Route::post('/download', [FileController::class, 'download']);
     
+   Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+
 });
 
 Route::middleware('auth')->group(function () {
