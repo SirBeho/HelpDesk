@@ -68,7 +68,6 @@ class LogSolicitudController extends Controller
                 'solicitud_id'=> 'required',
                 'user_id'=> 'required|exists:users,id',
                 'descripcion'=> 'required'
-                
             ]);
     
             if ($validator->fails()) {

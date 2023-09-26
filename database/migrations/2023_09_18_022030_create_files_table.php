@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('referencia')->unique();
-            $table->string('nombre');
-            $table->string('tipo');
+            $table->string('nombre')->unique();
+            $table->string('extencion');
             $table->boolean('confidencial')->default(false);
-            $table->unsignedBigInteger('emisor_id');
-            $table->unsignedBigInteger('receptor_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('solicitud_id');
             $table->timestamps();
-            $table->foreign('emisor_id')->references('id')->on('users');
-            $table->foreign('receptor_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('solicitud_id')->references('id')->on('solicitudes');
         });
     }
 

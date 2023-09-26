@@ -56,6 +56,17 @@ class User extends Authenticatable
         return $this->BelongsTo(Rol::class,'rol_id');
     }
 
+    public function solicitudes(): HasMany
+    {
+        return $this->hasMany(Solicitud::class,'user_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class,'user_id');
+    }
+
+
     public function chirps(): HasMany
     {
         return $this->hasMany(Chirp::class);
