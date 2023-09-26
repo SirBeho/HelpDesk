@@ -9,7 +9,7 @@ export default function admsolicitudes({ auth, archivos }) {
     const solicitudes = auth.user.solicitudes;
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
-    const [select, setSelet] = useState(1);
+    const [select, setSelet] = useState(0);
     const [datos_f, setDatos_f] = useState(solicitudes);
     const [archivos_f, setArchivos_f] = useState(null);
 
