@@ -11,15 +11,14 @@ class File extends Model
     use HasFactory;
 
     public $timestamps = false;
-    protected $table = "file";
+    protected $table = "files";
     protected $fillable = [
-       
         'referencia',
         'nombre',
-        'tipo', 
+        'extencion', 
         'confidencial', 
-        'emisor_id', 
-        'receptor_id', 
+        'user_id', 
+        'solicitud_id', 
     ];
 
 
