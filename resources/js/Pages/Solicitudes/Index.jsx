@@ -79,7 +79,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                 <ul className="flex gap-10 p-6 w-fit mx-auto">
                     <li
                         onClick={() => filtrarPorTipo(1)}
-                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-blue-500 ${
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-500 ${
                             esTipo == 1 ? "border-black" : ""
                         } rounded-md text-white font-semibold text-lg `}
                     >
@@ -95,7 +95,7 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                     <li
                         onClick={() => filtrarPorTipo(2)}
-                        className={` cursor-pointer flex flex-col p-3 w-52 border-2 bg-yellow-500 ${
+                        className={` cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-yellow-500 ${
                             esTipo == 2 ? "border-black" : ""
                         } rounded-md text-white font-semibold text-lg `}
                     >
@@ -111,7 +111,7 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                     <li
                         onClick={() => filtrarPorTipo(3)}
-                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-cyan-500 ${
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-cyan-500 ${
                             esTipo == 3 ? "border-black" : ""
                         } rounded-md text-white font-semibold text-lg filter`}
                     >
@@ -127,7 +127,7 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                     <li
                         onClick={() => filtrarPorTipo(4)}
-                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-blue-800 ${
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-800 ${
                             esTipo == 4 ? "border-black" : ""
                         } rounded-md text-white font-semibold text-lg`}
                     >
@@ -146,6 +146,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                     onSubmit={submit}
                     className="flex flex-col w-2/5 mx-auto gap-4 text-textgray"
                 >
+                    <label htmlFor=""></label>
                     <select
                         required
                         value={data.tipo_id}
