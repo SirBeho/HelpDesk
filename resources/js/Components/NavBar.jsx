@@ -8,23 +8,51 @@ import Modal from "@/Components/Modal";
 
 
 
-export default function NavBar({ user, solicitud_id }) {
+export default function NavBar({ user, solicitud_id, msj }) {
 
   const [show, setShow] = useState(false);
-   const { data, setData, post, processing, errors, reset } = useForm({
-    file: null,
-    nombre: '',
+  const { data, setData, post, processing, errors, reset } = useForm({
+    file: [],
+    nombre: [],
+    extencion: [],
     solicitud_id: solicitud_id
   });
-  
+
+
 
   useEffect(() => {
     setData("solicitud_id", solicitud_id)
-}, [solicitud_id]);
+  }, [solicitud_id]);
 
-  
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [duplicados, setDuplicados] = useState([]);
+
+
+
+
+  useEffect(() => {
+    console.log(msj?.error == null, msj?.error == [])
+    if (!(msj?.error == null || msj?.error == [])) {
+
+
+      if (msj?.error.duplicados?.length > 0) {
+
+        setDuplicados(msj.error.duplicados);
+
+        setErrorMessage([...msj?.error.error, "Algunos nombres están duplicados"])
+      } else {
+        setErrorMessage(msj?.error.error);
+      }
+    } else if (msj?.success) {
+
+      setDuplicados([]);
+      setErrorMessage([]);
+      reset();
+    }
+    console.log("fin")
+
+  }, [msj]);
 
 
   const submit = async (e) => {
@@ -56,7 +84,28 @@ export default function NavBar({ user, solicitud_id }) {
 
         <label htmlFor="file" onClick={() => setShow(true)} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-white cursor-pointer'>
           Cargar documento
-          <input required className="hidden" type="file" id="file" name="file" onChange={(e) => setData('file', e.target.files[0])} />
+
+          <input
+            required
+            multiple
+            className="hidden"
+            type="file"
+            id="file"
+            name="file"
+            onChange={(e) => {
+              const newFiles = Array.from(e.target.files);
+              const newNombres = newFiles.map((file) => file.name.split('.')[0]);
+              const newExtensiones = newFiles.map((file) => file.name.split('.').pop());
+
+              setData({
+                ...data,
+                file: [...data.file, ...newFiles],
+                nombre: [...data.nombre, ...newNombres],
+                extencion: [...data.extencion, ...newExtensiones],
+              });
+            }}
+          />
+
           <span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -152,26 +201,38 @@ export default function NavBar({ user, solicitud_id }) {
                 onChange={(e) => setData("solicitud_id", e.target.value)}
                 className="h-9 rounded-md  outline-none px-2"
               >
-                <option value="">Seleccione servicio</option>
-                {user.solicitudes.map((solicitud) => {
-                    if (solicitud.status_id < 4) {
+                <option value="">Seleccione Solicitud</option>
+
+
+
+                {user.solicitudes.sort((a, b) => {
+                  return new Date(a.created_at) - new Date(b.created_at);
+                }).map((solicitud) => {
+                  if (solicitud.status_id < 4) {
+                    if (solicitud.tipo_id < 3) {
+                      return (
+                        <option key={solicitud.id} value={solicitud.id}>
+                          Facturas {solicitud.comentario}{solicitud.tipo_id == 1 ? " - Compras" : " - ventas"}
+                        </option>
+                      );
+                    } else {
                       return (
                         <option key={solicitud.id} value={solicitud.id}>
                           {solicitud.numero} - {solicitud.tipo.nombre}
                         </option>
                       );
-                    } else {
-                      return null; 
                     }
-                  })
+
+                  } else {
+                    return null;
+                  }
+                })
                 }
 
               </select>
             </label>
 
-
-
-            <label htmlFor="date" className="text-xs flex flex-col ">
+            <label htmlFor="date" className="text-xs flex flex-col max-w-[10rem]">
               Fecha
               <input
                 disabled
@@ -179,12 +240,12 @@ export default function NavBar({ user, solicitud_id }) {
                 id="date"
                 name="date"
                 value={formattedDate}
-                className="h-9 rounded-md  outline-none px-2"
+                className="h-9 rounded-md w-full outline-none px-2"
               />
             </label>
           </div>
 
-          <label htmlFor="nombre" className="text-xs flex flex-col ">
+          {/* <label htmlFor="nombre" className="text-xs flex flex-col ">
             Nombre del Archivo
             <input
               required
@@ -195,44 +256,58 @@ export default function NavBar({ user, solicitud_id }) {
               onChange={(e) => setData("nombre", e.target.value)}
               className="h-9 rounded-md  outline-none px-2"
             />
-          </label>
+          </label> */}
 
           <label htmlFor="file" className="cursor-pointer ">
-            Seleccione un archivo:
-            <div className="flex gap-2">
-              {/*               <input required className="hidden" type="file" id="file" name="file" onChange={(e) => setData('file', e.target.files[0])} />
- */}              <img src="assets/svg/file2.svg" className="w-5" alt=" " />
-              {data.file ? <p>{data.file.name}</p> : <p>Ningun archivo seleccionado</p>}
+
+            <div className="flex gap-2 ">
+              {data.extencion && data.extencion.length > 0 ? (
+                <div className="flex flex-col w-full ">
+                  <p>Archivos seleccionados:</p>
+                  <ul className="grid grid-cols-2 gap-2 rounded-md p-1 hover:bg-green-100">
+                    {data.file.map((file, index) => (
+
+                      <li className="flex gap-3 " key={index}>
+                        <img src={`assets/svg/${data.extencion[index]}.svg`} className="w-8" alt=" " />
+                        <input type="text"
+                          className={`rounded-md py-0 ${duplicados.includes(data.nombre[index]) ? 'bg-red-300 text-black' : ''}`}
+                          value={data.nombre[index]}
+                          onChange={(e) => {
+                            const newNombres = [...data.nombre];
+                            newNombres[index] = e.target.value;
+                            setData({ ...data, nombre: newNombres });
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-center justify-center mr-5 mt-5">
+                    Enviar Archivos
+                  </button>
+                </div>
+
+              ) : (
+                <div className="flex justify-center w-full ">
+                  <p className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-white cursor-pointer '>
+                    Subir archivos
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                  </p>
+                </div>
+              )}
             </div>
+
 
           </label>
-
-          <div className="flex flex-col">
-            <label htmlFor="comentario" className="text-xs">
-              Comentarios
-            </label>
-
-            <textarea
-              placeholder="Escribe tu comentario"
-              name="comentario"
-              id="comentario"
-              className="w-full resize-none h-28 p-3 rounded-md outline-none "
-            ></textarea>
-          </div>
-
           {errorMessage && (
-            <div className="alert alert-danger">
-              {errorMessage}
-            </div>
+            errorMessage.map((msj, index) => (<h1 key={"msj" + index} className="text-red-400 text-center">{msj}</h1>))
           )}
 
-          <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-center justify-center mr-5 mt-5">
-            Enviar archivo
-          </button>
+
         </form>
 
       </Modal>
-
 
 
 

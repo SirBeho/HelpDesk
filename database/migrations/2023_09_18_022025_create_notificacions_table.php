@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('receptor_id');
             $table->string('message');
             $table->boolean('read')->default(false);
-            $table->string('status')->default(1);
             $table->timestamps();
             $table->foreign('emisor_id')->references('id')->on('users');
             $table->foreign('receptor_id')->references('id')->on('users');

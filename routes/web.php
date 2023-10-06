@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::match(['get', 'post'], '/admsolicitudes', function () {
         return Inertia::render('Admsolicitudes/Index', [
             'archivos' => Auth::user()->load("files")->files,
+            'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
         ]);
     })->name('admsolicitudes');
 
@@ -56,13 +57,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Session::forget('msj');
 
         return Inertia::render('Solicitudes/Index', [
-            'datos' => TipoSolicitud::all(),
+            'datos' => TipoSolicitud::where('status', '1')->get(),
             'msj' => $mensaje,
         ]);
     })->name('solicitudes');
 
     Route::get('/panel', function () {
-        return Inertia::render('Panel/Index');
+        $mensaje = session('msj');
+        Session::forget('msj');
+        return Inertia::render('Panel/Index', [
+            'archivos' => Auth::user()->load("files")->files,
+            'msj' => $mensaje,
+        ]);
     })->name('panel');
 
 

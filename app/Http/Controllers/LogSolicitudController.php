@@ -49,10 +49,17 @@ class LogSolicitudController extends Controller
     }
 
     public function create(Request $request)
-    {               
+    {              
+       
         try {
 
-            if( $request->status_ant){
+            if($request->created_at){
+               
+                $request->merge([
+                    'descripcion' => "Se ha creado el bloque de " . ($request->tipo_id == 1 ? "Compras" : "Ventas") . " " . $request->comentario,
+                ]);
+                
+            }else if($request->status_ant){
                 $request->merge([
                     'descripcion' => "Se ah actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
                 ]);
@@ -61,7 +68,6 @@ class LogSolicitudController extends Controller
                 $request->merge([
                     'descripcion' => "Se ah creado la solicitud Numero: ".$soli->numero,
                 ]);
-
             }
 
             $validator = validator($request->all(), [
@@ -139,4 +145,5 @@ class LogSolicitudController extends Controller
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
     }
+
 }
