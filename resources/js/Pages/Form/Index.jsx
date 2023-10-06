@@ -1,15 +1,16 @@
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-export default function form({auth}) {
+export default function form({ auth }) {
 
     return (
 
         <AuthenticatedLayout
+            countNotificaciones={auth.countNotificaciones}
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">
                 Formulario solicutud de servicio
-                </h2>}
+            </h2>}
         >
             <Head title="Form" />
 

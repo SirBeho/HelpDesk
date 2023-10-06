@@ -80,8 +80,7 @@ class LogSolicitudController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
             LogSolicitud::create($request->all());
-           
-          
+
             return response()->json(['msj' =>  $request->descripcion], 200);
         
         } catch (ModelNotFoundException $e) {

@@ -3,11 +3,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 
+
 export default function subir({auth,file,solicitudes}) {
 
 
+
     const today = new Date();
-  const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`; // Formatea la fecha como dd/mm/yyyy
+    const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`; // Formatea la fecha como dd/mm/yyyy
 
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -26,10 +28,11 @@ export default function subir({auth,file,solicitudes}) {
     return (
 
         <AuthenticatedLayout
+            countNotificaciones={auth.countNotificaciones}
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">
                 Formulario subir doumentos
-                </h2>}
+            </h2>}
         >
             <Head title="Form" />
 
@@ -50,6 +53,7 @@ export default function subir({auth,file,solicitudes}) {
                         <option key={solicitud.id} value={solicitud.id}>
                             {solicitud.numero}-{solicitud.tipo.nombre}
                         </option>
+
                     ))}
                       </select>
                      </label>

@@ -7,9 +7,6 @@ import Modal from "@/Components/Modal";
 
 export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) {
 
-
-   
-
     //const solicitudes = auth.user.solicitudes;
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
     const [errorMessage, setErrorMessage] = useState('');
@@ -67,6 +64,7 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
         setDatos_f(filtered);
     };
 
+
     const put = (id) => {
         if (select == id) {
             setSelet(0)
@@ -100,10 +98,13 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
     };
 
 
+
      return (
         <AuthenticatedLayout user={auth.user}
+              countNotificaciones={auth.countNotificaciones}
             solicitud_id={open}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
+
         >
             <Head title="Solicitudes" />
 

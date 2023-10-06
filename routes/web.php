@@ -4,15 +4,20 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProfileController;
- 
+
 use App\Http\Controllers\UserController;
- 
+
 use App\Http\Controllers\SolicitudController;
+
+use App\Models\Notificacion;
+
 use App\Models\File;
+
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
- 
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -37,23 +42,22 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
     Route::match(['get', 'post'], '/admsolicitudes', [SolicitudController::class, 'administracion'])->name('admsolicitudes');
+
     Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes');
     Route::get('/panel', [SolicitudController::class, 'panel'])->name('panel');
     
-
-    Route::get('/notificaciones', function () {
-        return Inertia::render('Notificaciones/Index');
-    })->name('notificaciones');
+    Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones');
+    Route::post('/notificaciones/{id}/{n_id}', [NotificacionController::class, 'update'])->name('notificaciones.update');
 
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
     Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
     Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
 
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+  
     Route::get('/archivos', function () {
         return Inertia::render('Archivos/Index');
     })->name('archivos');
@@ -66,7 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Reportes/Index');
     })->name('reportes');
   
-
+    Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     Route::post('upload', [FileController::class, 'upload'])->name('upload');
     Route::post('/solicitudes2', [SolicitudController::class, 'create'])->name('solicitud.create');
     Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');

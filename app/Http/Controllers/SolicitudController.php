@@ -33,6 +33,7 @@ class SolicitudController extends Controller
     }
 
 
+
     public function administracion(Request $request)
     {
 
@@ -55,16 +56,17 @@ class SolicitudController extends Controller
             'archivos' => Auth::user()->load("files")->files,
             'msj' => $mensaje,
         ]);
+
     }
 
-    
+
     public function show($id)
     {
 
         $validator = validator(['id' => $id], [
             'id' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -81,17 +83,16 @@ class SolicitudController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
-
     }
 
     public function create(Request $request)
     {
 
 
-      
+
         try {
-            
-                   
+
+
             $request->merge([
                 'user_id' => Auth::user()->id,
                 'status_id' => 1,
@@ -100,26 +101,28 @@ class SolicitudController extends Controller
 
             $validator = validator($request->all(), [
                 // 'numero'=> 'required',
-                'tipo_id'=> 'exists:tipo_Solicitudes,id',
+                'tipo_id' => 'exists:tipo_Solicitudes,id',
                 // 'empresa'=> 'required',
+
                 'created_at' => 'date',
                 'user_id'=> 'exists:users,id',
                 'status_id'=> 'exists:estado_Solicitudes,id',
                 'comentario'=> 'required',
+
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-    
+
             $Solicitud = Solicitud::create($request->all());
 
             $request->merge([
                 'solicitud_id' =>  $Solicitud->id,
             ]);
-                      
 
             $log = new LogSolicitudController();
+
             $respuesta = $log->create($request); 
         
             session()->put('msj', ["success" => $respuesta->original['msj']]);
@@ -130,9 +133,11 @@ class SolicitudController extends Controller
                 
            
 
+
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
-        
+
         } catch (ModelNotFoundException $e) {
+
             return response()->json(['error' => 'No se pudo registrar el Solicitud'.$e->getMessage()], 404);
         }catch (QueryException $e) {
            
@@ -158,41 +163,48 @@ class SolicitudController extends Controller
             }
 
             // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
+
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
         return redirect('solicitudes');
     }
 
+
     public function update(Request $request)
+
     {
-        
+
         try {
 
     
             $validator = validator($request->all(), [
+
                 'id'=> 'required|exists:solicitudes,id',
                 'tipo_id'=> 'exists:tipo_Solicitudes,id',
                 'created_at' => 'date',
                 'user_id'=> 'exists:users,id',
                 'status_id'=> 'exists:estado_Solicitudes,id',
                 'comentario'=> 'required',
+
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
             $Solicitud = Solicitud::findOrFail($request->id);
 
+
             $request->merge([
                 'solicitud_id' => $request->id,
+
                 'status_ant' => $Solicitud->status_id,
             ]);
-     
+
             $Solicitud->update($request->all());
             $Solicitud->save();
-            
+
             if ($request->status_ant != $request->status_id) {
 
                 $log = new LogSolicitudController();
@@ -203,14 +215,7 @@ class SolicitudController extends Controller
             // session()->put('msj' , ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
             // return redirect()->route('admsolicitudes', ['msj' => 'Solicitud actualizada correctamente']);
             return redirect()->route('admsolicitudes')->with('msj', 'Solicitud actualizada correctamente');
-
-
-           
-            
-            
             // return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
-            
-           
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
         }catch (Exception $e) {
@@ -224,7 +229,7 @@ class SolicitudController extends Controller
         $validator = validator(['id' => $id], [
             'id' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }

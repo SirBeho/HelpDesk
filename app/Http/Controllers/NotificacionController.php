@@ -7,6 +7,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class NotificacionController extends Controller
 {
@@ -18,18 +20,37 @@ class NotificacionController extends Controller
     public function index()
     {
 
-        return Notificacion::with('emisor', 'receptor')->get();
+        $user_id = Auth::user()->id;
 
+        $data = Notificacion::with('emisor')
+            ->where('receptor_id', $user_id)
+            ->where('status', 0)
+            ->get();
+        $notificaciones = [];
+
+        foreach ($data as $value) {
+            $notificaciones[] = [
+                'id' => $value->id,
+                'mensaje' => $value->message,
+                'emisor' => $value->emisor->name,
+                'solicitud_id' => $value->solicitud_id,
+                'date' => $value->created_at
+            ];
+        }
+
+        return Inertia::render('Notificaciones/Index', [
+            'notificaciones' => $notificaciones
+        ]);
     }
 
-    
+
     public function show($id)
     {
 
         $validator = validator(['id' => $id], [
             'id' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -45,62 +66,66 @@ class NotificacionController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
-
     }
 
     public function create(Request $request)
-    {               
+    {
         try {
 
             $validator = validator($request->all(), [
-                'emisor_id'=> 'required|exists:users,id',
-                'receptor_id'=> 'required|exists:users,id',
-                'message '=> 'required',
-                'read '=> 'required|boolean'
+                'emisor_id' => 'required|exists:users,id',
+                'receptor_id' => 'required|exists:users,id',
+                'message ' => 'required',
+                'read ' => 'required|boolean'
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
+
             Notificacion::create($request->all());
-           
-          
+
+
             return response()->json(['msj' =>  $request->description], 200);
-        
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el Notificacion'.$e->getMessage()], 404);
+            return response()->json(['error' => 'No se pudo registrar el Notificacion' . $e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
     }
 
-    public function update($id,Request $request)
+    public function update(Request $request)
     {
-        
-        try {
-            $validator = validator($request->all(), [
-                'emisor_id'=> 'required|exists:users,id',
-                'receptor_id'=> 'required|exists:users,id',
-                'message '=> 'required',
-                'read '=> 'required|boolean'
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
 
-            $Notificacion = Notificacion::findOrFail($id);
-            $Notificacion->update($request->all());
-            $Notificacion->save();
+        // $notificacion =  Notificacion::find($request->n_id);
+        // $notificacion->status = 1;
+        // $notificacion->save();
 
-           
+        return redirect()->route('admsolicitudes', ['id_solicitud' => $request->id]);
+        // try {
+        //     $validator = validator($request->all(), [
+        //         'emisor_id' => 'required|exists:users,id',
+        //         'receptor_id' => 'required|exists:users,id',
+        //         'message ' => 'required',
+        //         'read ' => 'required|boolean'
+        //     ]);
 
-            return response()->json(['msj' => 'Notificacion actualizado correctamente'], 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Notificacion ' . $id . ' no existe no fue encontrado'], 404);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Error en la acción realizada'], 500);
-        }
+        //     if ($validator->fails()) {
+        //         return response()->json(['errors' => $validator->errors()], 422);
+        //     }
+
+        //     $Notificacion = Notificacion::findOrFail($id);
+        //     $Notificacion->update($request->all());
+        //     $Notificacion->save();
+
+
+
+        //     return response()->json(['msj' => 'Notificacion actualizado correctamente'], 200);
+        // } catch (ModelNotFoundException $e) {
+        //     return response()->json(['error' => 'El Notificacion ' . $id . ' no existe no fue encontrado'], 404);
+        // } catch (Exception $e) {
+        //     return response()->json(['error' => 'Error en la acción realizada'], 500);
+        // }
     }
 
     public function destroy($id)
@@ -108,7 +133,7 @@ class NotificacionController extends Controller
         $validator = validator(['id' => $id], [
             'id' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -133,22 +158,21 @@ class NotificacionController extends Controller
 
         $validator = validator($request->all(), [
             'id' => 'required|numeric',
-            'read '=> 'required|boolean'
+            'read ' => 'required|boolean'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
-  
+
+
 
         try {
             $Notificacion = Notificacion::findOrFail($request->id);
-          
-                $Notificacion->read = $request->read;
-                $Notificacion->save();
-                return response()->json(['msj' => 'Notificacion eliminado correctamente'], 200);
 
+            $Notificacion->read = $request->read;
+            $Notificacion->save();
+            return response()->json(['msj' => 'Notificacion eliminado correctamente'], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'El Notificacion ' . $request->id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
