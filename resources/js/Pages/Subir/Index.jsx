@@ -3,11 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 
-export default function subir({auth,file}) {
+export default function subir({ auth, file }) {
 
 
     const today = new Date();
-  const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`; // Formatea la fecha como dd/mm/yyyy
+    const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`; // Formatea la fecha como dd/mm/yyyy
 
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -28,10 +28,11 @@ export default function subir({auth,file}) {
     return (
 
         <AuthenticatedLayout
+            countNotificaciones={auth.countNotificaciones}
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">
                 Formulario subir doumentos
-                </h2>}
+            </h2>}
         >
             <Head title="Form" />
 
@@ -46,13 +47,13 @@ export default function subir({auth,file}) {
                         </option>
                     </select>
 
-                        <div>
-                            <label htmlFor="email" className="text-sm text-darkblue font-medium">Correo</label>
-                            <input type="email" id="email" name="email" value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                                className="border-2 w-80 h-9 outline-none mb-6 block" />
-                            <InputError message={errors.email} className="mt-2" />
-                        </div>
+                    <div>
+                        <label htmlFor="email" className="text-sm text-darkblue font-medium">Correo</label>
+                        <input type="email" id="email" name="email" value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            className="border-2 w-80 h-9 outline-none mb-6 block" />
+                        <InputError message={errors.email} className="mt-2" />
+                    </div>
 
                     <div className="flex ">
                         <label htmlFor="rnc" className="text-xs flex flex-col ">
@@ -60,7 +61,7 @@ export default function subir({auth,file}) {
                             <input disabled type="text" name="rnc" id="rnc" value="Nueva Solicitud" className="h-9 rounded-md w-3/5 outline-none px-2" />
                         </label>
                         <label htmlFor="rnc" className="text-xs flex flex-col ">
-                             Fecha
+                            Fecha
                             <input disabled type="text" name="rnc" id="rnc" value={formattedDate} className="h-9 rounded-md w-3/5 outline-none px-2" />
                         </label>
                     </div>

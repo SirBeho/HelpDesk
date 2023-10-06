@@ -19,12 +19,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    
+
     protected $fillable = [
         'name',
         'email',
         'password',
-        'empresa', 
+        'empresa',
         'rnc',
         'rol_id',
         'status',
@@ -53,7 +53,11 @@ class User extends Authenticatable
 
     public function rol(): BelongsTo
     {
-        return $this->BelongsTo(Rol::class)->select('id','nombre');
+        return $this->BelongsTo(Rol::class)->select('id', 'nombre');
     }
- 
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'user_id');
+    }
 }

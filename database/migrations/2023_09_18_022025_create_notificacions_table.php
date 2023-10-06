@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('notificaciones', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('solicitud_id');
             $table->unsignedBigInteger('emisor_id');
             $table->unsignedBigInteger('receptor_id');
             $table->string('message');
-            $table->boolean('read')->default(false);
-            $table->string('status')->default(1);
+            $table->boolean('status')->default(false);
             $table->timestamps();
             $table->foreign('emisor_id')->references('id')->on('users');
             $table->foreign('receptor_id')->references('id')->on('users');
+            $table->foreign('solicitud_id')->references('id')->on('solicitudes');
         });
     }
 

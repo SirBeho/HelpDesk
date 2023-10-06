@@ -10,7 +10,7 @@ export default function Solicitudes({ auth, datos, msj }) {
     const [show, setShow] = useState(msj != null);
 
     useEffect(() => {
-      
+
         setShow(msj != null);
     }, [msj]);
 
@@ -32,21 +32,23 @@ export default function Solicitudes({ auth, datos, msj }) {
             setSolicitudes(solicitudesFiltradas);
         }
     };
-  
+
     const submit = (e) => {
         e.preventDefault();
-      
+
         post(route("solicitud.create"));
     };
-   
+
     const rediret = () => {
         window.location.reload();
 
     };
-  
-  
+
+
     return (
-        <AuthenticatedLayout user={auth.user} 
+        <AuthenticatedLayout
+            countNotificaciones={auth.countNotificaciones}
+            user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                     Solicitudes
@@ -66,12 +68,12 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <h1 className="mt-14 mb-8 font-semibold">{msj}</h1>
 
                     <div className="hover:scale-110">
-                    <Link  href={route("admsolicitudes")}  className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
-                        Ver
-                    </Link>
-                    
+                        <Link href={route("admsolicitudes", { id: 1 })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                            Ver
+                        </Link>
+
                     </div>
-                    
+
                 </div>
             </Modal>
 
@@ -79,9 +81,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                 <ul className="flex gap-10 p-6 w-fit mx-auto">
                     <li
                         onClick={() => filtrarPorTipo(1)}
-                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-blue-500 ${
-                            esTipo == 1 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg `}
+                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-blue-500 ${esTipo == 1 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg `}
                     >
                         <img
                             src="/assets/svg/export.svg"
@@ -95,9 +96,8 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                     <li
                         onClick={() => filtrarPorTipo(2)}
-                        className={` cursor-pointer flex flex-col p-3 w-52 border-2 bg-yellow-500 ${
-                            esTipo == 2 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg `}
+                        className={` cursor-pointer flex flex-col p-3 w-52 border-2 bg-yellow-500 ${esTipo == 2 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg `}
                     >
                         <img
                             src="/assets/svg/document.svg"
@@ -111,9 +111,8 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                     <li
                         onClick={() => filtrarPorTipo(3)}
-                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-cyan-500 ${
-                            esTipo == 3 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg filter`}
+                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-cyan-500 ${esTipo == 3 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg filter`}
                     >
                         <img
                             src="/assets/svg/board.svg"
@@ -127,9 +126,8 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                     <li
                         onClick={() => filtrarPorTipo(4)}
-                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-blue-800 ${
-                            esTipo == 4 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg`}
+                        className={`cursor-pointer flex flex-col p-3 w-52 border-2 bg-blue-800 ${esTipo == 4 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg`}
                     >
                         <img
                             src="/assets/svg/database.svg"

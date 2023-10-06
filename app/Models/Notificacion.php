@@ -25,6 +25,7 @@ class Notificacion extends Model
     {
         return $this->BelongsTo(User::class,'emisor_id');
     }
+    
     public function receptor(): BelongsTo
     {
         return $this->BelongsTo(User::class,'receptor_id');

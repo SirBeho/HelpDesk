@@ -4,14 +4,16 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProfileController;
- 
+
 use App\Http\Controllers\UserController;
- 
+
 use App\Http\Controllers\SolicitudController;
+use App\Models\Notificacion;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
- 
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,15 +42,15 @@ Route::get('download/{fileName}', [FileController::class, 'download'])->name('do
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::match(['get', 'post'], 'upload', function (Request $request) {
-            if ($request->hasFile('file')) {
-                return Inertia::render('Subir/Index', [
-                    'file' => $request->file('file'),
-                ]);
-            } else {
-                return Inertia::render('Subir/Index', [
-                    'file' => null, 
-                ]);
-            }
+        if ($request->hasFile('file')) {
+            return Inertia::render('Subir/Index', [
+                'file' => $request->file('file'),
+            ]);
+        } else {
+            return Inertia::render('Subir/Index', [
+                'file' => null,
+            ]);
+        }
     })->name('upload');
 
     Route::get('/dashboard', function () {
@@ -56,14 +58,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/admsolicitudes', function () {
-        return Inertia::render('Admsolicitudes/Index',[
-            'datos' => Solicitud::where("user_id",Auth::user()->id)->with('user', 'tipo','status')->get(),
+        return Inertia::render('Admsolicitudes/Index', [
+            'datos' => Solicitud::where("user_id", Auth::user()->id)->with('user', 'tipo', 'status')->get(),
         ]);
     })->name('admsolicitudes');
 
-    Route::get('/notificaciones', function () {
-        return Inertia::render('Notificaciones/Index');
-    })->name('notificaciones');
+    Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones');
+    Route::post('/notificaciones/{id}/{n_id}', [NotificacionController::class, 'update'])->name('notificaciones.update');
 
     Route::get('/solicitudes', function () {
         $mensaje = session('msj');
@@ -96,12 +97,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Reportes/Index');
     })->name('reportes');
 
- 
+
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
- 
-    
+
+
     Route::post('/solicitudes', [SolicitudController::class, 'create'])->name('solicitud.create');
- 
 });
 
 Route::middleware('auth')->group(function () {

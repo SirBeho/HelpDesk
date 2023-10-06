@@ -4,10 +4,11 @@ export default function Notificaciones({ auth }) {
 
     return (
         <AuthenticatedLayout
+            countNotificaciones={auth.countNotificaciones}
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Panel de documentos</h2>}
         >
-            <Head title="Panel"/>
+            <Head title="Panel" />
 
             <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] bg-[#f2f2f2] m-6 rounded-md  grid grid-cols-2 gap-2">
 

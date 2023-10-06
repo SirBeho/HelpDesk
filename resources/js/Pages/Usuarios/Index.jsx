@@ -95,7 +95,7 @@ export default function Usuarios({ auth, users, roles }) {
     setNewUser(false);
     setLoading(true);
 
-    post(route('register'), {
+    post( route('register'), {
       onSuccess: () => {
         setShow(false)
         setLoading(true);
@@ -156,6 +156,7 @@ export default function Usuarios({ auth, users, roles }) {
   return (
 
     <AuthenticatedLayout
+      countNotificaciones={auth.countNotificaciones}
       user={auth.user}
       header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Usuarios</h2>}
     >
