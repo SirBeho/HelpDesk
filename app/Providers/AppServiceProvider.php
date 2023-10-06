@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
             return false; 
         }
         
-            return !File::where('nombre', $value)->exists();
+            return !File::where('nombre', $value)->where('user_id', auth()->user()->id)->exists();
         });
     }
 }

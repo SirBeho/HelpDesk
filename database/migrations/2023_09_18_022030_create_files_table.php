@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('referencia')->unique();
-            $table->string('nombre')->unique();
+            $table->string('nombre');
             $table->string('extencion');
             $table->boolean('confidencial')->default(false);
             $table->unsignedBigInteger('user_id');
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('solicitud_id')->references('id')->on('solicitudes');
+            $table->unique(['nombre','user_id']);
         });
     }
 
