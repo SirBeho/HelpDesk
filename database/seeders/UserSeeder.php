@@ -18,9 +18,6 @@ class UserSeeder extends Seeder
  
             'name' => "admin",
             'email' => "joregesosa@gmail.com",
- 
-            'name' => "Benjamin Tavarez",
- 
             'email_verified_at' => now(),
             'password' => "admin", 
             'empresa'  => "Tesoria",

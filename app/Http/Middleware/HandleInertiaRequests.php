@@ -32,16 +32,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user_id = 0;
-        isset(Auth::user()->id) && $user_id = Auth::user()->id;
-
+     
         return [
             ...parent::share($request),
 
             'auth' => [
-                'user' => $request->user(),
-                'countNotificaciones' => Notificacion::where('receptor_id', $user_id)
-                    ->where('status', 0)->count()
+                'user' => auth()->check() ? auth()->user()->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user') : null,
+               'countNotificaciones' => auth()->check() ?  Notificacion::where('receptor_id', Auth::user()->id)->where('status', 0)->count() : null,
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

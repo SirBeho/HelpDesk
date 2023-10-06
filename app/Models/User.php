@@ -50,6 +50,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+  
+   public function solicitudes(): HasMany
+    {
+        return $this->hasMany(Solicitud::class,'user_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class,'user_id');
+    }
 
     public function rol(): BelongsTo
     {
@@ -60,4 +70,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(File::class, 'user_id');
     }
+
 }

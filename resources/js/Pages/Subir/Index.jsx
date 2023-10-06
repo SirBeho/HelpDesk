@@ -3,7 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 
-export default function subir({ auth, file }) {
+
+export default function subir({auth,file,solicitudes}) {
+
 
 
     const today = new Date();
@@ -23,8 +25,6 @@ export default function subir({ auth, file }) {
     };
 
 
-    console.log(auth)
-
     return (
 
         <AuthenticatedLayout
@@ -41,28 +41,26 @@ export default function subir({ auth, file }) {
 
                 <form className="flex flex-col w-2/5 gap-4 text-textgray">
 
-                    <select name="services" id="services" className="w-full p-3 bg-white rounded-md outline-none">
-                        <option>
-                            Seleccione servicio
+                   
+
+                       
+                    <div className="flex gap-4 ">
+                    <label  className="text-xs flex flex-col ">Solicitud
+                    <select name="services" id="services" className="h-9 rounded-md  outline-none px-2">
+                    
+                    <option value="">Seleccione servicio</option>
+                    {solicitudes.map((solicitud) => (
+                        <option key={solicitud.id} value={solicitud.id}>
+                            {solicitud.numero}-{solicitud.tipo.nombre}
                         </option>
-                    </select>
 
-                    <div>
-                        <label htmlFor="email" className="text-sm text-darkblue font-medium">Correo</label>
-                        <input type="email" id="email" name="email" value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            className="border-2 w-80 h-9 outline-none mb-6 block" />
-                        <InputError message={errors.email} className="mt-2" />
-                    </div>
+                    ))}
+                      </select>
+                     </label>
 
-                    <div className="flex ">
-                        <label htmlFor="rnc" className="text-xs flex flex-col ">
-                            Número solicitud
-                            <input disabled type="text" name="rnc" id="rnc" value="Nueva Solicitud" className="h-9 rounded-md w-3/5 outline-none px-2" />
-                        </label>
-                        <label htmlFor="rnc" className="text-xs flex flex-col ">
-                            Fecha
-                            <input disabled type="text" name="rnc" id="rnc" value={formattedDate} className="h-9 rounded-md w-3/5 outline-none px-2" />
+                    <label htmlFor="rnc" className="text-xs flex flex-col ">
+                             Fecha
+                            <input disabled type="text" name="date" value={formattedDate} className="h-9 rounded-md w-3/5 outline-none px-2" />
                         </label>
                     </div>
 
@@ -70,21 +68,21 @@ export default function subir({ auth, file }) {
                         <label htmlFor="name" className="text-xs">
                             Nombre solicitante
                         </label>
-                        <input type="text" name="name" id="name" className="h-9 rounded-md w-4/5 outline-none px-2" />
+                        <input type="text" name="name" id="name" value={auth.user.name} className="h-9 rounded-md w-4/5 outline-none px-2" />
                     </div>
 
                     <div className="flex flex-col">
                         <label htmlFor="phone" className="text-xs">
                             Número contacto
                         </label>
-                        <input type="text" name="phone" id="phone" className="h-9 rounded-md w-3/5 outline-none px-2" />
+                        <input type="text" name="phone" id="phone" value={auth.user.telefono} className="h-9 rounded-md w-3/5 outline-none px-2" />
                     </div>
 
                     <div className="flex flex-col">
                         <label htmlFor="email" className="text-xs">
                             Correo electrónico
                         </label>
-                        <input type="text" name="email" id="email" className="h-9 rounded-md w-4/5 outline-none px-2" />
+                        <input type="text" name="email" id="email" value={auth.user.email} className="h-9 rounded-md w-4/5 outline-none px-2" />
                     </div>
 
                     <div className="flex flex-col">
