@@ -49,6 +49,7 @@ export default function Panel({ auth, msj, archivos }) {
         month: "",
     });
 
+  
     const put = (id) => {
         if (select == id) {
             setSelet(0)
@@ -75,15 +76,14 @@ export default function Panel({ auth, msj, archivos }) {
                 console.error('Error al descargar el archivo:', error);
             });
     };
-    console.log(msj)
-    console.log(Message)
+    
 
     useEffect(() => {
-        console.log(msj)
+      
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
         } else if (msj && !msj.error) {
-            console.log("accion")
+           
             setMessage(msj.success);
             setShowmsj(true);
             setData("month", "")
@@ -208,7 +208,7 @@ export default function Panel({ auth, msj, archivos }) {
                         {Object.keys(datos_f.tipo2).sort((a, b) => {
                             return new Date(b) - new Date(a);
                         }).map((year, index) => {
-                            console.log(datos_f.tipo2[year].length)
+                           
                             return(
                             <table key={"t2" + index} className="w-full text-left text-textgray">
                                 <thead onClick={() => abrir("2" + year)}>

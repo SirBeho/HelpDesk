@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from '@inertiajs/react';
+import { Head, Link, useForm } from "@inertiajs/react";
 import { Solicitud } from "@/Components/Solicitud";
 import { format } from "date-fns";
 import Modal from "@/Components/Modal";
 
-export default function admsolicitudes({ auth, archivos }) {
+export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) {
+
+
+   
 
     //const solicitudes = auth.user.solicitudes;
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
-
-
     const [errorMessage, setErrorMessage] = useState('');
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
@@ -18,6 +19,13 @@ export default function admsolicitudes({ auth, archivos }) {
     const [datos_f, setDatos_f] = useState(solicitudes);
     const [archivos_f, setArchivos_f] = useState(null);
     const [edit, setEdit] = useState(false);
+    const { data, setData, post, processing, errors, reset } = useForm(null);
+    const [show, setShow] = useState(msj != null);
+
+    useEffect(() => {
+       
+        setShow(msj != null);
+    }, [msj]);
 
     const abrir = (solicitudId) => {
         if (open == solicitudId) {
@@ -31,15 +39,17 @@ export default function admsolicitudes({ auth, archivos }) {
             );
             if (solicitudSeleccionada) {
                 setdato(solicitudSeleccionada);
-                console.log(solicitudSeleccionada)
+                setData(solicitudSeleccionada);
+              
             }
 
             const archivos_por_solicitud = archivos.filter(
                 (archivo) => archivo.solicitud_id === solicitudId
             );
+          
             if (archivos_por_solicitud) {
                 setArchivos_f(archivos_por_solicitud);
-
+              
             }
 
         }
@@ -50,7 +60,7 @@ export default function admsolicitudes({ auth, archivos }) {
 
         const filtered = solicitudes.filter((item) => {
             const serializedItem = JSON.stringify(item).toLowerCase();
-            console.log(serializedItem);
+           
             return serializedItem.includes(term);
         });
 
@@ -84,9 +94,13 @@ export default function admsolicitudes({ auth, archivos }) {
             });
     };
 
+    const submit = (e) => {
+        e.preventDefault();
+        post(route("solicitud.update"));
+    };
 
 
-    return (
+     return (
         <AuthenticatedLayout user={auth.user}
             solicitud_id={open}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
@@ -114,7 +128,7 @@ export default function admsolicitudes({ auth, archivos }) {
                     <div className="flex flex-col gap-3 w-[520px] p-4 bg-white">
                         {dato ? (
                             <>
-                                {(dato.status_id == 1) &&
+                                {(data.status_id == 1) &&
                                     <div className="font-bold w-full flex justify-end">
                                         <button onClick={() => setEdit(true)} className="bg-blue-400 px-2 py-1 rounded-lg font-semibold text-white"> Editar </button>
                                     </div>
@@ -259,7 +273,7 @@ export default function admsolicitudes({ auth, archivos }) {
                                         </button>
                                     </div>
 
-                                    <form onSubmit={null} className="flex flex-col w-full gap-4 text-textgray p-4">
+                                    <form onSubmit={submit} className="flex flex-col w-full gap-4 text-textgray p-4">
 
                                         <label htmlFor="nombre" className="text-xs flex flex-col ">
                                             Numero de Solicitud
@@ -268,7 +282,7 @@ export default function admsolicitudes({ auth, archivos }) {
                                                 type="text"
                                                 id="nombre"
                                                 name="nombre"
-                                                value={dato.numero}
+                                                value={data.numero}
 
                                                 className="h-9 rounded-md  outline-none px-2"
                                             />
@@ -283,22 +297,16 @@ export default function admsolicitudes({ auth, archivos }) {
                                                     required
                                                     name="solicitud_id"
                                                     id="solicitud_id"
-                                                    value={dato.solicitud_id}
-                                                    onChange={(e) => setData("solicitud_id", e.target.value)}
+                                                    value={data.tipo_id}
+                                                    onChange={(e) => setData("tipo_id", e.target.value)}
                                                     className="h-9 rounded-md  outline-none px-2"
                                                 >
                                                     <option value="">Seleccione servicio</option>
-                                                    {auth.user.solicitudes.map((solicitud) => {
-                                                        if (solicitud.status_id < 4) {
-                                                            return (
-                                                                <option key={solicitud.id} value={solicitud.id}>
-                                                                    {solicitud.numero} - {solicitud.tipo.nombre}
-                                                                </option>
-                                                            );
-                                                        } else {
-                                                            return null;
-                                                        }
-                                                    })
+                                                    {tipoSolicitudes.map((tipo) => 
+                                                        (<option key={tipo.id} value={tipo.id}>
+                                                                    {tipo.nombre}
+                                                        </option> )
+                                                    )
                                                     }
 
                                                 </select>
@@ -313,7 +321,7 @@ export default function admsolicitudes({ auth, archivos }) {
                                                     type="text"
                                                     id="date"
                                                     name="date"
-                                                    value={format(new Date(dato.created_at), 'dd/MM/yyyy hh:mm:ss a')}
+                                                    value={format(new Date(data.created_at), 'dd/MM/yyyy hh:mm:ss a')}
                                                     className="h-9 rounded-md w-full outline-none px-2"
                                                 />
                                             </label>
@@ -328,7 +336,9 @@ export default function admsolicitudes({ auth, archivos }) {
                                             </label>
 
                                             <textarea
-                                                value={dato.comentario}
+                                                value={data.comentario}
+                                               
+                                                onChange={(e) => setData("comentario", e.target.value)}
                                                 placeholder="Escribe tu comentario"
                                                 name="comentario"
                                                 id="comentario"
@@ -354,11 +364,30 @@ export default function admsolicitudes({ auth, archivos }) {
                 </div>
             </div>
 
+            <Modal show={show} maxWidth="sm" onClose={() => setShow(false) }>
+                <img
+                    className="z-50 w-20 absolute left-1/2 transform -translate-x-1/2 -top-10 bg-white rounded-full p-2  "
+                    src="/assets/svg/check.svg"
+                    alt=""
+                />
 
+                <div className="text-center relative mb-2 ">
+                    <h1 className="mt-14 mb-8 font-semibold">{msj}</h1>
+
+                    <div className="hover:scale-110">
+
+                    <button  onClick={() => setShow(false)} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                        Cerrar
+                    </button>
+                    
+                    </div>
+                    
+                </div>
+            </Modal>                                
 
 
 
 
         </AuthenticatedLayout>
-    );
+    ); 
 }

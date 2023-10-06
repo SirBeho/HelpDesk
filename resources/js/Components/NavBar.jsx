@@ -5,9 +5,6 @@ import Dropdown from './Dropdown'
 import { Head, Link, useForm } from '@inertiajs/react';
 import Modal from "@/Components/Modal";
 
-
-
-
 export default function NavBar({ user, solicitud_id, msj }) {
 
   const [show, setShow] = useState(false);
@@ -28,11 +25,13 @@ export default function NavBar({ user, solicitud_id, msj }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
 
-
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
 
 
   useEffect(() => {
-    console.log(msj?.error == null, msj?.error == [])
+   
     if (!(msj?.error == null || msj?.error == [])) {
 
 
@@ -45,31 +44,40 @@ export default function NavBar({ user, solicitud_id, msj }) {
         setErrorMessage(msj?.error.error);
       }
     } else if (msj?.success) {
-
+     console.log(msj , "feoss")
       setDuplicados([]);
       setErrorMessage([]);
-      reset();
+      limpiar();
     }
-    console.log("fin")
-
+ 
   }, [msj]);
 
 
   const submit = async (e) => {
     e.preventDefault();
 
-    // Realiza la solicitud POST
-    const response = await post(route('upload'));
+    post( route('upload'), {
+      onSuccess: (e) => {
+        //console.log(e.msj)
+      },
+      onError: (e)=>{
+       // console.log(e)
+        //console.log("erroresss")
+      }
+    });
 
-    // Verifica si hay errores en la respuesta
-    if (response.error) {
-      // Puedes manejar errores de validación u otros errores aquí
-      console.error(response.error);
-    } else {
-      // La solicitud se realizó con éxito
-      console.log('Solicitud exitosa');
-      // Puedes realizar acciones adicionales aquí si es necesario
-    }
+   
+  };
+
+  const limpiar = (e) => {
+         
+        setData({
+        file: [],
+        nombre: [],
+        extencion: [],
+        solicitud_id: solicitud_id
+      });  
+   
   };
 
 
@@ -262,7 +270,7 @@ export default function NavBar({ user, solicitud_id, msj }) {
 
             <div className="flex gap-2 ">
               {data.extencion && data.extencion.length > 0 ? (
-                <div className="flex flex-col w-full ">
+                <div className="relative flex flex-col w-full ">
                   <p>Archivos seleccionados:</p>
                   <ul className="grid grid-cols-2 gap-2 rounded-md p-1 hover:bg-green-100">
                     {data.file.map((file, index) => (
@@ -283,7 +291,16 @@ export default function NavBar({ user, solicitud_id, msj }) {
                   </ul>
                   <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-center justify-center mr-5 mt-5">
                     Enviar Archivos
+
+                   
+
                   </button>
+                  <button className="absolute right-0 bottom-0 flex  p-1 rounded-md text-black" onClick={()=> limpiar()}>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hover:stroke-red-600 "><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
+
+
+                    </button>
                 </div>
 
               ) : (
@@ -306,7 +323,7 @@ export default function NavBar({ user, solicitud_id, msj }) {
 
 
         </form>
-
+        
       </Modal>
 
 

@@ -22,8 +22,39 @@ class SolicitudController extends Controller
      */
     public function index()
     {
+        $mensaje = session('msj');
+        if ($mensaje) {
+             Session::forget('msj');
+        }
+        return Inertia::render('Solicitudes/Index', [
+            'datos' => TipoSolicitud::where('status', '1')->get(),
+            'msj' => $mensaje,
+        ]);
+    }
 
-        return Solicitud::with('user', 'tipo' , 'status')->get();
+
+    public function administracion(Request $request)
+    {
+
+        $mensaje = session('msj');
+        if ($mensaje) {
+            session()->forget('msj');
+        }
+        return Inertia::render('Admsolicitudes/Index', [
+            'archivos' => Auth::user()->load("files")->files,
+            'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'msj' => $mensaje,
+        ]);
+    }
+    public function panel(Request $request)
+    {
+
+        $mensaje = session('msj');
+        Session::forget('msj');
+        return Inertia::render('Panel/Index', [
+            'archivos' => Auth::user()->load("files")->files,
+            'msj' => $mensaje,
+        ]);
     }
 
     
@@ -133,16 +164,16 @@ class SolicitudController extends Controller
         return redirect('solicitudes');
     }
 
-    public function update($id,Request $request)
+    public function update(Request $request)
     {
         
         try {
 
+    
             $validator = validator($request->all(), [
-                'numero'=> 'required',
+                'id'=> 'required|exists:solicitudes,id',
                 'tipo_id'=> 'exists:tipo_Solicitudes,id',
-                'empresa'=> 'required',
-                'rnc' => 'required',
+                'created_at' => 'date',
                 'user_id'=> 'exists:users,id',
                 'status_id'=> 'exists:estado_Solicitudes,id',
                 'comentario'=> 'required',
@@ -152,10 +183,10 @@ class SolicitudController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $Solicitud = Solicitud::findOrFail($id);
+            $Solicitud = Solicitud::findOrFail($request->id);
 
             $request->merge([
-                'solicitud_id' => $id,
+                'solicitud_id' => $request->id,
                 'status_ant' => $Solicitud->status_id,
             ]);
      
@@ -166,14 +197,22 @@ class SolicitudController extends Controller
 
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
+                return redirect('admsolicitudes');     
                 return response()->json(['msj' => 'Solicitud actualizada correctamente', 'log' => $respuesta->original['msj']], 200);
             }
+            // session()->put('msj' , ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
+            // return redirect()->route('admsolicitudes', ['msj' => 'Solicitud actualizada correctamente']);
+            return redirect()->route('admsolicitudes')->with('msj', 'Solicitud actualizada correctamente');
+
+
+           
             
-            return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
-        
+            
+            // return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
+            
            
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Solicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
         }catch (Exception $e) {
            
             return response()->json(['error' => 'Error en la acción realizada'], 500);

@@ -9,6 +9,8 @@ export default function Solicitudes({ auth, datos, msj }) {
 
     const [show, setShow] = useState(msj != null);
 
+
+    
     useEffect(() => {
         setShow(msj != null);
     }, [msj]);
@@ -36,6 +38,7 @@ export default function Solicitudes({ auth, datos, msj }) {
         e.preventDefault();
       
         post(route("solicitud.create"));
+
     };
    
     const rediret = () => {
