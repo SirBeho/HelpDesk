@@ -14,6 +14,9 @@ class TipoSolicitudSeeder extends Seeder
     public function run(): void
     {
         $elementos = [
+            // Otros
+            ["nombre" => "Facturas Compra", "tipo" => 4, "status" => 0],
+            ["nombre" => "Facturas Venta", "tipo" => 4, "status" => 0],
             // Servicios
             ["nombre" => "Asesoria Financiera", "tipo" => 1, "status" => 1],
             ["nombre" => "Marketing Digital", "tipo" => 1, "status" => 1],
@@ -42,6 +45,7 @@ class TipoSolicitudSeeder extends Seeder
             ["nombre" => "Reporte de costos/ingresos", "tipo" => 4, "status" => 1],
             ["nombre" => "Balance de ITBIS", "tipo" => 4, "status" => 1],
             ["nombre" => "Liquidación aduanal", "tipo" => 4, "status" => 1],
+           
         ];
         
        

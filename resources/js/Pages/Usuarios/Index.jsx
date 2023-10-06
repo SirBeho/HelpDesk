@@ -79,7 +79,7 @@ export default function Usuarios({ auth, users, roles }) {
         user.name.toLowerCase().includes(keyword)
       );
     });
-    console.log(results);
+ 
     setSortingData(results);
   }
 

@@ -3,19 +3,15 @@ import NavBar from '@/Components/NavBar';
 import SideNav from '@/Components/SideNav';
 
 
-export default function Authenticated({ user, header, children ,solicitud_id,countNotificaciones}) {
-    // const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+export default function Authenticated({ user, header, children ,solicitud_id,countNotificaciones,msj}) {
 
+    // const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
         <div className="min-h-screen bg-white">
 
-
-            <NavBar user={user} solicitud_id={solicitud_id} countNotificaciones={countNotificaciones} />
-
+            <NavBar user={user} solicitud_id={solicitud_id} countNotificaciones={countNotificaciones}  msj={msj} />
             <SideNav user={user} />
-
-
             <div className='absolute w-[calc(100%-7rem)] right-0 min-h-[calc(100vh-61px)] top-[61px]'>
                 {header && (
                     <header className="bg-white shadow">

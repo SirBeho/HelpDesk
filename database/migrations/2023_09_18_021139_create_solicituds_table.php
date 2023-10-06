@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('tipo_id')->references('id')->on('tipo_solicitudes');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('status_id')->references('id')->on('estado_solicitudes');
+            $table->unique(['tipo_id','user_id','created_at']);
         });
     }
 

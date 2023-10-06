@@ -15,7 +15,7 @@ class Solicitud extends Model
        
         'numero',
         'tipo_id',
-
+        'created_at',
         'user_id',      
         'status_id',      
         'comentario',

@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import dashimg from "/public/assets/dashImg.jpg";
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({ auth  }) {
 
     return (
         <AuthenticatedLayout

@@ -9,8 +9,9 @@ export default function Solicitudes({ auth, datos, msj }) {
 
     const [show, setShow] = useState(msj != null);
 
-    useEffect(() => {
 
+    
+    useEffect(() => {
         setShow(msj != null);
     }, [msj]);
 
@@ -37,6 +38,7 @@ export default function Solicitudes({ auth, datos, msj }) {
         e.preventDefault();
 
         post(route("solicitud.create"));
+
     };
 
     const rediret = () => {
@@ -65,7 +67,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                 />
 
                 <div className="text-center relative mb-2 ">
-                    <h1 className="mt-14 mb-8 font-semibold">{msj}</h1>
+                    <h1 className="mt-14 mb-8 font-semibold">{msj?.success }</h1>
 
                     <div className="hover:scale-110">
                         <Link href={route("admsolicitudes", { id: 1 })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
@@ -154,29 +156,32 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                 <form
                     onSubmit={submit}
-                    className="flex flex-col w-2/5 mx-auto gap-4 text-textgray"
+                    className="flex flex-col mx-24   gap-4 text-textgray"
                 >
-                    <label htmlFor=""></label>
+                    <label className="flex items-center gap-3"  >
+                   <span className=" text-xl w-60 "> Seleccione servicio</span>
                     <select
                         required
                         value={data.tipo_id}
                         onChange={(e) => setData("tipo_id", e.target.value)}
                         name="tipo_id"
                         id="tipo_id"
-                        className="w-96 p-3 bg-white rounded-md outline-none"
+                        className=" p-3 w-full bg-white rounded-md outline-none"
                     >
-                        <option defaultValue={""}>Seleccione servicio</option>
+                        <option defaultValue={""}>Ningun sercicio seleccionado</option>
                         {solicitudes.map((solicitud) => (
                             <option key={solicitud.id} value={solicitud.id}>
                                 {solicitud.nombre}
                             </option>
                         ))}
                     </select>
+                    </label>
 
                     <div className="flex flex-col">
-                        <label htmlFor="comentario">Comentarios</label>
+                        <label htmlFor="comentario" className=" text-xl" >Favor detalle su solicitud:</label>
 
                         <textarea
+                        required
                             placeholder="Escribe tu comentario"
                             name="comentario"
                             id="comentario"
@@ -184,7 +189,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                             onChange={(e) =>
                                 setData("comentario", e.target.value)
                             }
-                            className="w-full resize-none h-44 p-3 outline-none "
+                            className="w-full resize-none h-44 p-3 outline-none mt-2"
                         ></textarea>
                     </div>
 

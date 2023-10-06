@@ -12,7 +12,7 @@ export const Solicitud = ({data,click,open}) => {
 
     return (
         
-        <li onClick={click} className={`flex w-80 h-24  ${status[data.status_id-1]} ${open == data.id ? "border-2 scale-90": "" } duration-300 rounded-md cursor-pointer`}>
+        <li onClick={click} className={`flex w-80 min-h-24  ${status[data.status_id-1]} ${open == data.id ? "border-2 scale-90": "" } duration-300 rounded-md cursor-pointer`}>
             {/* <span className={`h-full w-2 ${conf? 'bg-red-600': ' bg-blue-500'} rounded-l-lg`}> */}
             <span className={`h-full w-2 ${tipo[data.tipo.tipo-1]} rounded-l-lg`}>
 
@@ -26,6 +26,7 @@ export const Solicitud = ({data,click,open}) => {
 
                 <p className="font-medium text-sm">
                 {data.tipo.nombre}
+                {data.tipo_id == 1 ? " "+data.comentario : ""}
                 </p>
                     
                 <div className='flex justify-between pe-5 '>

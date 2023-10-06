@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
@@ -21,8 +22,41 @@ class SolicitudController extends Controller
      */
     public function index()
     {
+        $mensaje = session('msj');
+        if ($mensaje) {
+             Session::forget('msj');
+        }
+        return Inertia::render('Solicitudes/Index', [
+            'datos' => TipoSolicitud::where('status', '1')->get(),
+            'msj' => $mensaje,
+        ]);
+    }
 
-        return Solicitud::with('user', 'tipo', 'status')->get();
+
+
+    public function administracion(Request $request)
+    {
+
+        $mensaje = session('msj');
+        if ($mensaje) {
+            session()->forget('msj');
+        }
+        return Inertia::render('Admsolicitudes/Index', [
+            'archivos' => Auth::user()->load("files")->files,
+            'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'msj' => $mensaje,
+        ]);
+    }
+    public function panel(Request $request)
+    {
+
+        $mensaje = session('msj');
+        Session::forget('msj');
+        return Inertia::render('Panel/Index', [
+            'archivos' => Auth::user()->load("files")->files,
+            'msj' => $mensaje,
+        ]);
+
     }
 
 
@@ -69,10 +103,12 @@ class SolicitudController extends Controller
                 // 'numero'=> 'required',
                 'tipo_id' => 'exists:tipo_Solicitudes,id',
                 // 'empresa'=> 'required',
-                // 'rnc' => 'required',
-                'user_id' => 'exists:users,id',
-                'status_id' => 'exists:estado_Solicitudes,id',
-                'comentario' => 'required',
+
+                'created_at' => 'date',
+                'user_id'=> 'exists:users,id',
+                'status_id'=> 'exists:estado_Solicitudes,id',
+                'comentario'=> 'required',
+
             ]);
 
             if ($validator->fails()) {
@@ -86,43 +122,83 @@ class SolicitudController extends Controller
             ]);
 
             $log = new LogSolicitudController();
-            $respuesta = $log->create($request);
 
-            session()->put('msj', $respuesta->original['msj']);
-            return redirect('solicitudes');
+            $respuesta = $log->create($request); 
+        
+            session()->put('msj', ["success" => $respuesta->original['msj']]);
+            
+            if(isset($request->created_at)){
+                return redirect('panel');     
+            }
+                
+           
+
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el Solicitud' . $e->getMessage()], 404);
+
+            return response()->json(['error' => 'No se pudo registrar el Solicitud'.$e->getMessage()], 404);
+        }catch (QueryException $e) {
+           
+            $errormsj = $e->getMessage();
+            
+
+            if (strpos($errormsj, 'Duplicate entry') !== false) {
+                preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
+                $duplicateValue = $matches[1] ?? '';
+                $duplicateKey = $matches[2] ?? '';
+                if ($duplicateKey == 'solicitudes_tipo_id_user_id_created_at_unique') {
+                    $fecha = Carbon::parse(substr($duplicateValue, 4))->locale('es');
+                    session()->put('msj', ["errord" => "Ya existe un bloque para " . $duplicateValue]);
+                }
+
+                preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
+                $duplicateValue = $matches[1] ?? '';
+                $duplicateKey = $matches[2] ?? '';
+
+                return redirect('panel');
+        
+                // return response()->json(['error' => "No se puede realizar la acción, el valor '$duplicateValue' ya está duplicado en el campo '$duplicateKey'"], 422);
+            }
+
+            // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
+
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
+        return redirect('solicitudes');
     }
 
-    public function update($id, Request $request)
+
+    public function update(Request $request)
+
     {
 
         try {
 
+    
             $validator = validator($request->all(), [
-                'numero' => 'required',
-                'tipo_id' => 'exists:tipo_Solicitudes,id',
-                'empresa' => 'required',
-                'rnc' => 'required',
-                'user_id' => 'exists:users,id',
-                'status_id' => 'exists:estado_Solicitudes,id',
-                'comentario' => 'required',
+
+                'id'=> 'required|exists:solicitudes,id',
+                'tipo_id'=> 'exists:tipo_Solicitudes,id',
+                'created_at' => 'date',
+                'user_id'=> 'exists:users,id',
+                'status_id'=> 'exists:estado_Solicitudes,id',
+                'comentario'=> 'required',
+
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $Solicitud = Solicitud::findOrFail($id);
+            $Solicitud = Solicitud::findOrFail($request->id);
 
-            $request->merge([ 
-                'solicitud_id' => $id,
+
+            $request->merge([
+                'solicitud_id' => $request->id,
+
                 'status_ant' => $Solicitud->status_id,
             ]);
 
@@ -133,13 +209,17 @@ class SolicitudController extends Controller
 
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
+                return redirect('admsolicitudes');     
                 return response()->json(['msj' => 'Solicitud actualizada correctamente', 'log' => $respuesta->original['msj']], 200);
             }
-
-            return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
+            // session()->put('msj' , ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
+            // return redirect()->route('admsolicitudes', ['msj' => 'Solicitud actualizada correctamente']);
+            return redirect()->route('admsolicitudes')->with('msj', 'Solicitud actualizada correctamente');
+            // return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Solicitud ' . $id . ' no existe no fue encontrado'], 404);
-        } catch (Exception $e) {
+            return response()->json(['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
+        }catch (Exception $e) {
+           
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
     }
