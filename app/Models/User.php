@@ -66,9 +66,6 @@ class User extends Authenticatable
         return $this->BelongsTo(Rol::class)->select('id', 'nombre');
     }
 
-    public function files(): HasMany
-    {
-        return $this->hasMany(File::class, 'user_id');
-    }
+    
 
 }
