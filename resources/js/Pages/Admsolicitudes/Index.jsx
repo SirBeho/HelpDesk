@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from '@inertiajs/react';
+
+import { Head, useForm } from "@inertiajs/react";
 import { Solicitud } from "@/Components/Solicitud";
 import { format } from "date-fns";
 
@@ -56,6 +57,7 @@ export default function admsolicitudes({ auth, archivos }) {
         setDatos_f(filtered);
     };
 
+
     const put = (id) => {
         if (select == id) {
             setSelet(0)
@@ -85,10 +87,14 @@ export default function admsolicitudes({ auth, archivos }) {
 
 
 
+
     return (
+
         <AuthenticatedLayout user={auth.user}
+              countNotificaciones={auth.countNotificaciones}
             solicitud_id={open}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
+
         >
             <Head title="Solicitudes" />
             

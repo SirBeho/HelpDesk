@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import NavBar from '@/Components/NavBar';
 import SideNav from '@/Components/SideNav';
 
-export default function Authenticated({ user, header, children ,solicitud_id}) {
+
+export default function Authenticated({ user, header, children ,solicitud_id,countNotificaciones}) {
     // const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
 
     return (
         <div className="min-h-screen bg-white">
 
-            <NavBar user={user} solicitud_id={solicitud_id} />
+
+            <NavBar user={user} solicitud_id={solicitud_id} countNotificaciones={countNotificaciones} />
+
             <SideNav user={user} />
 
 

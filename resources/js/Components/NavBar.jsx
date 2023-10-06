@@ -6,9 +6,9 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Modal from "@/Components/Modal";
 
 
-
-
-export default function NavBar({ user, solicitud_id }) {
+export default function NavBar({user, solicitud_id, countNotificaciones, msj }) {
+    
+ 
 
   const [show, setShow] = useState(false);
    const { data, setData, post, processing, errors, reset } = useForm({
@@ -25,6 +25,7 @@ export default function NavBar({ user, solicitud_id }) {
   
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
 
 
   const submit = async (e) => {
@@ -66,17 +67,7 @@ export default function NavBar({ user, solicitud_id }) {
 
 
 
-        {/*  <div className='flex bg-darkgray mx-5 px-2 gap-2 rounded-3xl text-white items-center'>
-          <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          </span>
-
-          <input type="text" name="search" id="search" placeholder='Buscar documento' className='outline-transparent border-none bg bg-transparent placeholder:text-gray-400 focus:ring-0' />
-
-        </div> */}
-
-
+       
 
       </div>
 
@@ -86,9 +77,12 @@ export default function NavBar({ user, solicitud_id }) {
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
           </svg>
-          <span className='absolute bg-red-600 rounded-full w-5 h-5 text-center text-xs font-semibold text-gray-50 flex items-center justify-center top-[15px] right-[-10px]'>
-            1
-          </span>
+
+          {countNotificaciones > 0 &&
+            <span className='absolute bg-red-600 rounded-full w-5 h-5 text-center text-xs font-semibold text-gray-50 flex items-center justify-center top-[15px] right-[-10px]'>
+              {countNotificaciones}
+            </span>
+          }
         </Link>
       </div>
 

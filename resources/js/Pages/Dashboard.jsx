@@ -1,10 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import dashimg from "/public/assets/dashImg.jpg";
-export default function Dashboard({ auth  }) {
-    console.log(auth)
+
+export default function Dashboard({ auth }) {
+
     return (
         <AuthenticatedLayout
+            countNotificaciones={auth.countNotificaciones}
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
         >
@@ -30,7 +32,7 @@ export default function Dashboard({ auth  }) {
 
                 </div>
                 <div className="self-end py-4 opacity-80">
-                    <img src={dashimg} alt="imagen del dashboard" className='w-3/4 h-full'/>
+                    <img src={dashimg} alt="imagen del dashboard" className='w-3/4 h-full' />
                 </div>
 
             </div>
