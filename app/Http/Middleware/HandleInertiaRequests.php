@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Notificacion;
+use App\Models\Solicitud;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -32,12 +33,26 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+
+        $user = null;
+
+        if (auth()->check()) {
+            
+            if(auth()->user()->rol_id == 2){
+                $user = auth()->user()->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user','solicitudes.files.user');
+            } else{
+                $user = auth()->user();
+                $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user','files.user');
+            }
+        }
+
+        
+
      
         return [
             ...parent::share($request),
-
             'auth' => [
-                'user' => auth()->check() ? auth()->user()->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user','solicitudes.files.user') : null,
+               'user' => $user,
                'countNotificaciones' => auth()->check() ?  Notificacion::where('receptor_id', Auth::user()->id)->where('status', 0)->count() : null,
             ],
             'ziggy' => fn () => [

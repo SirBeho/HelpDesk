@@ -41,8 +41,6 @@ class SolicitudController extends Controller
         }
        
         return Inertia::render('Admsolicitudes/Index', [
-           
-            'archivos' => Auth::user()->load("files.user")->files,
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'msj' => $mensaje,
         ]);

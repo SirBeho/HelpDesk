@@ -5,9 +5,9 @@ import { Solicitud } from "@/Components/Solicitud";
 import { format } from "date-fns";
 import Modal from "@/Components/Modal";
 
-export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) {
+export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
-
+    console.log(auth.user)
     //const solicitudes = auth.user.solicitudes;
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
    
@@ -202,15 +202,12 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
 
                                     <div className="flex justify-between w-full">
                                         <span className="font-semibold">Archivos Subidos</span>
-                                        {(dato.status_id < 4) &&
+                                        {(dato.status_id < 4 && auth.user.rol_id == 2) &&
                                             <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> Agregar + </label>
                                         }
                                     </div>
 
                                     <div className="flex flex-wrap gap-1">
-
-                                    
-
                                         {dato.files.filter(
                                     (archivo) => (archivo.user.rol_id === 2)
                                     ).map((archivo) =>
@@ -237,7 +234,9 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
 
                                     <div className="flex justify-between w-full">
                                         <span className="font-semibold">Entregas</span>
-                                       
+                                        {( auth.user.rol_id != 2) &&
+                                            <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> Agregar + </label>
+                                        }
                                     </div>
 
                                     <div className="flex flex-wrap gap-1">
