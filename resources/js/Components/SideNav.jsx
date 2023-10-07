@@ -7,7 +7,7 @@ const navItems = [
         icon: "/assets/svg/home.svg",
         title: "INICIO",
         route: route('dashboard'),
-        rol: 3
+        rol: [1,2,3,4]
     },
 
     {
@@ -15,7 +15,7 @@ const navItems = [
         icon: "/assets/svg/board.svg",
         title: "Administración de solicitudes",
         route: route('admsolicitudes'),
-        rol: 3
+        rol: [1,2,3,4]
       
     },
 
@@ -24,7 +24,7 @@ const navItems = [
         icon: "/assets/svg/doc.svg",
         title: "Panel De Documentos",
         route:  route('panel'),
-        rol: 3
+        rol: [1,2,3,4]
     },
 
     {
@@ -32,7 +32,7 @@ const navItems = [
         icon: "/assets/svg/file.svg",
         title: "SOLICITUDES",
         route: route('solicitudes'),
-        rol: 3
+        rol: [1,2,3,4]
     },
 
     {
@@ -41,7 +41,7 @@ const navItems = [
         title: "USUARIOS",
  
         route:  route('usuarios.index') ,
-        rol: 1
+        rol: [1,3,4]
  
     },
 
@@ -50,7 +50,7 @@ const navItems = [
         icon: "/assets/svg/database.svg",
         title: "REPORTES",
         route:  route('reportes'),
-        rol: 1
+        rol: [1,3,4]
     }
 ];
 
@@ -61,7 +61,7 @@ export default function SideNav({user}) {
             <ul className='flex flex-col '>
 
                 {navItems.map(item => (
-                  item.rol >= user.rol_id ?(
+                  item.rol.includes(user.rol_id) ?(
                     <li key={item.id} >
                         <Link href={item.route} className='w-28 h-24 flex flex-col items-center justify-center text-gray-200 hover:bg-nav cursor-pointer text-xs gap-2'>
                             <img src={item.icon} width={40} height={40} alt='prueba' />

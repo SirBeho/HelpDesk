@@ -7,14 +7,16 @@ import Modal from "@/Components/Modal";
 
 export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) {
 
+
     //const solicitudes = auth.user.solicitudes;
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
+   
     const [errorMessage, setErrorMessage] = useState('');
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
     const [datos_f, setDatos_f] = useState(solicitudes);
-    const [archivos_f, setArchivos_f] = useState(null);
+   
     const [edit, setEdit] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm(null);
     const [show, setShow] = useState(msj != null);
@@ -28,27 +30,16 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
         if (open == solicitudId) {
             setOpen(0);
             setdato(null);
-            setArchivos_f(null);
+            
         } else {
             setOpen(solicitudId);
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === solicitudId
             );
-            if (solicitudSeleccionada) {
-                setdato(solicitudSeleccionada);
-                setData(solicitudSeleccionada);
-              
-            }
-
-            const archivos_por_solicitud = archivos.filter(
-                (archivo) => archivo.solicitud_id === solicitudId
-            );
-          
-            if (archivos_por_solicitud) {
-                setArchivos_f(archivos_por_solicitud);
-              
-            }
-
+           
+            setdato(solicitudSeleccionada);
+            setData(solicitudSeleccionada);
+        
         }
     };
 
@@ -217,7 +208,12 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
                                     </div>
 
                                     <div className="flex flex-wrap gap-1">
-                                        {archivos_f.map((archivo) =>
+
+                                    
+
+                                        {dato.files.filter(
+                                    (archivo) => (archivo.user.rol_id === 2)
+                                    ).map((archivo) =>
                                         (
                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
                                                 <div className="w-16 relative">
@@ -245,7 +241,9 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
                                     </div>
 
                                     <div className="flex flex-wrap gap-1">
-                                        {archivos_f.map((archivo) =>
+                                        {dato.files.filter(
+                                    (archivo) => (archivo.user.rol_id != 2)
+                                    ).map((archivo) =>
                                         (
                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
                                                 <div className="w-16 relative">
@@ -260,7 +258,6 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
                                                 </span>
                                             </div>
                                         ))}
-
 
                                     </div>
                                 </div>
@@ -373,7 +370,7 @@ export default function admsolicitudes({ auth, archivos,tipoSolicitudes, msj }) 
                 />
 
                 <div className="text-center relative mb-2 ">
-                    <h1 className="mt-14 mb-8 font-semibold">{msj}</h1>
+                    <h1 className="mt-14 mb-8 font-semibold">{msj?.success}</h1>
 
                     <div className="hover:scale-110">
 

@@ -32,8 +32,6 @@ class SolicitudController extends Controller
         ]);
     }
 
-
-
     public function administracion(Request $request)
     {
 
@@ -41,8 +39,10 @@ class SolicitudController extends Controller
         if ($mensaje) {
             session()->forget('msj');
         }
+       
         return Inertia::render('Admsolicitudes/Index', [
-            'archivos' => Auth::user()->load("files")->files,
+           
+            'archivos' => Auth::user()->load("files.user")->files,
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'msj' => $mensaje,
         ]);

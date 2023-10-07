@@ -37,7 +37,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
 
             'auth' => [
-                'user' => auth()->check() ? auth()->user()->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user') : null,
+                'user' => auth()->check() ? auth()->user()->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user','solicitudes.files.user') : null,
                'countNotificaciones' => auth()->check() ?  Notificacion::where('receptor_id', Auth::user()->id)->where('status', 0)->count() : null,
             ],
             'ziggy' => fn () => [

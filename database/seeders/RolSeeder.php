@@ -17,15 +17,21 @@ class RolSeeder extends Seeder
             'nombre'=> "Admin",
             'status'=> 1 
         ]);
-
-        Rol::factory()->create([
-            'nombre'=> "Usuario",
-            'status'=> 1 
-        ]);
-
+        
         Rol::factory()->create([
             'nombre'=> "Cliente",
             'status'=> 1 
         ]);
+
+        Rol::factory()->create([
+            'nombre'=> "Usuario1",
+            'status'=> 1 
+        ]);
+        Rol::factory()->create([
+            'nombre'=> "Usuario2",
+            'status'=> 1 
+        ]);
+
+        
     }
 }

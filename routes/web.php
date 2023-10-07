@@ -43,7 +43,6 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::match(['get', 'post'], '/admsolicitudes', [SolicitudController::class, 'administracion'])->name('admsolicitudes');
-
     Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes');
     Route::get('/panel', [SolicitudController::class, 'panel'])->name('panel');
     
