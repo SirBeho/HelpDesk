@@ -67,7 +67,7 @@ class FileController extends Controller
                  
                  try {
                     $extension = $file->getClientOriginalExtension();
-                    $encryptedData = Crypt::encrypt(file_get_contents($file->getPathname()));
+                    //$encryptedData = Crypt::encrypt(file_get_contents($file->getPathname()));
     
                     $referencia = time() . "_" .$index. $solicitud_numero;
                     $name = $referencia . "." . $extension;
@@ -82,8 +82,9 @@ class FileController extends Controller
     
                     File::create($data);
     
-                    Storage::disk('uploads')->put($name, $encryptedData);
-    
+                    //Storage::disk('uploads')->put($name, $encryptedData);
+                    $file->storeAs('uploads', $name, 'public');
+
                     $mensajesExitosos[] = "Archivo ".$request->nombre[$index]." subido con éxito.";
                 }catch (QueryException $e) {
                     $errormsj = $e->getMessage();
@@ -136,12 +137,12 @@ class FileController extends Controller
         try {
            
             $data = File::where('id', $request->id)->where('user_id', Auth::user()->id)->firstOrFail();
-            $name = $data->referencia.'.'.$data->extencion;
+            $name = 'uploads/' .$data->referencia.'.'.$data->extencion;
 
             if (Storage::disk('uploads')->exists($name)) {
 
-                $encryptedData = Storage::disk('uploads')->get($name);
-                $file = Crypt::decrypt($encryptedData);
+                $file = Storage::disk('uploads')->get($name);
+               // $file = Crypt::decrypt($encryptedData);
 
                 $mimeType = Storage::disk('uploads')->mimeType($name);
                //Log::info('MIME Type del archivo: ' . $mimeType);

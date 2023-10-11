@@ -73,7 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('upload', [FileController::class, 'upload'])->name('upload');
     Route::post('/solicitudes2', [SolicitudController::class, 'create'])->name('solicitud.create');
     Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');
-    Route::post('/download', [FileController::class, 'download']);
+    Route::post('/download', [FileController::class, 'download'])->name('download');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
 });

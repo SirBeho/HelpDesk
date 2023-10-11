@@ -8,6 +8,7 @@ import Modal from "@/Components/Modal";
 export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
     console.log(auth.user)
+    console.log(msj)
     //const solicitudes = auth.user.solicitudes;
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
    

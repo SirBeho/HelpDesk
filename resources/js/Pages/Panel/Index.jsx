@@ -65,6 +65,7 @@ export default function Panel({ auth, msj, archivos }) {
         axios
             .post('/download', { id }, { responseType: 'blob' })
             .then((response) => {
+                console.log(response) 
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
@@ -77,7 +78,6 @@ export default function Panel({ auth, msj, archivos }) {
             });
     };
     
-
     useEffect(() => {
       
         if (msj && msj.errord) {
