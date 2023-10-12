@@ -16,14 +16,11 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
     const [datos_f, setDatos_f] = useState(solicitudes);
-   
     const [edit, setEdit] = useState(false);
-
     const { data, setData, post } = useForm(null);
     const [show, setShow] = useState(msj != null);
 
     useEffect(() => {
-
         setShow(msj != null);
     }, [msj]);
 
@@ -31,7 +28,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         if (solicitud_id) {
             abrir(parseInt(solicitud_id));
         }
-    }, [solicitud_id]);
+    },[solicitud_id]);
 
     const abrir = (solicitudId) => {
         if (open == solicitudId) {
@@ -43,11 +40,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === solicitudId
             );
-
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
-        
-
         }
     };
 
@@ -93,6 +87,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
     const submit = (e) => {
         e.preventDefault();
+        setOpen(0);
+        setdato(null);
         post(route("solicitud.update"));
     };
 

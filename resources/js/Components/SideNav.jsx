@@ -32,7 +32,7 @@ const navItems = [
         icon: "/assets/svg/file.svg",
         title: "SOLICITUDES",
         route: route('solicitudes'),
-        rol: [1,2,3,4]
+        rol: [2,3,4]
     },
 
     {

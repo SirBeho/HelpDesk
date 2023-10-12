@@ -30,8 +30,8 @@ class Solicitud extends Model
 
         static::creating(function ($solicitud) {
 
-            $ultimoRegistro = Solicitud::latest()->first();
-            $solicitud->numero = $ultimoRegistro ? ($ultimoRegistro->numero + 1) : 10000;
+            $ultimoRegistro = Solicitud::max('numero');
+            $solicitud->numero = $ultimoRegistro ? ($ultimoRegistro + 1) : 10000;
         });
     }
 

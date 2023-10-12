@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->id();
-            $table->integer('numero');
+            $table->integer('numero')->unique();
             $table->unsignedBigInteger('tipo_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('status_id');
