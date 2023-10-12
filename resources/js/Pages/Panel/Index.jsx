@@ -4,7 +4,7 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 export default function Panel({ auth, msj, archivos }) {
 
-
+   
     // const solicitudes = auth.user.solicitudes;
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id < 3);
 
@@ -14,7 +14,7 @@ export default function Panel({ auth, msj, archivos }) {
     });
 
 
-
+   
 
     const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
         const year = new Date(solicitud.created_at).getFullYear();
@@ -82,6 +82,8 @@ export default function Panel({ auth, msj, archivos }) {
       
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
+        } else if (msj && msj.error) {
+            setMessage(msj.error);
         } else if (msj && !msj.error) {
            
             setMessage(msj.success);
@@ -121,8 +123,7 @@ export default function Panel({ auth, msj, archivos }) {
         setOpenmonth(0);
     };
 
-    let h;
-
+   
     return (
         <AuthenticatedLayout
             solicitud_id={openmonth}

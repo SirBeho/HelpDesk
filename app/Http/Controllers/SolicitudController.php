@@ -94,9 +94,7 @@ class SolicitudController extends Controller
 
             session()->put('msj', ["success" => $respuesta->original['msj']]);
 
-            if (isset($request->created_at)) {
-                return redirect('panel');
-            }
+           
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
@@ -106,7 +104,7 @@ class SolicitudController extends Controller
 
             $errormsj = $e->getMessage();
 
-
+               
             if (strpos($errormsj, 'Duplicate entry') !== false) {
                 preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
                 $duplicateValue = $matches[1] ?? '';
@@ -114,21 +112,22 @@ class SolicitudController extends Controller
                 if ($duplicateKey == 'solicitudes_tipo_id_user_id_created_at_unique') {
                     $fecha = Carbon::parse(substr($duplicateValue, 4))->locale('es');
                     session()->put('msj', ["errord" => "Ya existe un bloque para " . $duplicateValue]);
+                }else{
+
+                    session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
 
-                preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
-                $duplicateValue = $matches[1] ?? '';
-                $duplicateKey = $matches[2] ?? '';
-
-                return redirect('panel');
-
-                // return response()->json(['error' => "No se puede realizar la acción, el valor '$duplicateValue' ya está duplicado en el campo '$duplicateKey'"], 422);
+               
             }
 
             // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
 
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
+        }
+
+        if (isset($request->created_at)) {
+            return redirect('panel');
         }
         return redirect('solicitudes');
     }
@@ -170,8 +169,11 @@ class SolicitudController extends Controller
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
             }
+          
+            return redirect()->route('admsolicitudes')
+            ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
+            ->with('solicitud_id', $request->id);
 
-            return redirect()->route('admsolicitudes')->with('msj', ['success' => 'Solicitud actualizada correctamente']);
         } catch (ModelNotFoundException $e) {
 
             return redirect()->route('admsolicitudes')->with('msj', ['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
