@@ -9,7 +9,7 @@ import Modal from "@/Components/Modal";
 export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id, statusList }) {
 
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
-
+    console.log(solicitudes)
     const [errorMessage, setErrorMessage] = useState('');
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
@@ -20,15 +20,21 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     const [show, setShow] = useState(msj != null);
     const [isOpenModalStatus, setIsOpenModalStatus] = useState(false);
 
+
+    useEffect(() => {
+        setDatos_f(solicitudes);
+        if(open){
+            const solicitudSeleccionada = solicitudes.find(
+                (solicitud) => solicitud.id === open
+            );
+            setdato(solicitudSeleccionada);
+            setData(solicitudSeleccionada);
+        }
+     }, [auth.user.solicitudes]);
+
     useEffect(() => {
         setShow(msj != null);
     }, [msj]);
-
-    useEffect(() => {
-        if (solicitud_id) {
-            abrir(parseInt(solicitud_id));
-        }
-    }, [solicitud_id]);
 
     const abrir = (solicitudId) => {
         if (open == solicitudId) {
@@ -40,11 +46,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === solicitudId
             );
-
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
-
-
         }
     };
 
@@ -91,6 +94,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     const submit = (e) => {
         e.preventDefault();
         post(route("solicitud.update"));
+        
     };
 
     return (
@@ -123,7 +127,9 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                     <div className="flex flex-col gap-3 w-[520px] p-4 bg-white">
                         {dato ? (
                             <>
-                                {(data.status_id == 1) &&
+                          
+                                {(dato.status_id == 1 && auth.user.id == dato.user.id) &&
+                              
                                     <div className="font-bold w-full flex justify-end">
                                         <button onClick={() => setEdit(true)} className="bg-blue-400 px-2 py-1 rounded-lg font-semibold text-white"> Editar </button>
                                     </div>
