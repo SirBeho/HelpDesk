@@ -9,8 +9,6 @@ export default function Solicitudes({ auth, datos, msj }) {
 
     const [show, setShow] = useState(msj != null);
 
-
-    
     useEffect(() => {
         setShow(msj != null);
     }, [msj]);
@@ -46,7 +44,6 @@ export default function Solicitudes({ auth, datos, msj }) {
 
     };
 
-
     return (
         <AuthenticatedLayout
             countNotificaciones={auth.countNotificaciones}
@@ -67,7 +64,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                 />
 
                 <div className="text-center relative mb-2 ">
-                    <h1 className="mt-14 mb-8 font-semibold">{msj?.success }</h1>
+                    <h1 className="mt-14 mb-8 font-semibold">{msj?.success}</h1>
 
                     <div className="hover:scale-110">
                         <Link href={route("admsolicitudes", { id: 1 })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
@@ -84,9 +81,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(1)}
 
-                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-500 ${
-                            esTipo == 1 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg `}
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-500 ${esTipo == 1 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg `}
 
                     >
                         <img
@@ -94,7 +90,6 @@ export default function Solicitudes({ auth, datos, msj }) {
                             width={40}
                             height={40}
                             alt="Servicios"
-                            className="dark:invert"
                         />
                         Servicios
                     </li>
@@ -102,9 +97,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(2)}
 
-                        className={` cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-yellow-500 ${
-                            esTipo == 2 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg `}
+                        className={` cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-yellow-500 ${esTipo == 2 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg `}
 
                     >
                         <img
@@ -112,7 +106,6 @@ export default function Solicitudes({ auth, datos, msj }) {
                             width={40}
                             height={40}
                             alt="icon documento"
-                            className="dark:invert"
                         />
                         Certificaciones
                     </li>
@@ -120,9 +113,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(3)}
 
-                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-cyan-500 ${
-                            esTipo == 3 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg filter`}
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-cyan-500 ${esTipo == 3 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg filter`}
 
                     >
                         <img
@@ -130,7 +122,6 @@ export default function Solicitudes({ auth, datos, msj }) {
                             width={40}
                             height={40}
                             alt="Icon board"
-                            className="pr"
                         />
                         Estados Financieros
                     </li>
@@ -138,9 +129,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(4)}
 
-                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-800 ${
-                            esTipo == 4 ? "border-black" : ""
-                        } rounded-md text-white font-semibold text-lg`}
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-800 ${esTipo == 4 ? "border-black" : ""
+                            } rounded-md text-white font-semibold text-lg`}
 
                     >
                         <img
@@ -148,7 +138,6 @@ export default function Solicitudes({ auth, datos, msj }) {
                             width={40}
                             height={40}
                             alt="icon database"
-                            className="pr"
                         />
                         Reportes Generales
                     </li>
@@ -159,29 +148,29 @@ export default function Solicitudes({ auth, datos, msj }) {
                     className="flex flex-col mx-24   gap-4 text-textgray"
                 >
                     <label className="flex items-center gap-3"  >
-                   <span className=" text-xl w-60 "> Seleccione servicio</span>
-                    <select
-                        required
-                        value={data.tipo_id}
-                        onChange={(e) => setData("tipo_id", e.target.value)}
-                        name="tipo_id"
-                        id="tipo_id"
-                        className=" p-3 w-full bg-white rounded-md outline-none"
-                    >
-                        <option defaultValue={""}>Ningun sercicio seleccionado</option>
-                        {solicitudes.map((solicitud) => (
-                            <option key={solicitud.id} value={solicitud.id}>
-                                {solicitud.nombre}
-                            </option>
-                        ))}
-                    </select>
+                        <span className=" text-xl w-60 "> Seleccione servicio</span>
+                        <select
+                            required
+                            value={data.tipo_id}
+                            onChange={(e) => setData("tipo_id", e.target.value)}
+                            name="tipo_id"
+                            id="tipo_id"
+                            className=" p-3 w-full bg-white rounded-md outline-none"
+                        >
+                            <option defaultValue={""}>Ningun sercicio seleccionado</option>
+                            {solicitudes.map((solicitud) => (
+                                <option key={solicitud.id} value={solicitud.id}>
+                                    {solicitud.nombre}
+                                </option>
+                            ))}
+                        </select>
                     </label>
 
                     <div className="flex flex-col">
                         <label htmlFor="comentario" className=" text-xl" >Favor detalle su solicitud:</label>
 
                         <textarea
-                        required
+                            required
                             placeholder="Escribe tu comentario"
                             name="comentario"
                             id="comentario"
