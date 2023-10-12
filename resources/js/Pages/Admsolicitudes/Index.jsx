@@ -5,11 +5,10 @@ import { Solicitud } from "@/Components/Solicitud";
 import { format } from "date-fns";
 import Modal from "@/Components/Modal";
 
-export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
-    console.log(auth.user)
-    console.log(msj)
-    //const solicitudes = auth.user.solicitudes;
+export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id }) {
+
+
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
    
     const [errorMessage, setErrorMessage] = useState('');
@@ -19,19 +18,20 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
     const [datos_f, setDatos_f] = useState(solicitudes);
    
     const [edit, setEdit] = useState(false);
-    const { data, setData, post, processing, errors, reset } = useForm(null);
-    const [show, setShow] = useState(false);
+
+    const { data, setData, post } = useForm(null);
+    const [show, setShow] = useState(msj != null);
 
     useEffect(() => {
-        console.log(dato);
-        console.log(datos_f);
-        console.log(data);
-        setOpen(0);
-        setdato(null);
-        setData(null);
-      
+
         setShow(msj != null);
     }, [msj]);
+
+    useEffect(() => {
+        if (solicitud_id) {
+            abrir(parseInt(solicitud_id));
+        }
+    }, [solicitud_id]);
 
     const abrir = (solicitudId) => {
         if (open == solicitudId) {
@@ -43,10 +43,11 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === solicitudId
             );
-           
+
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
         
+
         }
     };
 
@@ -55,7 +56,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
         const filtered = solicitudes.filter((item) => {
             const serializedItem = JSON.stringify(item).toLowerCase();
-           
+
             return serializedItem.includes(term);
         });
 
@@ -97,7 +98,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
      return (
         <AuthenticatedLayout user={auth.user}
-              countNotificaciones={auth.countNotificaciones}
+            countNotificaciones={auth.countNotificaciones}
             solicitud_id={open}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
 
@@ -239,9 +240,11 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
                                     <div className="flex justify-between w-full">
                                         <span className="font-semibold">Entregas</span>
+
                                         {( auth.user.rol_id != 2) &&
                                             <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> Agregar + </label>
                                         }
+
                                     </div>
 
                                     <div className="flex flex-wrap gap-1">
@@ -304,10 +307,10 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
                                                     className="h-9 rounded-md  outline-none px-2"
                                                 >
                                                     <option value="">Seleccione servicio</option>
-                                                    {tipoSolicitudes.map((tipo) => 
-                                                        (<option key={tipo.id} value={tipo.id}>
-                                                                    {tipo.nombre}
-                                                        </option> )
+                                                    {tipoSolicitudes.map((tipo) =>
+                                                    (<option key={tipo.id} value={tipo.id}>
+                                                        {tipo.nombre}
+                                                    </option>)
                                                     )
                                                     }
 
@@ -339,7 +342,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
                                             <textarea
                                                 value={data.comentario}
-                                               
+
                                                 onChange={(e) => setData("comentario", e.target.value)}
                                                 placeholder="Escribe tu comentario"
                                                 name="comentario"
@@ -366,7 +369,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
                 </div>
             </div>
 
-            <Modal show={show} maxWidth="sm" onClose={() => {setShow(false), setEdit(false)} }>
+       <Modal show={show} maxWidth="sm" onClose={() => {setShow(false), setEdit(false)} }>
+
                 <img
                     className="z-50 w-20 absolute left-1/2 transform -translate-x-1/2 -top-10 bg-white rounded-full p-2  "
                     src="/assets/svg/check.svg"
@@ -377,19 +381,14 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
                     <h1 className="mt-14 mb-8 font-semibold">{msj?.success}</h1>
 
                     <div className="hover:scale-110">
-
-                    <button  onClick={() => {setShow(false), setEdit(false)}} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                   <button  onClick={() => {setShow(false), setEdit(false)}} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
                         Cerrar
                     </button>
-                    
+                   
                     </div>
-                    
+
                 </div>
-            </Modal>                                
-
-
-
-
+            </Modal>
         </AuthenticatedLayout>
-    ); 
+    );
 }
