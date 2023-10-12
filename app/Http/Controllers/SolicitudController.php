@@ -132,7 +132,6 @@ class SolicitudController extends Controller
     }
     
     public function update(Request $request)
-
     {
 
         try {
