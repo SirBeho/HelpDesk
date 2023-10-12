@@ -12,10 +12,7 @@ export default function Panel({ auth, msj, archivos }) {
     solicitudes.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
-
-
-   
-
+    
     const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
         const year = new Date(solicitud.created_at).getFullYear();
 

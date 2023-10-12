@@ -123,6 +123,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                     <ul className="flex flex-col gap-4 overflow-hidden hover:overflow-y-scroll w-full h-full max-h-[740px]">
                         {datos_f.map((solicitud) => (
                             <Solicitud
+                                adm={auth.user.id != 2}
                                 key={solicitud.id}
                                 data={solicitud}
                                 click={() => abrir(solicitud.id)}

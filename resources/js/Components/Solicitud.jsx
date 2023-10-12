@@ -2,7 +2,7 @@ import React from 'react'
 import { format } from 'date-fns';
 
 
-export const Solicitud = ({data,click,open}) => {
+export const Solicitud = ({data,click,open,adm}) => {
    
     
 
@@ -19,10 +19,15 @@ export const Solicitud = ({data,click,open}) => {
             </span>
 
             <div className="flex flex-col gap-2 p-2 text-textgray w-full">
-
-                <span>
-                    Solicitud: {data.numero}
-                </span>
+            {adm ? (
+                <div className='flex justify-between'> 
+                    <span>{data.user.name}</span>
+                         <span>#{data.numero}</span>
+                     </div>
+            ): ( <span>
+                Solicitud: {data.numero}
+            </span>)}
+               
 
                 <p className="font-medium text-sm">
                 {data.tipo.nombre}

@@ -23,6 +23,13 @@ export default function Usuarios({ auth, users, roles }) {
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false);
 
+  
+  const [usuariosmostrar, setUsuariosmostrar] = useState(users)
+  
+  useEffect(() => {
+    setUsuariosmostrar(users)
+  }, [users]);
+
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     email: '',
