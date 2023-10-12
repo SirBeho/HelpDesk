@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { Solicitud } from "@/Components/Solicitud";
@@ -6,24 +6,21 @@ import { format } from "date-fns";
 import Modal from "@/Components/Modal";
 
 
-export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id }) {
-
+export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id, statusList }) {
 
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
-   
+
     const [errorMessage, setErrorMessage] = useState('');
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
     const [datos_f, setDatos_f] = useState(solicitudes);
-   
     const [edit, setEdit] = useState(false);
-
     const { data, setData, post } = useForm(null);
     const [show, setShow] = useState(msj != null);
+    const [isOpenModalStatus, setIsOpenModalStatus] = useState(false);
 
     useEffect(() => {
-
         setShow(msj != null);
     }, [msj]);
 
@@ -37,7 +34,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         if (open == solicitudId) {
             setOpen(0);
             setdato(null);
-            
+
         } else {
             setOpen(solicitudId);
             const solicitudSeleccionada = solicitudes.find(
@@ -46,7 +43,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
-        
+
 
         }
     };
@@ -96,7 +93,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         post(route("solicitud.update"));
     };
 
-     return (
+    return (
         <AuthenticatedLayout user={auth.user}
             countNotificaciones={auth.countNotificaciones}
             solicitud_id={open}
@@ -192,7 +189,15 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             <td className="font-bold w-44 py-2">
                                                 Estatus
                                             </td>
-                                            <td>{dato.status.nombre}</td>
+                                            <td className="flex gap-2">
+                                                {dato.status.nombre}
+                                                <span onClick={() => setIsOpenModalStatus(true)}
+                                                    className="cursor-pointer text-blue-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                                    </svg>
+                                                </span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -215,8 +220,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
                                     <div className="flex flex-wrap gap-1">
                                         {dato.files.filter(
-                                    (archivo) => (archivo.user.rol_id === 2)
-                                    ).map((archivo) =>
+                                            (archivo) => (archivo.user.rol_id === 2)
+                                        ).map((archivo) =>
                                         (
                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
                                                 <div className="w-16 relative">
@@ -241,7 +246,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                     <div className="flex justify-between w-full">
                                         <span className="font-semibold">Entregas</span>
 
-                                        {( auth.user.rol_id != 2) &&
+                                        {(auth.user.rol_id != 2) &&
                                             <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> Agregar + </label>
                                         }
 
@@ -249,8 +254,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
                                     <div className="flex flex-wrap gap-1">
                                         {dato.files.filter(
-                                    (archivo) => (archivo.user.rol_id != 2)
-                                    ).map((archivo) =>
+                                            (archivo) => (archivo.user.rol_id != 2)
+                                        ).map((archivo) =>
                                         (
                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
                                                 <div className="w-16 relative">
@@ -271,7 +276,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
 
 
-                                <Modal show={edit} onClose={() => {setShow(false), setEdit(false)}} >
+                                <Modal show={edit} onClose={() => { setShow(false), setEdit(false) }} >
                                     <div className="flex justify-end" >
                                         <button onClick={() => setEdit(false)} className="px-2 font-bold hover:bg-gray-300 rounded-lg">
                                             x
@@ -369,7 +374,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                 </div>
             </div>
 
-       <Modal show={show} maxWidth="sm" onClose={() => {setShow(false), setEdit(false)} }>
+            <Modal show={show} maxWidth="sm" onClose={() => { setShow(false), setEdit(false) }}>
 
                 <img
                     className="z-50 w-20 absolute left-1/2 transform -translate-x-1/2 -top-10 bg-white rounded-full p-2  "
@@ -381,12 +386,51 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                     <h1 className="mt-14 mb-8 font-semibold">{msj?.success}</h1>
 
                     <div className="hover:scale-110">
-                   <button  onClick={() => {setShow(false), setEdit(false)}} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
-                        Cerrar
-                    </button>
-                   
+                        <button onClick={() => { setShow(false), setEdit(false), setIsOpenModalStatus(false) }} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                            Cerrar
+                        </button>
+
                     </div>
 
+                </div>
+            </Modal>
+
+            <Modal show={isOpenModalStatus} maxWidth="sm">
+
+                <div className="flex flex-col items-center gap-5 relative  ">
+                    <h1 className="font-semibold text-xl">Cambiar estado de solicitud</h1>
+
+                    <select
+                        name="statusSolicitud"
+                        id="statusSolicitud"
+                        defaultValue={isOpenModalStatus && dato.status.id}
+                        onChange={(e) => setData("status_id", e.target.value)}
+                        className="w-60 h-9 rounded-md  outline-none"
+                    >
+
+                        {statusList.map((tipo) =>
+                        (<option key={tipo.id} value={tipo.id}>
+                            {tipo.nombre}
+                        </option>)
+                        )
+                        }
+
+                    </select>
+
+                    <div className="flex justify-evenly w-full">
+                        <div className="hover:scale-110">
+                            <button onClick={() => { setIsOpenModalStatus(false), setEdit(false) }} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                                Cancelar
+                            </button>
+
+                        </div>
+                        <div className="hover:scale-110">
+                            <button onClick={submit} className="bg-blue-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                                Guardar
+                            </button>
+
+                        </div>
+                    </div>
                 </div>
             </Modal>
         </AuthenticatedLayout>
