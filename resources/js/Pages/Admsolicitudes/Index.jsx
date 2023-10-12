@@ -268,7 +268,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
 
 
-                                <Modal show={edit} onClose={() => setEdit(false)} >
+                                <Modal show={edit} onClose={() => {setShow(false), setEdit(false)}} >
                                     <div className="flex justify-end" >
                                         <button onClick={() => setEdit(false)} className="px-2 font-bold hover:bg-gray-300 rounded-lg">
                                             x
@@ -366,7 +366,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
                 </div>
             </div>
 
-            <Modal show={show} maxWidth="sm" onClose={() => setShow(false) }>
+            <Modal show={show} maxWidth="sm" onClose={() => {setShow(false), setEdit(false)} }>
                 <img
                     className="z-50 w-20 absolute left-1/2 transform -translate-x-1/2 -top-10 bg-white rounded-full p-2  "
                     src="/assets/svg/check.svg"
@@ -378,7 +378,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
 
                     <div className="hover:scale-110">
 
-                    <button  onClick={() => setShow(false)} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                    <button  onClick={() => {setShow(false), setEdit(false)}} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
                         Cerrar
                     </button>
                     
