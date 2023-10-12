@@ -35,7 +35,7 @@ export default function Usuarios({ auth, users, roles }) {
 
     let value = e.target.value;
     setData('rol_id', e.target.value)
-    if (value == 3) {
+    if (value == 2) {
       setIsCliente(true)
     } else {
       setIsCliente(false)

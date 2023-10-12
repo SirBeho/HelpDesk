@@ -43,7 +43,6 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::match(['get', 'post'], '/admsolicitudes', [SolicitudController::class, 'administracion'])->name('admsolicitudes');
-
     Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes');
     Route::get('/panel', [SolicitudController::class, 'panel'])->name('panel');
     
@@ -74,7 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('upload', [FileController::class, 'upload'])->name('upload');
     Route::post('/solicitudes2', [SolicitudController::class, 'create'])->name('solicitud.create');
     Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');
-    Route::post('/download', [FileController::class, 'download']);
+    Route::post('/download', [FileController::class, 'download'])->name('download');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
 });

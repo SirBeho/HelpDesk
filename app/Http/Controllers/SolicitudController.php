@@ -43,9 +43,7 @@ class SolicitudController extends Controller
             session()->forget('msj');
         }
 
-        
         return Inertia::render('Admsolicitudes/Index', [
-            'archivos' => Auth::user()->load("files")->files,
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'msj' => $mensaje,
             'solicitud_id' => $solicitud_id,
@@ -62,55 +60,20 @@ class SolicitudController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-
-        $validator = validator(['id' => $id], [
-            'id' => 'required|numeric'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        try {
-            $Solicitud = Solicitud::findOrFail($id);
-            $Solicitud->load('user');
-            $Solicitud->load('tipo');
-            $Solicitud->load('status');
-
-            return $Solicitud;
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'La Solicitud ' . $id . ' no existe no fue encontrada'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error en la acción realizada'], 500);
-        }
-    }
-
     public function create(Request $request)
     {
-
-
-
         try {
-
-
             $request->merge([
                 'user_id' => Auth::user()->id,
                 'status_id' => 1,
             ]);
 
-
             $validator = validator($request->all(), [
-                // 'numero'=> 'required',
-                'tipo_id' => 'exists:tipo_Solicitudes,id',
-                // 'empresa'=> 'required',
-
+                'tipo_id' => 'exists:tipo_solicitudes,id',
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
                 'status_id' => 'exists:estado_Solicitudes,id',
                 'comentario' => 'required',
-
             ]);
 
             if ($validator->fails()) {
@@ -133,11 +96,7 @@ class SolicitudController extends Controller
                 return redirect('panel');
             }
 
-
-
-
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
-
         } catch (ModelNotFoundException $e) {
 
             return response()->json(['error' => 'No se pudo registrar el Solicitud' . $e->getMessage()], 404);
@@ -171,8 +130,7 @@ class SolicitudController extends Controller
         }
         return redirect('solicitudes');
     }
-
-
+    
     public function update(Request $request)
 
     {
@@ -208,21 +166,17 @@ class SolicitudController extends Controller
             $Solicitud->save();
 
             if ($request->status_ant != $request->status_id) {
-
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
-                return redirect('admsolicitudes');
-                return response()->json(['msj' => 'Solicitud actualizada correctamente', 'log' => $respuesta->original['msj']], 200);
             }
-            // session()->put('msj' , ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
-            // return redirect()->route('admsolicitudes', ['msj' => 'Solicitud actualizada correctamente']);
-            return redirect()->route('admsolicitudes')->with('msj', 'Solicitud actualizada correctamente');
-            // return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
+           
+            return redirect()->route('admsolicitudes')->with('msj', ['success' => 'Solicitud actualizada correctamente']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
-        } catch (Exception $e) {
 
-            return response()->json(['error' => 'Error en la acción realizada'], 500);
+             return redirect()->route('admsolicitudes')->with('msj',['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
+        }catch (Exception $e) {
+           
+             return redirect()->route('admsolicitudes')->with('msj',['error' => 'Error en la acción realizada'], 500);
         }
     }
 

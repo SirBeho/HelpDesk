@@ -23,15 +23,11 @@ class File extends Model
 
 
   
-    public function emisor(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->BelongsTo(User::class,'emisor_id');
+        return $this->BelongsTo(User::class,'user_id');
     }
-    public function receptor(): BelongsTo
-    {
-        return $this->BelongsTo(User::class,'receptor_id');
-    }
-
+   
 
 
 

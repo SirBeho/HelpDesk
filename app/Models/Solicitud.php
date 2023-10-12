@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Solicitud extends Model
 {
@@ -49,6 +50,11 @@ class Solicitud extends Model
     public function status(): BelongsTo
     {
         return $this->BelongsTo(EstadoSolicitud::class,'status_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class,'solicitud_id');
     }
 
 

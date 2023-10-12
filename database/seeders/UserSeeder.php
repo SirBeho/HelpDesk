@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             'empresa'  => "Coca Cola",
             'rnc'  => "856-7586985-4",
             'telefono'=> "8098892235",
-            'rol_id'=> 3,  
+            'rol_id'=> 2,  
         ]);
     }
 }
