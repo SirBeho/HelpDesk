@@ -26,7 +26,6 @@ export default function Dashboard({ auth  }) {
                     </p>
 
                     <p className="font-medium text-lg w-96 py-6">
-
                         Siempre comprometidos con brindar la mejor experiencia
                     </p>
 
