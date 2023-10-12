@@ -96,36 +96,16 @@ class NotificacionController extends Controller
 
     public function update(Request $request)
     {
+        try {
+            $notificacion =  Notificacion::findOrFail($request->n_id);
+            $notificacion->status = 1;
+            $notificacion->save();
 
-        // $notificacion =  Notificacion::find($request->n_id);
-        // $notificacion->status = 1;
-        // $notificacion->save();
+            return redirect()->route('admsolicitudes')->with('solicitud_id', $request->id);
+        } catch (ModelNotFoundException $e) {
 
-        return redirect()->route('admsolicitudes', ['id_solicitud' => $request->id]);
-        // try {
-        //     $validator = validator($request->all(), [
-        //         'emisor_id' => 'required|exists:users,id',
-        //         'receptor_id' => 'required|exists:users,id',
-        //         'message ' => 'required',
-        //         'read ' => 'required|boolean'
-        //     ]);
-
-        //     if ($validator->fails()) {
-        //         return response()->json(['errors' => $validator->errors()], 422);
-        //     }
-
-        //     $Notificacion = Notificacion::findOrFail($id);
-        //     $Notificacion->update($request->all());
-        //     $Notificacion->save();
-
-
-
-        //     return response()->json(['msj' => 'Notificacion actualizado correctamente'], 200);
-        // } catch (ModelNotFoundException $e) {
-        //     return response()->json(['error' => 'El Notificacion ' . $id . ' no existe no fue encontrado'], 404);
-        // } catch (Exception $e) {
-        //     return response()->json(['error' => 'Error en la acción realizada'], 500);
-        // }
+            return redirect()->route('admsolicitudes');
+        }
     }
 
     public function destroy($id)

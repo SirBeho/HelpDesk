@@ -24,7 +24,7 @@ class SolicitudController extends Controller
     {
         $mensaje = session('msj');
         if ($mensaje) {
-             Session::forget('msj');
+            Session::forget('msj');
         }
         return Inertia::render('Solicitudes/Index', [
             'datos' => TipoSolicitud::where('status', '1')->get(),
@@ -32,33 +32,35 @@ class SolicitudController extends Controller
         ]);
     }
 
-
-
     public function administracion(Request $request)
     {
-
         $mensaje = session('msj');
+        $solicitud_id = session('solicitud_id');
+
+        $solicitud_id &&  session()->forget('solicitud_id');
+
         if ($mensaje) {
             session()->forget('msj');
         }
+
+        
         return Inertia::render('Admsolicitudes/Index', [
             'archivos' => Auth::user()->load("files")->files,
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'msj' => $mensaje,
+            'solicitud_id' => $solicitud_id,
         ]);
     }
+
     public function panel(Request $request)
     {
-
         $mensaje = session('msj');
         Session::forget('msj');
         return Inertia::render('Panel/Index', [
             'archivos' => Auth::user()->load("files")->files,
             'msj' => $mensaje,
         ]);
-
     }
-
 
     public function show($id)
     {
@@ -105,9 +107,9 @@ class SolicitudController extends Controller
                 // 'empresa'=> 'required',
 
                 'created_at' => 'date',
-                'user_id'=> 'exists:users,id',
-                'status_id'=> 'exists:estado_Solicitudes,id',
-                'comentario'=> 'required',
+                'user_id' => 'exists:users,id',
+                'status_id' => 'exists:estado_Solicitudes,id',
+                'comentario' => 'required',
 
             ]);
 
@@ -123,26 +125,26 @@ class SolicitudController extends Controller
 
             $log = new LogSolicitudController();
 
-            $respuesta = $log->create($request); 
-        
+            $respuesta = $log->create($request);
+
             session()->put('msj', ["success" => $respuesta->original['msj']]);
-            
-            if(isset($request->created_at)){
-                return redirect('panel');     
+
+            if (isset($request->created_at)) {
+                return redirect('panel');
             }
-                
-           
+
+
 
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
 
         } catch (ModelNotFoundException $e) {
 
-            return response()->json(['error' => 'No se pudo registrar el Solicitud'.$e->getMessage()], 404);
-        }catch (QueryException $e) {
-           
+            return response()->json(['error' => 'No se pudo registrar el Solicitud' . $e->getMessage()], 404);
+        } catch (QueryException $e) {
+
             $errormsj = $e->getMessage();
-            
+
 
             if (strpos($errormsj, 'Duplicate entry') !== false) {
                 preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
@@ -158,7 +160,7 @@ class SolicitudController extends Controller
                 $duplicateKey = $matches[2] ?? '';
 
                 return redirect('panel');
-        
+
                 // return response()->json(['error' => "No se puede realizar la acción, el valor '$duplicateValue' ya está duplicado en el campo '$duplicateKey'"], 422);
             }
 
@@ -177,15 +179,15 @@ class SolicitudController extends Controller
 
         try {
 
-    
+
             $validator = validator($request->all(), [
 
-                'id'=> 'required|exists:solicitudes,id',
-                'tipo_id'=> 'exists:tipo_Solicitudes,id',
+                'id' => 'required|exists:solicitudes,id',
+                'tipo_id' => 'exists:tipo_Solicitudes,id',
                 'created_at' => 'date',
-                'user_id'=> 'exists:users,id',
-                'status_id'=> 'exists:estado_Solicitudes,id',
-                'comentario'=> 'required',
+                'user_id' => 'exists:users,id',
+                'status_id' => 'exists:estado_Solicitudes,id',
+                'comentario' => 'required',
 
             ]);
 
@@ -209,7 +211,7 @@ class SolicitudController extends Controller
 
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
-                return redirect('admsolicitudes');     
+                return redirect('admsolicitudes');
                 return response()->json(['msj' => 'Solicitud actualizada correctamente', 'log' => $respuesta->original['msj']], 200);
             }
             // session()->put('msj' , ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
@@ -218,8 +220,8 @@ class SolicitudController extends Controller
             // return response()->json(['msj' => 'Solicitud actualizada correctamente'], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
-        }catch (Exception $e) {
-           
+        } catch (Exception $e) {
+
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
     }
