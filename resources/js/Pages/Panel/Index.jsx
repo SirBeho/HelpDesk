@@ -159,7 +159,7 @@ export default function Panel({ auth, msj, archivos }) {
                                 </thead>
 
                                 {/* <tbody className={`block overflow-auto duration-500  transition-all ${openyear == year ? 'h-['+parseInt(datos_f.tipo1[year].length,10) * 40+'px]' : "h-0"}  `}> */}
-                                <div key={"t1" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "1" + year ? 'h-['+12*40+'px]' : "h-0"}  `}>
+                                <div key={"t1" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "1" + year ? 'h-[400px]' : "h-0"}  `}>
                                     {datos_f.tipo1[year].map((solicitud, index) => (
                                         <div key={solicitud.id}>
                                             <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
@@ -199,10 +199,7 @@ export default function Panel({ auth, msj, archivos }) {
                     <h3 className="w-full bg-[#1e85e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Ventas
                         <button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                             Crear Bloque +
-                            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                            </svg> */}
-
+                            
                         </button>
                     </h3>
 
@@ -219,7 +216,6 @@ export default function Panel({ auth, msj, archivos }) {
                                     </tr>
                                 </thead>
 
-                                {/* <tbody className={`block overflow-hidden duration-500  transition-all ${openyear == year ? 'max-h-['+datos_f.tipo2[year].length * 40+'px]' : "h-0"}  `}> */}
                                 <div key={"tb2" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "2" + year ? 'h-[400px]' : "h-0"}  `}>
                                     {datos_f.tipo2[year].map((solicitud) => (
                                         <div key={solicitud.id} >

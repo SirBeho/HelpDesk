@@ -26,14 +26,13 @@ class FileController extends Controller
             'solicitud_id.exists' => 'La solicitud no existe.',
             // 'nombre.*.unique_name' => 'El nombre esta duplicado.',
         ];
-    
+        
         $validator = validator($request->all(), [
             'files.*' => 'required|file|mimes:jpeg,jpg,png,docx,xlsx|max:2048',
             'nombre.*' => 'required|unique_name',
             'solicitud_id' => 'required|exists:solicitudes,id',
         ], $mensajes);
 
-      
         if ($validator->fails()) {
             $formattedErrors = ["duplicados" => [], "error" => []];
         
@@ -65,47 +64,51 @@ class FileController extends Controller
     
             foreach ($request->file('file') as $index => $file) {
                  
-                 try {
-                    $extension = $file->getClientOriginalExtension();
-                    //$encryptedData = Crypt::encrypt(file_get_contents($file->getPathname()));
-    
-                    $referencia = time() . "_" .$index. $solicitud_numero;
-                    $name = $referencia . "." . $extension;
-    
-                    $data = [
-                        'nombre' => $request->nombre[$index],
-                        'solicitud_id' => $request->solicitud_id,
-                        'referencia' => $referencia,
-                        'extencion' => $extension,
-                        'user_id' => Auth::user()->id,
-                    ];
-    
-                    File::create($data);
-    
-                    //Storage::disk('uploads')->put($name, $encryptedData);
-                    $file->storeAs('uploads', $name, 'public');
+                if ($file->isValid()) {
 
-                    $mensajesExitosos[] = "Archivo ".$request->nombre[$index]." subido con éxito.";
-                }catch (QueryException $e) {
-                    $errormsj = $e->getMessage();
-                
-                    if (strpos($errormsj, 'Duplicate entry') !== false) {
-                        preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
-                        $duplicateValue = $matches[1] ?? '';
-                        $duplicateKey = $matches[2] ?? '';
-                
+                    try {   
+                        $extension = $file->getClientOriginalExtension();
+                        $encryptedData = Crypt::encrypt(file_get_contents($file->getPathname()));
+        
+                        $referencia = time() . "_" .$index. $solicitud_numero;
+                        $name = $referencia . "." . $extension;
+        
+                        $data = [
+                            'nombre' => $request->nombre[$index],
+                            'solicitud_id' => $request->solicitud_id,
+                            'referencia' => $referencia,
+                            'extencion' => $extension,
+                            'user_id' => Auth::user()->id,
+                        ];
+        
+                        File::create($data);
+        
+                        Storage::disk('uploads')->put($name, $encryptedData);
+                        //$file->storeAs('uploads', $name, 'public');
 
-                        $mensajesErrores[] = "Error al subir el archivo $duplicateValue: nombre duplicado";
+                        $mensajesExitosos[] = "Archivo ".$request->nombre[$index]." subido con éxito.";
+                    }catch (QueryException $e) {
+                        $errormsj = $e->getMessage();
+                    
+                        if (strpos($errormsj, 'Duplicate entry') !== false) {
+                            preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
+                            $duplicateValue = $matches[1] ?? '';
+                            $duplicateKey = $matches[2] ?? '';
+                            $mensajesErrores[] = "Error al subir el archivo $duplicateValue: nombre duplicado";
 
-                        // return response()->json(['error' => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado "], 422);
-                    }else{
+                        }else{
 
-                        $mensajesErrores[] = "Error al subir el archivo:";
-                    }
+                            $mensajesErrores[] = "Error al subir el archivo:";
+                        }
 
-                } catch (\Exception $e) {
-                    $mensajesErrores[] = "Error desconocido al subir el archivo :" . $e->getMessage();
-                } 
+                    } catch (\Exception $e) {
+                        $mensajesErrores[] = "Error desconocido al subir el archivo :" . $e->getMessage();
+                    } 
+
+                }else{
+                    $mensajesErrores[] = "Error el archibo no es valido ";
+                }
+
             }
             if($mensajesErrores == null){
                 $mensajesExitosos = ["Todos los archivos subidos con exito"];
@@ -123,26 +126,20 @@ class FileController extends Controller
        
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'.$e], 500);
-        } 
-
-
-       
-            
-       
+        }
     }
 
     public function download(Request $request)
     {
-        
         try {
            
             $data = File::where('id', $request->id)->where('user_id', Auth::user()->id)->firstOrFail();
-            $name = 'uploads/' .$data->referencia.'.'.$data->extencion;
-
+            $name = $data->referencia.'.'.$data->extencion;
+           
             if (Storage::disk('uploads')->exists($name)) {
 
-                $file = Storage::disk('uploads')->get($name);
-               // $file = Crypt::decrypt($encryptedData);
+                $encryptedData = Storage::disk('uploads')->get($name);
+                $file = Crypt::decrypt($encryptedData);
 
                 $mimeType = Storage::disk('uploads')->mimeType($name);
                //Log::info('MIME Type del archivo: ' . $mimeType);
