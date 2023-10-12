@@ -20,10 +20,16 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
    
     const [edit, setEdit] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm(null);
-    const [show, setShow] = useState(msj != null);
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
-       
+        console.log(dato);
+        console.log(datos_f);
+        console.log(data);
+        setOpen(0);
+        setdato(null);
+        setData(null);
+      
         setShow(msj != null);
     }, [msj]);
 
@@ -88,8 +94,6 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj }) {
         e.preventDefault();
         post(route("solicitud.update"));
     };
-
-
 
      return (
         <AuthenticatedLayout user={auth.user}
