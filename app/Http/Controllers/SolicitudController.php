@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EstadoSolicitud;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
 use Carbon\Carbon;
@@ -45,6 +46,7 @@ class SolicitudController extends Controller
 
         return Inertia::render('Admsolicitudes/Index', [
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
             'msj' => $mensaje,
             'solicitud_id' => $solicitud_id,
         ]);
@@ -129,7 +131,7 @@ class SolicitudController extends Controller
         }
         return redirect('solicitudes');
     }
-    
+
     public function update(Request $request)
     {
 
@@ -167,16 +169,17 @@ class SolicitudController extends Controller
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
             }
-           
+          
             return redirect()->route('admsolicitudes')
             ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
             ->with('solicitud_id', $request->id);
+
         } catch (ModelNotFoundException $e) {
 
-             return redirect()->route('admsolicitudes')->with('msj',['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
-        }catch (Exception $e) {
-           
-             return redirect()->route('admsolicitudes')->with('msj',['error' => 'Error en la acción realizada'], 500);
+            return redirect()->route('admsolicitudes')->with('msj', ['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
+        } catch (Exception $e) {
+
+            return redirect()->route('admsolicitudes')->with('msj', ['error' => 'Error en la acción realizada'], 500);
         }
     }
 
