@@ -36,5 +36,16 @@ class UserSeeder extends Seeder
             'telefono'=> "8098892235",
             'rol_id'=> 2,  
         ]);
+
+        User::factory()->create([
+            'name' => "Cliete Jose",
+            'email' => "cliente2@gmail.com",
+            'email_verified_at' => now(),
+            'password' => "cliente", 
+            'empresa'  => "DGI",
+            'rnc'  => "856-7586985-4",
+            'telefono'=> "8098892235",
+            'rol_id'=> 2,  
+        ]);
     }
 }

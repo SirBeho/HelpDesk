@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EstadoSolicitud;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -43,7 +44,7 @@ class SolicitudController extends Controller
         if ($mensaje) {
             session()->forget('msj');
         }
-
+        
         return Inertia::render('Admsolicitudes/Index', [
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
@@ -56,9 +57,11 @@ class SolicitudController extends Controller
     {
         $mensaje = session('msj');
         Session::forget('msj');
+
         return Inertia::render('Panel/Index', [
-            'archivos' => Auth::user()->load("files")->files,
             'msj' => $mensaje,
+            'clientes' => User::where("rol_id",2)->get(),
+
         ]);
     }
 
@@ -130,7 +133,6 @@ class SolicitudController extends Controller
 
     public function update(Request $request)
     {
-
         try {
 
             $validator = validator($request->all(), [
@@ -152,7 +154,6 @@ class SolicitudController extends Controller
 
             $request->merge([
                 'solicitud_id' => $request->id,
-
                 'status_ant' => $Solicitud->status_id,
             ]);
 

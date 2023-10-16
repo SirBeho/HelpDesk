@@ -8,9 +8,9 @@ import Modal from "@/Components/Modal";
 
 export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id, statusList }) {
 
+
+ 
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
-    console.log(solicitudes)
-    const [errorMessage, setErrorMessage] = useState('');
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
@@ -38,7 +38,10 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     },[solicitud_id]);
 
     useEffect(() => {
-        setShow(msj != null);
+        if (msj?.error == null || msj?.error == []) {
+           
+            setShow(msj != null);
+        }
     }, [msj]);
 
     const abrir = (solicitudId) => {
@@ -101,11 +104,11 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         setOpen(0);
         setdato(null);
         post(route("solicitud.update"));
-        
     };
 
     return (
         <AuthenticatedLayout user={auth.user}
+        msj={msj}
             countNotificaciones={auth.countNotificaciones}
             solicitud_id={open}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
@@ -205,12 +208,13 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             </td>
                                             <td className="flex gap-2">
                                                 {dato.status.nombre}
-                                                <span onClick={() => setIsOpenModalStatus(true)}
+                                                {auth.user.id != 2 && (<span onClick={() => setIsOpenModalStatus(true)}
                                                     className="cursor-pointer text-blue-600">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                                                     </svg>
-                                                </span>
+                                                </span>)}
+                                                
                                             </td>
                                         </tr>
                                     </tbody>
@@ -369,12 +373,6 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                                 className="w-full resize-none h-28 p-3 rounded-md outline-none "
                                             ></textarea>
                                         </div>
-
-                                        {errorMessage && (
-                                            <div className="alert alert-danger">
-                                                {errorMessage}
-                                            </div>
-                                        )}
 
                                         <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-center justify-center mr-5 mt-5">
                                             Guardar
