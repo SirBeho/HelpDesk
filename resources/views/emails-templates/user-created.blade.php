@@ -12,8 +12,8 @@
 
     <p>A continuación, se te proporciona la información de acceso:</p>
 
-    <p>Correo electrónico:{{ $email }}</p>
-    <p>Contraseña:{{ $password }}</p>
+    <p>Correo electrónico: {{ $email }}</p>
+    <p>Contraseña: {{ $password }}</p>
 
     <p>
         Por favor, guarda esta información de forma segura.
