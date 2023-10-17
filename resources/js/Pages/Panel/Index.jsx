@@ -171,7 +171,7 @@ export default function Panel({ auth, msj, clientes }) {
                 ) : (null)}
 
 
-            {(opencliente?.rol_id == 2) ?
+            {(opencliente?.rol_id == 2 && auth.user.rol_id != 2 ) ?
                 (<div className=' m-6 mt-0 border-2 w-fit border-black rounded-md p-1  flex gap-2 '>
 
                     <div>
