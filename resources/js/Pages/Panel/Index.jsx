@@ -15,10 +15,6 @@ export default function Panel({ auth, msj, clientes }) {
 
     const [opencliente, setOpenCliente] = useState(auth.user);
 
-    useEffect(() => {
-        console.log(opencliente);
-    }, [opencliente]);
-
 
     const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
         const year = new Date(solicitud.created_at).getFullYear();
@@ -160,9 +156,9 @@ export default function Panel({ auth, msj, clientes }) {
                         >
                             <option value="0">Seleccione Solicitud</option>
 
-                            {clientes.map((cliente) =>
+                            {clientes?.map((cliente) =>
                                 <option key={cliente.id} value={cliente.id}>
-                                    {cliente.name}- {cliente.email}
+                                    {cliente.name} - {cliente.email}
                                 </option>)
                             }
                         </select>

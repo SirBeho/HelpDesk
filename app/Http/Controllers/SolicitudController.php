@@ -73,13 +73,17 @@ class SolicitudController extends Controller
                 'status_id' => 1,
             ]);
 
+          
+
             $validator = validator($request->all(), [
                 'tipo_id' => 'exists:tipo_solicitudes,id',
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
-                'status_id' => 'exists:estado_Solicitudes,id',
+                'status_id' => 'exists:estado_solicitudes,id',
                 'comentario' => 'required',
             ]);
+           
+
 
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
@@ -99,8 +103,8 @@ class SolicitudController extends Controller
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
-
-            return response()->json(['error' => 'No se pudo registrar el Solicitud' . $e->getMessage()], 404);
+            session()->put('msj', ["error" => 'No se pudo registrar el Solicitud' ]);
+           
         } catch (QueryException $e) {
 
             $errormsj = $e->getMessage();
@@ -117,12 +121,15 @@ class SolicitudController extends Controller
                     session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
 
+            }else{
+                session()->put('msj', ["error" => 'No se pudo registrar el Solicitud' ]);
             }
 
             // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
 
         } catch (Exception $e) {
-            return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
+            session()->put('msj', ["error" => 'Error en la accion realizada' ]);
+           
         }
 
         if (isset($request->created_at)) {
@@ -135,19 +142,28 @@ class SolicitudController extends Controller
     {
         try {
 
+            $mensajes = [
+                'tipo_id' => 'El tipo de solicitud no existe.',
+                'created_at' => 'La fecha de creacion no es valida.',
+                'user_id' => 'El usuario no existe.',
+                'status_id' => 'El estado seleccionado no existe.',
+                'comentario' => 'El comentario no puede estar en blanco.',
+            ];
+            
             $validator = validator($request->all(), [
 
                 'id' => 'required|exists:solicitudes,id',
-                'tipo_id' => 'exists:tipo_Solicitudes,id',
+                'tipo_id' => 'exists:tipo_solicitudes,id',
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
-                'status_id' => 'exists:estado_Solicitudes,id',
+                'status_id' => 'exists:estado_solicitudes,id',
                 'comentario' => 'required',
 
-            ]);
+            ],$mensajes);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
+
+                return redirect()->route('admsolicitudes')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
             }
 
             $Solicitud = Solicitud::findOrFail($request->id);

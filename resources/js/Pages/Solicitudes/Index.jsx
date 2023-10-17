@@ -5,12 +5,12 @@ import Modal from "@/Components/Modal";
 import React from "react";
 
 export default function Solicitudes({ auth, datos, msj }) {
+
     const [solicitudes, setSolicitudes] = useState(datos);
-
     const [show, setShow] = useState(msj != null);
-
     useEffect(() => {
-        setShow(msj != null);
+
+        setShow(msj?.success != undefined);
     }, [msj]);
 
     const [esTipo, setEsTipo] = useState(0);
@@ -64,7 +64,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                 />
 
                 <div className="text-center relative mb-2 ">
-                    <h1 className="mt-14 mb-8 font-semibold">{msj?.success}</h1>
+                    <h1 className="mt-14 mb-8 font-semibold">{msj?.success || msj?.error}</h1>
 
                     <div className="hover:scale-110">
                         <Link href={route("admsolicitudes", { id: 1 })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
@@ -181,7 +181,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                             className="w-full resize-none h-44 p-3 outline-none mt-2"
                         ></textarea>
                     </div>
-
+                    {msj?.error ?? ( <div>{msj?.error}</div>)}
+                   
                     <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-end justify-end mr-5 mt-5">
                         Enviar solicitud
                     </button>
