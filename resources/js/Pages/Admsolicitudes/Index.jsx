@@ -415,7 +415,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                     <select
                         name="statusSolicitud"
                         id="statusSolicitud"
-                        defaultValue={isOpenModalStatus && dato.status.id}
+                        defaultValue={dato?.status.id}
                         onChange={(e) => setData("status_id", e.target.value)}
                         className="w-60 h-9 rounded-md  outline-none"
                     >
