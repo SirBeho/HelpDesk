@@ -20,17 +20,10 @@ export default function Usuarios({ auth, users, roles }) {
   const [deleteUser, setDeleteUser] = useState(false);
   const [newUser, setNewUser] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
-  const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false);
+ 
 
-  
-  const [usuariosmostrar, setUsuariosmostrar] = useState(users)
-  
-  useEffect(() => {
-    setUsuariosmostrar(users)
-  }, [users]);
-
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, reset } = useForm({
     name: '',
     email: '',
     telefono: '',
@@ -86,15 +79,9 @@ export default function Usuarios({ auth, users, roles }) {
         user.name.toLowerCase().includes(keyword)
       );
     });
- 
+
     setSortingData(results);
   }
-
-  useEffect(() => {
-    return () => {
-      reset('password', 'password_confirmation');
-    };
-  }, []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -102,11 +89,9 @@ export default function Usuarios({ auth, users, roles }) {
     setNewUser(false);
     setLoading(true);
 
-    post( route('register'), {
+    post(route('register'), {
       onSuccess: () => {
-        setShow(false)
         setLoading(true);
-        setSortingData(users);
       }
     });
   };
@@ -124,9 +109,7 @@ export default function Usuarios({ auth, users, roles }) {
     post(route('usuario.update', selectedUser.id), {
       onSuccess: () => {
         setLoading(false);
-        setShow(false);
         setSelectedUser({});
-        setSortingData(users);
       }
     });
 
@@ -144,22 +127,21 @@ export default function Usuarios({ auth, users, roles }) {
         setLoading(false);
         setSelectedUser({});
         setSortingData(users);
-
       }
     });
 
 
   };
 
-  const hideModal = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setSortingData(users);
+  }, [users])
 
-    updateUser && setUpdateUser(false);
-    deleteUser && setDeleteUser(false);
-    newUser && setNewUser(false);
-    setShow(false);
-  }
-
+  useEffect(() => {
+    return () => {
+      reset('password', 'password_confirmation');
+    };
+  }, []);
   return (
 
     <AuthenticatedLayout
@@ -169,45 +151,40 @@ export default function Usuarios({ auth, users, roles }) {
     >
       <Head title="Usuarios" />
 
-      <Modal
-        show={show}
-      >
+      <Modal show={newUser}>
+        <Register
+          roles={roles}
+          setData={setData}
+          isCliente={isCliente}
+          data={data}
+          submit={submit}
+          changeRol={changeRol}
+          hideModal={() => setNewUser(false)}
+        />
+      </Modal>
 
-        {newUser &&
-          <Register
-            roles={roles}
-            setData={setData}
-            isCliente={isCliente}
-            data={data}
-            submit={submit}
-            changeRol={changeRol}
-            hideModal={hideModal}
-          />
-        }
+      <Modal show={updateUser}>
+        <EditUser
+          roles={roles}
+          changeRol={changeRol}
+          hideModal={() => setUpdateUser(false)}
+          update={update}
+          setData={setData}
+          selectedUser={selectedUser}
+        />
+      </Modal>
 
-        {updateUser &&
-          <EditUser
-            roles={roles}
-            changeRol={changeRol}
-            hideModal={hideModal}
-            update={update}
-            setData={setData}
-            selectedUser={selectedUser}
-          />
-        }
+      <Modal show={deleteUser}>
+        <DeleteUser
+          deleteUser={deleteUser}
+          hideModal={() => setDeleteUser(false)}
+          destroy={destroy}
+          selectedUser={selectedUser}
+        />
+      </Modal>
 
-        {deleteUser &&
-          <DeleteUser
-            deleteUser={deleteUser}
-            hideModal={hideModal}
-            destroy={destroy}
-          />
-        }
-
-        {loading &&
-          <Loading />
-        }
-
+      <Modal show={loading}>
+        <Loading />
       </Modal>
 
       <div className="container mx-auto px-4 sm:px-8">
@@ -225,7 +202,6 @@ export default function Usuarios({ auth, users, roles }) {
               </span>
               <input placeholder="Buscar usuario"
                 className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
-
                 value={searchValue}
                 onChange={(e) => search(e.target.value)}
               />

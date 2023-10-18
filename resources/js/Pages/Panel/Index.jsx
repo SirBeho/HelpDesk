@@ -2,25 +2,32 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import React, { useEffect, useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
-export default function Panel({ auth, msj, archivos }) {
+export default function Panel({ auth, msj, clientes }) {
 
-   
-    // const solicitudes = auth.user.solicitudes;
+
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id < 3);
 
 
     solicitudes.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
-    
+
+
+    const [opencliente, setOpenCliente] = useState(auth.user);
+
+    useEffect(() => {
+        console.log(opencliente);
+    }, [opencliente]);
+
+
     const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
         const year = new Date(solicitud.created_at).getFullYear();
 
-        if (solicitud.tipo_id === 1) {
+        if (solicitud.tipo_id === 1 && solicitud.user_id == opencliente?.id) {
 
             solicitudesPorTipo.tipo1[year] = solicitudesPorTipo.tipo1[year] || [];
             solicitudesPorTipo.tipo1[year].push(solicitud);
-        } else if (solicitud.tipo_id === 2) {
+        } else if (solicitud.tipo_id === 2 && solicitud.user_id == opencliente?.id) {
 
             solicitudesPorTipo.tipo2[year] = solicitudesPorTipo.tipo2[year] || [];
             solicitudesPorTipo.tipo2[year].push(solicitud);
@@ -30,13 +37,13 @@ export default function Panel({ auth, msj, archivos }) {
     }, { tipo1: {}, tipo2: {} });
 
 
+
     const [Message, setMessage] = useState(null);
     const [show, setShow] = useState(false);
     const [showmsj, setShowmsj] = useState(msj != null);
     const [select, setSelet] = useState(0);
     const [openyear, setOpenyear] = useState(0);
     const [openmonth, setOpenmonth] = useState(0);
-
 
     const { data, setData, post, processing, errors, reset } = useForm({
         tipo_id: 0,
@@ -46,7 +53,18 @@ export default function Panel({ auth, msj, archivos }) {
         month: "",
     });
 
-  
+    const cliente = (id) => {
+        console.log(id)
+        const clienteseleccionado = clientes.find(
+            (cliente) => cliente.id == id
+        );
+        setOpenCliente(clienteseleccionado)
+        console.log(clienteseleccionado)
+    };
+
+
+
+
     const put = (id) => {
         if (select == id) {
             setSelet(0)
@@ -58,11 +76,10 @@ export default function Panel({ auth, msj, archivos }) {
     const handleDownload = (archivo) => {
         const id = archivo.id;
         const filename = archivo.nombre + '.' + archivo.extencion;
-
         axios
             .post('/download', { id }, { responseType: 'blob' })
             .then((response) => {
-                console.log(response) 
+
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
@@ -74,15 +91,15 @@ export default function Panel({ auth, msj, archivos }) {
                 console.error('Error al descargar el archivo:', error);
             });
     };
-    
+
     useEffect(() => {
-      
+
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
         } else if (msj && msj.error) {
             setMessage(msj.error);
         } else if (msj && !msj.error) {
-           
+
             setMessage(msj.success);
             setShowmsj(true);
             setData("month", "")
@@ -120,7 +137,7 @@ export default function Panel({ auth, msj, archivos }) {
         setOpenmonth(0);
     };
 
-   
+
     return (
         <AuthenticatedLayout
             solicitud_id={openmonth}
@@ -132,17 +149,85 @@ export default function Panel({ auth, msj, archivos }) {
             <Head title="Panel" />
 
 
+            {(auth.user.rol_id != 2) ?
+                (
+                    <label className='flex w-1/2  m-6 items-center'>
+                        <span className='flex items-center whitespace-nowrap  w-fit h-12 px-2'>Seleccione un cliente</span>
+                        <select
+                            value={opencliente?.id}
+                            onChange={(e) => cliente(e.target.value)}
+                            className="w-[calc(100%-3rem)]   rounded-md  h-12   outline-none px-2"
+                        >
+                            <option value="0">Seleccione Solicitud</option>
+
+                            {clientes.map((cliente) =>
+                                <option key={cliente.id} value={cliente.id}>
+                                    {cliente.name}- {cliente.email}
+                                </option>)
+                            }
+                        </select>
+                    </label>
+
+                ) : (null)}
+
+
+            {(opencliente?.rol_id == 2 && auth.user.rol_id != 2 ) ?
+                (<div className=' m-6 mt-0 border-2 w-fit border-black rounded-md p-1  flex gap-2 '>
+
+                    <div>
+                        <div className="flex items-center ">
+                            <div className="font-bold w-44 py-2">Nombre solicitante</div>
+                            <div>{opencliente.name}</div>
+                        </div>
+
+                        <div className="flex items-center ">
+                            <div className="font-bold w-44 py-2">Nombre empresa</div>
+                            <div>{opencliente.empresa}</div>
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex items-center ">
+                            <div className="font-bold w-44 py-2">Télefono</div>
+                            <div>{opencliente.telefono}</div>
+                        </div>
+
+                        <div className="flex items-center ">
+                            <div className="font-bold w-44 py-2">RNC</div>
+                            <div>{opencliente.rnc}</div>
+                        </div>
+                    </div>
+
+
+
+
+                    <tr className="w-fit">
+
+                    </tr>
+
+
+                    <tr className="w-fit">
+
+                    </tr>
+
+                </div>) : (null)}
+
+
+
             <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] flex gap-4  m-6 rounded-md ">
 
                 <div className="h-full w-full bg-[#f2f2f2]">
                     <h3 className="w-full bg-[#1ec0e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Compras
-                        <button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 1) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                        {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 1) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                             Crear Bloque +
-                            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                            </svg> */}
 
-                        </button>
+
+                        </button>) : (
+                             
+                        <h1 className='h-9 px-2 gap-2  items-center '></h1>
+                        )}
+
                     </h3>
 
                     <div className="flex flex-col h-5/6 overflow-hidden ">
@@ -161,25 +246,25 @@ export default function Panel({ auth, msj, archivos }) {
                                     {datos_f.tipo1[year].map((solicitud, index) => (
                                         <div key={solicitud.id}>
                                             <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
-                                                <div className="p-2 h-10">{solicitud.comentario} ({archivos.filter((archivo) => archivo.solicitud_id === solicitud.id).length})</div>
+                                                <div className="p-2 h-10">{solicitud.comentario} ({solicitud.files?.length})</div>
                                                 <div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label></div>
                                             </div>
                                             <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
-                                                {archivos.some((archivo) => archivo.solicitud_id === solicitud.id) ? (
-                                                    archivos.filter((archivo) => archivo.solicitud_id === solicitud.id)
-                                                        .map((archivo) => (
-                                                            <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
-                                                                <div className="w-12 relative">
-                                                                    <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                                    {select == archivo.id ? (
-                                                                        <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
-                                                                    ) : null}
-                                                                </div>
-                                                                <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                                    {archivo.nombre}
-                                                                </span>
+                                                {solicitud.files ? (
+                                                    solicitud.files.map((archivo) => (
+                                                        <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
+                                                            <div className="w-12 relative">
+
+                                                                <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
+                                                                {select == archivo.id ? (
+                                                                    <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
+                                                                ) : null}
                                                             </div>
-                                                        ))
+                                                            <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
+                                                                {archivo.nombre}
+                                                            </span>
+                                                        </div>
+                                                    ))
                                                 ) : <div>No hay facturas subidas</div>}
                                             </div>
                                         </div>
@@ -195,39 +280,45 @@ export default function Panel({ auth, msj, archivos }) {
 
                 <div className="h-full w-full bg-[#f2f2f2]">
                     <h3 className="w-full bg-[#1e85e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Ventas
-                        <button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                    {(auth.user.rol_id == 2) ? ( <button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                             Crear Bloque +
-                            
-                        </button>
+
+                        </button>) : (
+                             
+                        <h1 className='h-9 px-2 gap-2  items-center '></h1>
+                        )}                                           
+                        
                     </h3>
 
                     <div className="flex flex-col h-5/6 overflow-hidden ">
                         {Object.keys(datos_f.tipo2).sort((a, b) => {
                             return new Date(b) - new Date(a);
                         }).map((year, index) => {
-                           
-                            return(
-                            <table key={"t2" + index} className="w-full text-left text-textgray">
-                                <thead onClick={() => abrir("2" + year)}>
-                                    <tr className="border-2 text-sm h-8 bg-gray-300">
-                                        <th className="p-2">Facturas {year} </th>
-                                    </tr>
-                                </thead>
 
-                                <div key={"tb2" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "2" + year ? 'h-[400px]' : "h-0"}  `}>
-                                    {datos_f.tipo2[year].map((solicitud) => (
-                                        <div key={solicitud.id} >
-                                            <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
+                            return (
+                                <table key={"t2" + index} className="w-full text-left text-textgray">
+                                    <thead onClick={() => abrir("2" + year)}>
+                                        <tr className="border-2 text-sm h-8 bg-gray-300">
+                                            <th className="p-2">Facturas {year} </th>
+                                        </tr>
+                                    </thead>
 
-                                                <div className="p-2 h-10">{solicitud.comentario} ({archivos.filter((archivo) => archivo.solicitud_id === solicitud.id).length})</div>
-                                                <div className="p-2 h-10">                                            <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label>
+                                    <div key={"tb2" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "2" + year ? 'h-[400px]' : "h-0"}  `}>
+
+                                        {datos_f.tipo2[year].map((solicitud) => (
+                                            <div key={solicitud.id} >
+                                                <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
+
+                                                    <div className="p-2 h-10">{solicitud.comentario} ({solicitud.files?.length})</div>
+                                                    <div className="p-2 h-10">                                            <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
-                                                {archivos.some((archivo) => archivo.solicitud_id === solicitud.id) ? (
-                                                    archivos.filter((archivo) => archivo.solicitud_id === solicitud.id)
-                                                        .map((archivo) => (
+                                                <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
+
+                                                    {solicitud.files ? (
+                                                        solicitud.files.map((archivo) => (
                                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
+
                                                                 <div className="w-12 relative">
                                                                     <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
                                                                     {select == archivo.id ? (
@@ -239,13 +330,14 @@ export default function Panel({ auth, msj, archivos }) {
                                                                 </span>
                                                             </div>
                                                         ))
-                                                ) : <div>No hay facturas subidas</div>}
+                                                    ) : <div>No hay facturas subidas</div>}
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </table>)}
-                        
+                                        ))}
+                                    </div>
+                                </table>)
+                        }
+
 
                         )}
 

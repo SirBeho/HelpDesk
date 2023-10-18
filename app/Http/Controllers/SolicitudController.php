@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EstadoSolicitud;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -43,7 +44,7 @@ class SolicitudController extends Controller
         if ($mensaje) {
             session()->forget('msj');
         }
-
+        
         return Inertia::render('Admsolicitudes/Index', [
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
@@ -56,9 +57,11 @@ class SolicitudController extends Controller
     {
         $mensaje = session('msj');
         Session::forget('msj');
+
         return Inertia::render('Panel/Index', [
-            'archivos' => Auth::user()->load("files")->files,
             'msj' => $mensaje,
+            'clientes' => User::where("rol_id",2)->get(),
+
         ]);
     }
 
@@ -94,8 +97,6 @@ class SolicitudController extends Controller
 
             session()->put('msj', ["success" => $respuesta->original['msj']]);
 
-           
-
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
 
@@ -104,7 +105,6 @@ class SolicitudController extends Controller
 
             $errormsj = $e->getMessage();
 
-               
             if (strpos($errormsj, 'Duplicate entry') !== false) {
                 preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
                 $duplicateValue = $matches[1] ?? '';
@@ -117,7 +117,6 @@ class SolicitudController extends Controller
                     session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
 
-               
             }
 
             // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
@@ -134,9 +133,7 @@ class SolicitudController extends Controller
 
     public function update(Request $request)
     {
-
         try {
-
 
             $validator = validator($request->all(), [
 
@@ -155,10 +152,8 @@ class SolicitudController extends Controller
 
             $Solicitud = Solicitud::findOrFail($request->id);
 
-
             $request->merge([
                 'solicitud_id' => $request->id,
-
                 'status_ant' => $Solicitud->status_id,
             ]);
 
@@ -169,7 +164,7 @@ class SolicitudController extends Controller
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
             }
-          
+        
             return redirect()->route('admsolicitudes')
             ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
             ->with('solicitud_id', $request->id);

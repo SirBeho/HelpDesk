@@ -19,33 +19,43 @@ class FileController extends Controller
    
     public function upload(Request $request) {
         $mensajes = [
-            'file.required' => 'No se ha seleccionado ningun archivo.',
-            'file.file' => 'El archivo debe ser un archivo válido.',
-            'file.mimes' => 'El archivo debe ser una imagen o un archivo PDF, Word o Exel.',
-            'file.max' => 'El archivo no debe ser mayor de 2MB.',
+            'file.*.required' => 'No se ha seleccionado ningun archivo.',
+            'file.*.file' => 'El archivo debe ser un archivo válido.',
+            'file.*.mimes' => 'El archivo debe ser una imagen o un archivo PDF, Word o Exel.',
+            'file.*.max' => 'El archivo no debe ser mayor de 2MB.',
             'solicitud_id.exists' => 'La solicitud no existe.',
             // 'nombre.*.unique_name' => 'El nombre esta duplicado.',
         ];
         
         $validator = validator($request->all(), [
-            'files.*' => 'required|file|mimes:jpeg,jpg,png,docx,xlsx|max:2048',
+            'file.*' => 'required|file|mimes:xlsx,jpeg,jpg,png,docx,pdf|max:2048',
             'nombre.*' => 'required|unique_name',
             'solicitud_id' => 'required|exists:solicitudes,id',
         ], $mensajes);
 
         if ($validator->fails()) {
-            $formattedErrors = ["duplicados" => [], "error" => []];
+            $formattedErrors = ["archivo_error" => [], "error" => [], "duplicados" => false];
         
             foreach ($validator->errors()->messages() as $key => $value) {
+               
                 if ($value[0] == "validation.unique_name") {
                     $index = substr($key, 7);
+                    var_dump("nombre duplicado");
                     $nombre = $request->nombre[$index];
-                    $formattedErrors["duplicados"][] =  $nombre;
-                } else {
-                    $formattedErrors["error"][] =  $value[0];
+                    $formattedErrors["duplicados"] = true;
+                    $formattedErrors["archivo_error"][] =  $nombre;  
+                }elseif (substr($key,0,4) =='file') {
+                    $index = substr($key, 5); 
+                    var_dump("file");
+                    $nombre = $request->nombre[$index];
+                    $formattedErrors["error"][] =  "(".($index+1).")-> ". $value[0];
+                    $formattedErrors["archivo_error"][] =  $nombre;  
+                }else{
+                    $formattedErrors["error"][] = $value[0];
                 }
+            
             }
-        
+           
             session()->put('msj', ['error' => $formattedErrors], 200);
         
             if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
@@ -133,7 +143,13 @@ class FileController extends Controller
     {
         try {
            
-            $data = File::where('id', $request->id)->where('user_id', Auth::user()->id)->firstOrFail();
+            if(Auth::check()){
+                if(Auth::user()->rol_id != 2){
+                    $data = File::where('id', $request->id)->firstOrFail();
+                }else{
+                   $data = File::where('id', $request->id)->where('user_id', Auth::user()->id)->firstOrFail();
+                };
+            }
             $name = $data->referencia.'.'.$data->extencion;
            
             if (Storage::disk('uploads')->exists($name)) {

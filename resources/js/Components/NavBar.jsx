@@ -23,24 +23,23 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [duplicados, setDuplicados] = useState([]);
+  const [archivo_error, setArchivo_error] = useState([]);
 
-  
+
   useEffect(() => {
+   
     setLoading(false);
+
     if (!(msj?.error == null || msj?.error == [])) {
 
-
-      if (msj?.error.duplicados?.length > 0) {
-
-        setDuplicados(msj.error.duplicados);
-
+      setArchivo_error(msj.error.archivo_error);
+      if (msj?.error.duplicados) {
         setErrorMessage([...msj?.error.error, "Algunos nombres están duplicados"])
       } else {
-        setErrorMessage(msj?.error.error);
+        setErrorMessage(msj?.error?.error);
       }
     } else if (msj?.success) {
-      setDuplicados([]);
+      setArchivo_error([]);
       setErrorMessage([]);
       limpiar();
     }
@@ -55,8 +54,8 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
     post(route('upload'), {
       onSuccess: (e) => {
-        console.log(e.msj)
-        console.log(e.props.msj)
+  
+        //console.log(e.props.msj)
       },
       onError: (e) => {
         // console.log(e)
@@ -68,7 +67,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
   };
 
   const limpiar = (e) => {
-
+    setErrorMessage([]);
     setData({
       file: [],
       nombre: [],
@@ -92,6 +91,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
           Cargar documento
 
           <input
+            accept=".xlsx, .jpeg, .jpg, .png, .docx, .pdf"
             required
             multiple
             className="hidden"
@@ -260,7 +260,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                       <li className="flex gap-3 " key={index}>
                         <img src={`assets/svg/${data.extencion[index]}.svg`} className="w-8" alt=" " />
                         <input type="text"
-                          className={`rounded-md py-0 ${duplicados.includes(data.nombre[index]) ? 'bg-red-300 text-black' : ''}`}
+                          className={`rounded-md py-0 ${archivo_error.includes(data.nombre[index]) ? 'bg-red-300 text-black' : ''}`}
                           value={data.nombre[index]}
                           onChange={(e) => {
                             const newNombres = [...data.nombre];
