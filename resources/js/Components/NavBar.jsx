@@ -10,6 +10,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isfactura, setIsfactura] = useState(window.location.pathname == "/panel");
   const { data, setData, post, processing, errors, reset } = useForm({
     file: [],
     nombre: [],
@@ -19,6 +20,9 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
   useEffect(() => {
     setData("solicitud_id", solicitud_id)
+
+    const soli= user.solicitudes.find((soli) => soli.id == solicitud_id);
+
   }, [solicitud_id]);
 
 
@@ -195,7 +199,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
         <form onSubmit={submit} className="flex flex-col w-full gap-4 text-textgray p-4">
           <div className="flex gap-4 justify-between ">
             <label className="text-xs flex flex-col  w-full">
-              Solicitud
+                  {isfactura ? "Factura" : "Solicitud" }  
               <select
                 required
                 name="solicitud_id"
@@ -212,13 +216,16 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                   return new Date(a.created_at) - new Date(b.created_at);
                 }).map((solicitud) => {
                   if (solicitud.status_id < 4) {
-                    if (solicitud.tipo_id < 3) {
+
+
+
+                    if (solicitud.tipo_id < 3 && isfactura) {
                       return (
                         <option key={solicitud.id} value={solicitud.id}>
                           Facturas {solicitud.comentario}{solicitud.tipo_id == 1 ? " - Compras" : " - ventas"}
                         </option>
                       );
-                    } else {
+                    } else if(!isfactura) {
                       return (
                         <option key={solicitud.id} value={solicitud.id}>
                           {solicitud.numero} - {solicitud.tipo.nombre}
