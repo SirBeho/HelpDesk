@@ -255,7 +255,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                                 <div className="w-16 relative">
                                                     <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
                                                    
-                                                   {archivo.confidencial ? (<img src="/assets/svg/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+                                                   {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
 
                                                     {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
                                                         <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />

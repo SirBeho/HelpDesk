@@ -272,7 +272,10 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                     {data.file.map((file, index) => (
 
                       <li className="flex gap-3 " key={index}>
+                        <div className="relative">
                         <img src={`assets/svg/${data.extencion[index]}.svg`} className="w-8" alt=" " />
+                        {data.confidencial[index] ? (<img src={`assets/confidencial.png`} className="absolute top-0 left-0 " alt=" " />) : null}
+                        </div>
                         <input type="text"
                           className={`rounded-md py-0 ${archivo_error.includes(data.nombre[index]) ? 'bg-red-300 text-black' : ''}`}
                           value={data.nombre[index]}
