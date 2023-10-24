@@ -208,7 +208,9 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                 onChange={(e) => setData("solicitud_id", e.target.value)}
                 className="h-9 rounded-md  outline-none px-2"
               >
-                <option value="">Seleccione Solicitud</option>
+
+          
+                <option value="">Seleccione la {isfactura ? "factura" : "solicitud" }  </option>
 
 
 
