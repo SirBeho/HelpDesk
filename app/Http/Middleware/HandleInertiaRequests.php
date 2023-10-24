@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
             } else {
                 $user = auth()->user();
                 $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user','files.user');
-                        }
+             }
         }
         
         return [

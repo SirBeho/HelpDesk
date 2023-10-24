@@ -38,9 +38,9 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     
 
     useEffect(() => {
-        console.log(solicitud_id,"hola")
+        //console.log(solicitud_id,"hola")
         if (solicitud_id && !open ) {
-            console.log(solicitud_id,"hol2a")
+            //console.log(solicitud_id,"hol2a")
             abrir(parseInt(solicitud_id));
         }
     }, [solicitud_id]);
@@ -48,14 +48,14 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
   
 
     const abrir = (solicitudId) => {    
-        console.log("abriendo")
+        //console.log("abriendo")
         if (open == solicitudId) {
-            console.log("cerrar todo")
+            //console.log("cerrar todo")
             setOpen(0);
             setdato(null);
 
         } else {
-            console.log("corrido")
+            //console.log("corrido")
             setOpen(solicitudId);
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === solicitudId
@@ -107,7 +107,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data)
+        //console.log(data)
        
         post(route("solicitud.update"));
     };

@@ -11,7 +11,7 @@ export default function Solicitudes({ auth, datos, msj }) {
     useEffect(() => {
 
         setShow(msj?.success != undefined);
-        console.log(msj)
+        //console.log(msj)
     }, [msj]);
 
     const [esTipo, setEsTipo] = useState(0);
