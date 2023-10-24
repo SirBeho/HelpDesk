@@ -50,12 +50,12 @@ export default function Panel({ auth, msj, clientes }) {
     });
 
     const cliente = (id) => {
-        console.log(id)
+        //console.log(id)
         const clienteseleccionado = clientes.find(
             (cliente) => cliente.id == id
         );
         setOpenCliente(clienteseleccionado)
-        console.log(clienteseleccionado)
+        //console.log(clienteseleccionado)
     };
 
 
