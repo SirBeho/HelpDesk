@@ -247,20 +247,26 @@ export default function Panel({ auth, msj, clientes }) {
                                             </div>
                                             <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
                                                 {solicitud.files ? (
-                                                    solicitud.files.map((archivo) => (
+                                                    solicitud.files.map((archivo) =>{
+                                                        const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
+                                                       return(
                                                         <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
                                                             <div className="w-12 relative">
-
                                                                 <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                                {select == archivo.id ? (
+                                                               
+                                                               {archivo.confidencial ? (<img src="/assets/svg/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+            
+                                                                {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
                                                                     <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
                                                                 ) : null}
+                                                                
                                                             </div>
                                                             <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
                                                                 {archivo.nombre}
                                                             </span>
+                                                           
                                                         </div>
-                                                    ))
+                                                    )}) 
                                                 ) : <div>No hay facturas subidas</div>}
                                             </div>
                                         </div>
@@ -312,20 +318,26 @@ export default function Panel({ auth, msj, clientes }) {
                                                 <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
 
                                                     {solicitud.files ? (
-                                                        solicitud.files.map((archivo) => (
+                                                        solicitud.files.map((archivo) =>{
+                                                            const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
+                                                           return(
                                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
-
                                                                 <div className="w-12 relative">
                                                                     <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                                    {select == archivo.id ? (
+                                                                   
+                                                                   {archivo.confidencial ? (<img src="/assets/svg/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+                
+                                                                    {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
                                                                         <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
                                                                     ) : null}
+                                                                    
                                                                 </div>
                                                                 <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
                                                                     {archivo.nombre}
                                                                 </span>
+                                                               
                                                             </div>
-                                                        ))
+                                                        )}) 
                                                     ) : <div>No hay facturas subidas</div>}
                                                 </div>
                                             </div>

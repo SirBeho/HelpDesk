@@ -15,6 +15,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
     file: [],
     nombre: [],
     extencion: [],
+    confidencial: [],
     solicitud_id: solicitud_id
   });
 
@@ -76,6 +77,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
       file: [],
       nombre: [],
       extencion: [],
+      confidencial: [],
       solicitud_id: solicitud_id
     });
 
@@ -106,12 +108,15 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
               const newFiles = Array.from(e.target.files);
               const newNombres = newFiles.map((file) => file.name.split('.')[0]);
               const newExtensiones = newFiles.map((file) => file.name.split('.').pop());
+              const newConfidencial = newFiles.map((file) => false);
+             
 
               setData({
                 ...data,
                 file: [...data.file, ...newFiles],
                 nombre: [...data.nombre, ...newNombres],
                 extencion: [...data.extencion, ...newExtensiones],
+                confidencial: [...data.confidencial, ...newConfidencial],
               });
             }}
           />
@@ -277,6 +282,12 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                             setData({ ...data, nombre: newNombres });
                           }}
                         />
+                        <input type="checkbox" name="confidencial" id="confidencial" 
+                          onChange={(e) => {
+                            const newConfidencial = [...data.confidencial];
+                            newConfidencial[index] = e.target.checked;
+                            setData({ ...data, confidencial: newConfidencial });
+                          }} />
                       </li>
                     ))}
                   </ul>
