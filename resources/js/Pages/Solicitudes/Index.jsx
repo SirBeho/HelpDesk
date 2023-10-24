@@ -11,6 +11,7 @@ export default function Solicitudes({ auth, datos, msj }) {
     useEffect(() => {
 
         setShow(msj?.success != undefined);
+        console.log(msj)
     }, [msj]);
 
     const [esTipo, setEsTipo] = useState(0);
@@ -65,13 +66,13 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                 <div className="text-center relative mb-2 ">
                     <h1 className="mt-14 mb-8 font-semibold">{msj?.success || msj?.error}</h1>
-
-                    <div className="hover:scale-110">
-                        <Link href={route("admsolicitudes", { id: 1 })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                    {msj?.success && (
+                         <div className="hover:scale-110">
+                        <Link href={route("admsolicitudes", { id: msj.id })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
                             Ver
                         </Link>
-
-                    </div>
+                    </div>)}
+                   
 
                 </div>
             </Modal>

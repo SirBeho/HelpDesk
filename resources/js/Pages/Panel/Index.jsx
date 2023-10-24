@@ -214,7 +214,7 @@ export default function Panel({ auth, msj, clientes }) {
             <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] flex gap-4  m-6 rounded-md ">
 
                 <div className="h-full w-full bg-[#f2f2f2]">
-                    <h3 className="w-full bg-[#1ec0e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Compras
+                    <h3 className="w-full bg-[#1ec0e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de costos/gastos
                         {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 1) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                             Crear Bloque +
 
@@ -355,7 +355,8 @@ export default function Panel({ auth, msj, clientes }) {
                     <div className='flex gap-4'>
 
                         <label className="text-base flex flex-col w-2/3">
-                            Seleccione el mes
+                        <span className='whitespace-nowrap'>Seleccione el mes </span>
+                          
                             <select
                                 required
                                 name="month"
@@ -364,7 +365,7 @@ export default function Panel({ auth, msj, clientes }) {
                                 onChange={(e) => setData("month", e.target.value)}
                                 className="h-9 rounded-md outline-none px-2"
                             >
-                                <option value="">Seleccione servicio</option>
+                                <option value="" disabled></option>
                                 <option value="01">Enero</option>
                                 <option value="02">Febrero</option>
                                 <option value="03">Marzo</option>
@@ -380,17 +381,17 @@ export default function Panel({ auth, msj, clientes }) {
                             </select>
                         </label>
 
-                        <label className="text-base flex flex-col w-1/3">
-                            Seleccione el Año
+                        <label className="text-base flex flex-col w-fit">
+                            <span className='whitespace-nowrap'>Seleccione el Año </span>
                             <select
                                 required
                                 name="year"
                                 id="year"
                                 value={data.year}
                                 onChange={(e) => setData("year", e.target.value)}
-                                className="h-9 rounded-md outline-none px-2"
+                                className="h-9  rounded-md outline-none px-2"
                             >
-                                <option value="">Seleccione servicio</option>
+                                <option value="" disabled></option>
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
                                 <option value="2025">2025</option>

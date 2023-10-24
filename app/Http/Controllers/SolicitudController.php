@@ -39,12 +39,16 @@ class SolicitudController extends Controller
         $mensaje = session('msj');
         $solicitud_id = session('solicitud_id');
 
-        $solicitud_id &&  session()->forget('solicitud_id');
+        $solicitud_id && session()->forget('solicitud_id');
+
+        if(!$solicitud_id){
+            $solicitud_id =  $request->id;
+        }
 
         if ($mensaje) {
             session()->forget('msj');
         }
-        
+                
         return Inertia::render('Admsolicitudes/Index', [
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
@@ -99,7 +103,7 @@ class SolicitudController extends Controller
 
             $respuesta = $log->create($request);
 
-            session()->put('msj', ["success" => $respuesta->original['msj']]);
+            session()->put('msj', ["success" => $respuesta->original['msj'],"id" => $Solicitud->id]);
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
