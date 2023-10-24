@@ -267,8 +267,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                                 </span>
                                                
                                             </div>
-                                        )
-                                                    })}
+                                        )})}
 
 
                                     </div>
