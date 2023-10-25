@@ -3,7 +3,7 @@ import React from 'react'
 export default function Register({ roles, setData, isCliente, data, submit, changeRol, hideModal }) {
     return (
         <>
-            <form onSubmit={submit} className="flex flex-col gap-4 text-textgray">
+            <form  className="flex flex-col gap-4 text-textgray">
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-3/5">
                         <label htmlFor="name" className="text-xs">
@@ -86,7 +86,8 @@ export default function Register({ roles, setData, isCliente, data, submit, chan
                     Cancelar
                 </button>
 
-                <button className="border py-1 w-36 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end mr-5 mt-5">
+                <button onClick={submit}
+                className="border py-1 w-36 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end mr-5 mt-5">
                     Registrar
                 </button>
             </div>
