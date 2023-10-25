@@ -15,6 +15,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
     file: [],
     nombre: [],
     extencion: [],
+    confidencial: [],
     solicitud_id: solicitud_id
   });
 
@@ -76,6 +77,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
       file: [],
       nombre: [],
       extencion: [],
+      confidencial: [],
       solicitud_id: solicitud_id
     });
 
@@ -106,12 +108,15 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
               const newFiles = Array.from(e.target.files);
               const newNombres = newFiles.map((file) => file.name.split('.')[0]);
               const newExtensiones = newFiles.map((file) => file.name.split('.').pop());
+              const newConfidencial = newFiles.map((file) => false);
+             
 
               setData({
                 ...data,
                 file: [...data.file, ...newFiles],
                 nombre: [...data.nombre, ...newNombres],
                 extencion: [...data.extencion, ...newExtensiones],
+                confidencial: [...data.confidencial, ...newConfidencial],
               });
             }}
           />
@@ -208,7 +213,9 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                 onChange={(e) => setData("solicitud_id", e.target.value)}
                 className="h-9 rounded-md  outline-none px-2"
               >
-                <option value="">Seleccione Solicitud</option>
+
+          
+                <option value="">Seleccione la {isfactura ? "factura" : "solicitud" }  </option>
 
 
 
@@ -265,7 +272,10 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                     {data.file.map((file, index) => (
 
                       <li className="flex gap-3 " key={index}>
+                        <div className="relative">
                         <img src={`assets/svg/${data.extencion[index]}.svg`} className="w-8" alt=" " />
+                        {data.confidencial[index] ? (<img src={`assets/confidencial.png`} className="absolute top-0 left-0 " alt=" " />) : null}
+                        </div>
                         <input type="text"
                           className={`rounded-md py-0 ${archivo_error.includes(data.nombre[index]) ? 'bg-red-300 text-black' : ''}`}
                           value={data.nombre[index]}
@@ -275,6 +285,12 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
                             setData({ ...data, nombre: newNombres });
                           }}
                         />
+                        <input type="checkbox" name="confidencial" id="confidencial" 
+                          onChange={(e) => {
+                            const newConfidencial = [...data.confidencial];
+                            newConfidencial[index] = e.target.checked;
+                            setData({ ...data, confidencial: newConfidencial });
+                          }} />
                       </li>
                     ))}
                   </ul>
