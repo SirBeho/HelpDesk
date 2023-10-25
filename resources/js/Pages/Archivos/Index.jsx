@@ -25,7 +25,7 @@ export default function archivos({ auth }) {
         },
       });
 
-      console.log('Archivo subido con éxito', response.data);
+      //console.log('Archivo subido con éxito', response.data);
     } catch (error) {
       console.error('Error al subir el archivo', error);
     }

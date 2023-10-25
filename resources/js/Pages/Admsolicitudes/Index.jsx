@@ -8,8 +8,6 @@ import Modal from "@/Components/Modal";
 
 export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id, statusList }) {
 
-
- 
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
@@ -19,23 +17,17 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     const { data, setData, post } = useForm(null);
     const [show, setShow] = useState(msj != null);
     const [isOpenModalStatus, setIsOpenModalStatus] = useState(false);
-   
+
     useEffect(() => {
         setDatos_f(solicitudes);
-        if(open){
+        if (open) {
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === open
             );
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
         }
-     }, [auth.user.solicitudes]);
-
-     useEffect(() => {
-        if (solicitud_id) {
-            abrir(parseInt(solicitud_id));
-        }
-    },[solicitud_id]);
+    }, [auth.user.solicitudes]);
 
     useEffect(() => {
         if (msj?.error == null || msj?.error == []) {
@@ -43,13 +35,27 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
             setShow(msj != null);
         }
     }, [msj]);
+    
 
-    const abrir = (solicitudId) => {
+    useEffect(() => {
+        //console.log(solicitud_id,"hola")
+        if (solicitud_id && !open ) {
+            //console.log(solicitud_id,"hol2a")
+            abrir(parseInt(solicitud_id));
+        }
+    }, [solicitud_id]);
+
+  
+
+    const abrir = (solicitudId) => {    
+        //console.log("abriendo")
         if (open == solicitudId) {
+            //console.log("cerrar todo")
             setOpen(0);
             setdato(null);
 
         } else {
+            //console.log("corrido")
             setOpen(solicitudId);
             const solicitudSeleccionada = solicitudes.find(
                 (solicitud) => solicitud.id === solicitudId
@@ -101,14 +107,17 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
     const submit = (e) => {
         e.preventDefault();
-        setOpen(0);
-        setdato(null);
+        //console.log(data)
+       
         post(route("solicitud.update"));
     };
+                                          
+  
+
 
     return (
         <AuthenticatedLayout user={auth.user}
-        msj={msj}
+            msj={msj}
             countNotificaciones={auth.countNotificaciones}
             solicitud_id={open}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
@@ -138,9 +147,9 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                     <div className="flex flex-col gap-3 w-[520px] p-4 bg-white">
                         {dato ? (
                             <>
-                          
+
                                 {(dato.status_id == 1 && auth.user.id == dato.user.id) &&
-                              
+
                                     <div className="font-bold w-full flex justify-end">
                                         <button onClick={() => setEdit(true)} className="bg-blue-400 px-2 py-1 rounded-lg font-semibold text-white"> Editar </button>
                                     </div>
@@ -214,7 +223,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                                                     </svg>
                                                 </span>)}
-                                                
+
                                             </td>
                                         </tr>
                                     </tbody>
@@ -372,6 +381,18 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                                 id="comentario"
                                                 className="w-full resize-none h-28 p-3 rounded-md outline-none "
                                             ></textarea>
+                                        </div>
+
+
+                                       
+                                        <div className="flex flex-col">
+                                        {msj?.error && 
+                                            msj.error.map((msj,index) => (
+                                                <h1 key={index} className="flex w-full text-red-400">
+                                                {msj}
+                                            </h1>
+                                               ))
+                                        }
                                         </div>
 
                                         <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-center justify-center mr-5 mt-5">
