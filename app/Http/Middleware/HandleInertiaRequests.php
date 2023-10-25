@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\NotificacionController;
 use App\Models\Notificacion;
 use App\Models\Solicitud;
 use Illuminate\Http\Request;
@@ -53,7 +54,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                'user' => $user,
-               'countNotificaciones' => auth()->check() ?  Notificacion::where('receptor_id', Auth::user()->id)->where('status', 0)->count() : null,
+               'countNotificaciones' => NotificacionController::countNotification()
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

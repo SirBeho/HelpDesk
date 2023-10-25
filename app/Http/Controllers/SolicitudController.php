@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EstadoSolicitud;
+use App\Models\Notificacion;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
 use App\Models\User;
@@ -44,7 +45,7 @@ class SolicitudController extends Controller
         if ($mensaje) {
             session()->forget('msj');
         }
-        
+
         return Inertia::render('Admsolicitudes/Index', [
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
@@ -60,7 +61,7 @@ class SolicitudController extends Controller
 
         return Inertia::render('Panel/Index', [
             'msj' => $mensaje,
-            'clientes' => User::where("rol_id",2)->get(),
+            'clientes' => User::where("rol_id", 2)->get(),
 
         ]);
     }
@@ -91,6 +92,14 @@ class SolicitudController extends Controller
                 'solicitud_id' =>  $Solicitud->id,
             ]);
 
+            Notificacion::create(
+                [
+                    'solicitud_id' =>  $Solicitud->id,
+                    'emisor_id' => Auth::user()->id,
+                    'message' => "Has recibido una nueva solicitud"         
+                ]
+            );
+
             $log = new LogSolicitudController();
 
             $respuesta = $log->create($request);
@@ -112,11 +121,10 @@ class SolicitudController extends Controller
                 if ($duplicateKey == 'solicitudes_tipo_id_user_id_created_at_unique') {
                     $fecha = Carbon::parse(substr($duplicateValue, 4))->locale('es');
                     session()->put('msj', ["errord" => "Ya existe un bloque para " . $duplicateValue]);
-                }else{
+                } else {
 
                     session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
-
             }
 
             // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
@@ -151,10 +159,13 @@ class SolicitudController extends Controller
             }
 
             $Solicitud = Solicitud::findOrFail($request->id);
+            $status_ant = EstadoSolicitud::find($Solicitud->status_id);
+            $status_act = EstadoSolicitud::find($request->status_id);
 
             $request->merge([
                 'solicitud_id' => $request->id,
                 'status_ant' => $Solicitud->status_id,
+                'message' => "El estado de la solicitud No. $request->numero Ha cambiado de $status_ant->nombre a $status_act->nombre"
             ]);
 
             $Solicitud->update($request->all());
@@ -163,12 +174,20 @@ class SolicitudController extends Controller
             if ($request->status_ant != $request->status_id) {
                 $log = new LogSolicitudController();
                 $respuesta = $log->create($request);
-            }
-        
-            return redirect()->route('admsolicitudes')
-            ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
-            ->with('solicitud_id', $request->id);
 
+                Notificacion::create(
+                    [
+                        'solicitud_id' => $request->id,
+                        'emisor_id' => Auth::user()->id,
+                        'receptor_id' => $request->user_id, 
+                        'message' => $request->message          
+                    ]
+                );
+            }
+
+            return redirect()->route('admsolicitudes')
+                ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
+                ->with('solicitud_id', $request->id);
         } catch (ModelNotFoundException $e) {
 
             return redirect()->route('admsolicitudes')->with('msj', ['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
