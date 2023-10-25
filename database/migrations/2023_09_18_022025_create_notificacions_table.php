@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('solicitud_id');
             $table->unsignedBigInteger('emisor_id');
-            $table->unsignedBigInteger('receptor_id')->nullable();
+            $table->unsignedBigInteger('receptor_id')->nullable()->default(null);
             $table->string('message');
             $table->boolean('status')->default(false);
             $table->timestamps();

@@ -4,7 +4,6 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 export default function Panel({ auth, msj, clientes }) {
 
-
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id < 3);
 
 
@@ -12,9 +11,7 @@ export default function Panel({ auth, msj, clientes }) {
         return new Date(a.created_at) - new Date(b.created_at);
     });
 
-
     const [opencliente, setOpenCliente] = useState(auth.user);
-
 
     const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
         const year = new Date(solicitud.created_at).getFullYear();
