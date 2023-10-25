@@ -11,23 +11,23 @@ class Notificacion extends Model
     use HasFactory;
     protected $table = "notificaciones";
     protected $fillable = [
-     
+        'solicitud_id',
         'emisor_id',
         'receptor_id',
-        'message', 
+        'message',
         'read',
         'status',
     ];
 
 
-  
+
     public function emisor(): BelongsTo
     {
-        return $this->BelongsTo(User::class,'emisor_id');
+        return $this->BelongsTo(User::class, 'emisor_id');
     }
-    
+
     public function receptor(): BelongsTo
     {
-        return $this->BelongsTo(User::class,'receptor_id');
+        return $this->BelongsTo(User::class, 'receptor_id');
     }
 }

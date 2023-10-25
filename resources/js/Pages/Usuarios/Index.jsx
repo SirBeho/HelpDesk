@@ -50,7 +50,6 @@ export default function Usuarios({ auth, users, roles }) {
     })
 
     setUpdateUser(true)
-    setShow(true)
     setSelectedUser(user[0])
     setData('rol_id', user[0].rol_id)
 
@@ -63,7 +62,6 @@ export default function Usuarios({ auth, users, roles }) {
     })
 
     setDeleteUser(true)
-    setShow(true)
     setSelectedUser(user[0])
 
   }
@@ -84,21 +82,20 @@ export default function Usuarios({ auth, users, roles }) {
   }
 
   const submit = (e) => {
-    e.preventDefault();
+     
 
     setNewUser(false);
     setLoading(true);
 
     post(route('register'), {
       onSuccess: () => {
-        setLoading(true);
+        setLoading(false);
       }
     });
   };
 
   const create = () => {
     setNewUser(true);
-    setShow(true);
   };
 
   const update = (e) => {
@@ -123,7 +120,6 @@ export default function Usuarios({ auth, users, roles }) {
     setLoading(true);
     post(route('usuario.delete', selectedUser.id), {
       onSuccess: () => {
-        setShow(false);
         setLoading(false);
         setSelectedUser({});
         setSortingData(users);
