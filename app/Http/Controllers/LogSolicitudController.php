@@ -61,12 +61,12 @@ class LogSolicitudController extends Controller
                 
             }else if($request->status_ant){
                 $request->merge([
-                    'descripcion' => "Se ah actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
+                    'descripcion' => "Se ha actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
                 ]);
             }else{
                 $soli = Solicitud::find($request->solicitud_id);
                 $request->merge([
-                    'descripcion' => "Se ah creado la solicitud Numero: ".$soli->numero,
+                    'descripcion' => "Se ha creado la solicitud Numero: ".$soli->numero,
                 ]);
             }
 

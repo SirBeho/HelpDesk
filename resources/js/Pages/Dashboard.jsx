@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import dashimg from "/public/assets/dashImg.jpg";
 
 export default function Dashboard({ auth  }) {
-
+      
     return (
         <AuthenticatedLayout
             countNotificaciones={auth.countNotificaciones}
