@@ -21,12 +21,20 @@ class NotificacionController extends Controller
     {
 
         $user_id = Auth::user()->id;
+        if (Auth::user()->rol_id === 2) {
+            $data = Notificacion::with('emisor')
+                ->where('receptor_id', $user_id)
+                ->where('status', 0)
+                ->get();
+            $notificaciones = [];
+        } else {
+            $data = Notificacion::with('emisor')
+                ->where('receptor_id', null) //verificar esta funcion creando solicitudes en el clientes deben cargarse en el admin
+                ->where('status', 0)
+                ->get();
+            $notificaciones = [];
+        }
 
-        $data = Notificacion::with('emisor')
-            ->where('receptor_id', $user_id)
-            ->where('status', 0)
-            ->get();
-        $notificaciones = [];
 
         foreach ($data as $value) {
             $notificaciones[] = [
@@ -73,10 +81,8 @@ class NotificacionController extends Controller
         try {
 
             $validator = validator($request->all(), [
-                'emisor_id' => 'required|exists:users,id',
-                'receptor_id' => 'required|exists:users,id',
+                'user_id' => 'required|exists:users,id',
                 'message ' => 'required',
-                'read ' => 'required|boolean'
             ]);
 
             if ($validator->fails()) {
@@ -158,5 +164,18 @@ class NotificacionController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
+    }
+
+    public static function countNotification()
+    {
+        if (auth()->check()) :
+
+        $countnotification =    Auth::user()->rol_id === 2 ?
+                Notificacion::where('receptor_id', Auth::user()->id)
+                ->where('status', 0)->count() : Notificacion::where('receptor_id', null)
+                ->where('status', 0)->count();
+
+            return $countnotification;
+        endif;
     }
 }
