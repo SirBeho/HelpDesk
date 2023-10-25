@@ -62,7 +62,7 @@ class FileController extends Controller
             
             }
            
-            session()->put('msj', ['error' => $formattedErrors], 200);
+            session()->put('msj', ['error' => $formattedErrors]);
         
             if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
                 return redirect('panel');
