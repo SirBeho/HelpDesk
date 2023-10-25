@@ -8,6 +8,9 @@ import Modal from "@/Components/Modal";
 
 export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id, statusList }) {
 
+
+
+        console.log(msj)
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
@@ -111,8 +114,6 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
        
         post(route("solicitud.update"));
     };
-                                          
-  
 
 
     return (
@@ -133,7 +134,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
                 <div className="grid grid-cols-2">
                     <ul className="flex flex-col gap-4 overflow-hidden hover:overflow-y-scroll w-full h-full max-h-[740px]">
-                        {datos_f.map((solicitud) => (
+                        
+                         {datos_f?.length ? (datos_f.map((solicitud) => (
                             <Solicitud
                                 adm={auth.user.id != 2}
                                 key={solicitud.id}
@@ -141,12 +143,13 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                 click={() => abrir(solicitud.id)}
                                 open={open}
                             />
-                        ))}
+                        ))):(<h1>No hay Solicitudes</h1>)}
                     </ul>
 
-                    <div className="flex flex-col gap-3 w-[520px] p-4 bg-white">
+                   
                         {dato ? (
-                            <>
+                             <div className="flex flex-col gap-3 w-[520px] p-4 bg-white">
+                            
 
                                 {(dato.status_id == 1 && auth.user.id == dato.user.id) &&
 
@@ -388,10 +391,8 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             ></textarea>
                                         </div>
 
-
-                                       
                                         <div className="flex flex-col">
-                                        {msj?.error && 
+                                        {(msj?.error && Array.isArray(msj?.error)) && 
                                             msj.error.map((msj,index) => (
                                                 <h1 key={index} className="flex w-full text-red-400">
                                                 {msj}
@@ -406,9 +407,9 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                     </form>
 
                                 </Modal>
-                            </>
-                        ) : null}
-                    </div>
+                          
+                        </div>) : null}
+                    
                 </div>
             </div>
 

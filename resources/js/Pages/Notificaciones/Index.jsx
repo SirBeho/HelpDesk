@@ -3,10 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from "@inertiajs/react";
 export default function Notificaciones({ auth, notificaciones }) {
     const { post } = useForm({});
-
+   
     const selectNotification = (id, n_id) => {
         post(route("notificaciones.update", { id: id, n_id: n_id }));
     }
+    
     return (
         <AuthenticatedLayout
             countNotificaciones={auth.countNotificaciones}
@@ -23,9 +24,10 @@ export default function Notificaciones({ auth, notificaciones }) {
 
                 <ul className="flex flex-col gap-3 p-6">
 
-                    {notificaciones && (
+                    {notificaciones?.length ? (
                         notificaciones.map(notificacion => (
                             <Notifications
+                                user={auth.user}
                                 key={notificacion.id}
                                 emisor={notificacion.emisor}
                                 mensaje={notificacion.mensaje}
@@ -34,7 +36,7 @@ export default function Notificaciones({ auth, notificaciones }) {
                                 conf={false}
                             />
                         ))
-                    )}
+                    ):(<h1>No hay Notificaciones</h1>)}
 
                 </ul>
 
