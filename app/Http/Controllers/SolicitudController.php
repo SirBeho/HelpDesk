@@ -85,7 +85,7 @@ class SolicitudController extends Controller
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
                 'status_id' => 'exists:estado_solicitudes,id',
-                'comentario' => 'required',
+                'descripcion' => 'required',
             ]);
            
 
@@ -163,7 +163,7 @@ class SolicitudController extends Controller
                 'created_at' => 'La fecha de creacion no es valida.',
                 'user_id' => 'El usuario no existe.',
                 'status_id' => 'El estado seleccionado no existe.',
-                'comentario' => 'El comentario no puede estar en blanco.',
+                'descripcion' => 'La descripcion no puede estar en blanco.',
             ];
             
             $validator = validator($request->all(), [
@@ -173,7 +173,7 @@ class SolicitudController extends Controller
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
                 'status_id' => 'exists:estado_solicitudes,id',
-                'comentario' => 'required',
+                'descripcion' => 'required',
 
             ],$mensajes);
 

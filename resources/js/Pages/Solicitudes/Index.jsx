@@ -17,7 +17,7 @@ export default function Solicitudes({ auth, datos, msj }) {
     const [esTipo, setEsTipo] = useState(0);
     const { data, setData, post, processing, errors, reset } = useForm({
         tipo_id: "",
-        comentario: "",
+        descripcion: "",
     });
 
     const filtrarPorTipo = (tipo) => {
@@ -168,16 +168,16 @@ export default function Solicitudes({ auth, datos, msj }) {
                     </label>
 
                     <div className="flex flex-col">
-                        <label htmlFor="comentario" className=" text-xl" >Favor detalle su solicitud:</label>
+                        <label htmlFor="descripcion" className=" text-xl" >Favor detalle su solicitud:</label>
 
                         <textarea
                             required
-                            placeholder="Escribe tu comentario"
-                            name="comentario"
-                            id="comentario"
-                            value={data.comentario}
+                            placeholder="Escribe tu descripcion"
+                            name="descripcion"
+                            id="descripcion"
+                            value={data.descripcion}
                             onChange={(e) =>
-                                setData("comentario", e.target.value)
+                                setData("descripcion", e.target.value)
                             }
                             className="w-full resize-none h-44 p-3 outline-none mt-2"
                         ></textarea>

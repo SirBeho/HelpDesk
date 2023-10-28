@@ -41,10 +41,10 @@ class HandleInertiaRequests extends Middleware
 
         if ($authUser) {
             if ($authUser->rol_id == 2) {
-                $user = $authUser->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user', 'solicitudes.files.user');
+                $user = $authUser->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user', 'solicitudes.files.user','solicitudes.comentarios');
             } else {
                 $user = auth()->user();
-                $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user','files.user');
+                $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user','files.user','comentarios');
              }
         }
         
