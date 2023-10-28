@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProfileController;
@@ -75,6 +76,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');
     Route::post('/download', [FileController::class, 'download'])->name('download');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+
+    Route::post('/coment', [ComentarioController::class, 'create'])->name('comentario.create');
+    Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
 
 });
 

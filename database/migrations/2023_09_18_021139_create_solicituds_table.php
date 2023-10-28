@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tipo_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('status_id');
-            $table->text('comentario');
+            $table->text('descripcion');
             $table->string('status')->default(1);
             $table->timestamps();
             $table->foreign('tipo_id')->references('id')->on('tipo_solicitudes');

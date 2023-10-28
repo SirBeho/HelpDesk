@@ -26,7 +26,7 @@ export const Solicitud = ({data,click,open,adm}) => {
 
                 <p className="font-medium text-sm">
                 {data.tipo.nombre}
-                {data.tipo_id == 1 ? " "+data.comentario : ""}
+                {data.tipo_id == 1 ? " "+data.descripcion : ""}
                 </p>
                     
                 <div className='flex justify-between pe-5 '>

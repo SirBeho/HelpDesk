@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `solicitudes` (
   `tipo_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `status_id` bigint(20) UNSIGNED NOT NULL,
-  `comentario` text NOT NULL,
+  `descripcion` text NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
