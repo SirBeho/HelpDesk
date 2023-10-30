@@ -67,8 +67,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('form');
 
     Route::get('/reportes', function () {
-        return Inertia::render('Reportes/Index');
+
+        
+        return Inertia::render('Reportes/Index',[
+            'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
+        ]);
+       
     })->name('reportes');
+
+    Route::get('/reportes1', function () {
+        return Inertia::render('Reportes/reporte_documentos');
+       
+    });
+    Route::get('/reportes2', function () {
+        return Inertia::render('Reportes/reporte_documentos');
+       
+    });
+
+   
   
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     Route::post('upload', [FileController::class, 'upload'])->name('upload');
