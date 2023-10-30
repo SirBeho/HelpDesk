@@ -263,15 +263,12 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                 <div className="flex flex-wrap gap-1">
                                     {dato.comentarios.filter(
                                         (comentario) => (comentario.status == 1)
-                                    ).map((comentario) =>
-                                    (
+                                    ).map((comentario) =>(
                                         <div key={comentario.id} className="flex gap-3 w-full group ">
                                             <div className="flex flex-col justify-between">
                                                 <div className="flex flex-col">
                                                     <span className="w-20">Tesoria:</span>
                                                     <span className="hidden text-sm group-hover:block "> {comentario.created_at && format(new Date(comentario.created_at), 'dd/MM/yyyy')}</span>
-                                                
-
                                                 </div>
                                                 <span className='hidden  mt-2 group-hover:block cursor-pointer self' onClick={() => post(route("comentario.destroy", { comentario_id: comentario.id }))}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:stroke-red-600">
@@ -321,8 +318,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             </div>
                                         )
                                     })}
-
-
+                                    
                                 </div>
                             </div>
 
