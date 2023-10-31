@@ -151,7 +151,7 @@ export default function Panel({ auth, msj, clientes }) {
                             onChange={(e) => cliente(e.target.value)}
                             className="w-[calc(100%-3rem)]   rounded-md  h-12   outline-none px-2"
                         >
-                            <option value="0">Seleccione Solicitud</option>
+                            <option value="0">Seleccione el cliente</option>
 
                             {clientes?.map((cliente) =>
                                 <option key={cliente.id} value={cliente.id}>
