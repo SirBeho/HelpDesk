@@ -17,6 +17,12 @@ use Illuminate\Support\Facades\Log;
 class FileController extends Controller
 {
    
+
+
+
+   
+
+
     public function upload(Request $request) {
         $mensajes = [
             'file.*.required' => 'No se ha seleccionado ningun archivo.',
@@ -56,7 +62,7 @@ class FileController extends Controller
             
             }
            
-            session()->put('msj', ['error' => $formattedErrors], 200);
+            session()->put('msj', ['error' => $formattedErrors]);
         
             if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
                 return redirect('panel');
@@ -85,12 +91,13 @@ class FileController extends Controller
         
                         $data = [
                             'nombre' => $request->nombre[$index],
+                            'confidencial' => $request->confidencial[$index],
                             'solicitud_id' => $request->solicitud_id,
                             'referencia' => $referencia,
                             'extencion' => $extension,
                             'user_id' => Auth::user()->id,
                         ];
-        
+                               
                         File::create($data);
         
                         Storage::disk('uploads')->put($name, $encryptedData);

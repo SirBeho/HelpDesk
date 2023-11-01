@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notificaciones', function (Blueprint $table) {
+        Schema::create('comentarios', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('solicitud_id');
-            $table->unsignedBigInteger('emisor_id');
-            $table->unsignedBigInteger('receptor_id')->nullable()->default(null);
-            $table->string('message');
-            $table->boolean('status')->default(false);
+            $table->string('comentario');
+            $table->boolean('status')->default(1);
             $table->timestamps();
-            $table->foreign('emisor_id')->references('id')->on('users');
-            $table->foreign('receptor_id')->references('id')->on('users');
             $table->foreign('solicitud_id')->references('id')->on('solicitudes');
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notificaciones');
+        Schema::dropIfExists('comentarios');
     }
 };

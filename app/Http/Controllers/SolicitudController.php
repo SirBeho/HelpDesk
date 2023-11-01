@@ -85,7 +85,7 @@ class SolicitudController extends Controller
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
                 'status_id' => 'exists:estado_solicitudes,id',
-                'comentario' => 'required',
+                'descripcion' => 'required',
             ]);
            
 
@@ -100,13 +100,16 @@ class SolicitudController extends Controller
                 'solicitud_id' =>  $Solicitud->id,
             ]);
 
-            Notificacion::create(
-                [
-                    'solicitud_id' =>  $Solicitud->id,
-                    'emisor_id' => Auth::user()->id,
-                    'message' => "Has recibido una nueva solicitud"         
-                ]
-            );
+            if($request->tipo_id > 2){
+                Notificacion::create(
+                    [
+                        'solicitud_id' =>  $Solicitud->id,
+                        'emisor_id' => Auth::user()->id,
+                        'message' => "Has recibido una nueva solicitud"         
+                    ]
+                );
+            }
+            
 
             $log = new LogSolicitudController();
 
@@ -116,7 +119,7 @@ class SolicitudController extends Controller
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
-            session()->put('msj', ["error" => 'No se pudo registrar el Solicitud' ]);
+            session()->put('msj', ["error" => 'No se pudo registrar la Solicitud' ]);
            
         } catch (QueryException $e) {
 
@@ -160,7 +163,7 @@ class SolicitudController extends Controller
                 'created_at' => 'La fecha de creacion no es valida.',
                 'user_id' => 'El usuario no existe.',
                 'status_id' => 'El estado seleccionado no existe.',
-                'comentario' => 'El comentario no puede estar en blanco.',
+                'descripcion' => 'La descripcion no puede estar en blanco.',
             ];
             
             $validator = validator($request->all(), [
@@ -170,7 +173,7 @@ class SolicitudController extends Controller
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
                 'status_id' => 'exists:estado_solicitudes,id',
-                'comentario' => 'required',
+                'descripcion' => 'required',
 
             ],$mensajes);
 

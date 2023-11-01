@@ -19,7 +19,7 @@ class Solicitud extends Model
         'created_at',
         'user_id',      
         'status_id',      
-        'comentario',
+        'descripcion',
         'status',
       
     ];
@@ -55,6 +55,11 @@ class Solicitud extends Model
     public function files(): HasMany
     {
         return $this->hasMany(File::class,'solicitud_id');
+    }
+
+    public function comentarios(): HasMany
+    {
+        return $this->hasMany(Comentario::class,'solicitud_id')->orderBy('created_at', 'desc');;
     }
 
 

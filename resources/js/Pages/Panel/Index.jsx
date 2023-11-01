@@ -4,7 +4,6 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 export default function Panel({ auth, msj, clientes }) {
 
-
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id < 3);
 
 
@@ -12,9 +11,7 @@ export default function Panel({ auth, msj, clientes }) {
         return new Date(a.created_at) - new Date(b.created_at);
     });
 
-
     const [opencliente, setOpenCliente] = useState(auth.user);
-
 
     const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
         const year = new Date(solicitud.created_at).getFullYear();
@@ -43,7 +40,7 @@ export default function Panel({ auth, msj, clientes }) {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         tipo_id: 0,
-        comentario: "",
+        descripcion: "",
         created_at: "",
         year: new Date().getFullYear().toString(),
         month: "",
@@ -117,7 +114,7 @@ export default function Panel({ auth, msj, clientes }) {
     useEffect(() => {
         setData({
             ...data,
-            comentario: monthNames[data.month - 1] + " " + data.year,
+            descripcion: monthNames[data.month - 1] + " " + data.year,
             created_at: data.year + "-" + data.month + "-02",
         });
     }, [data.month]);
@@ -242,25 +239,31 @@ export default function Panel({ auth, msj, clientes }) {
                                     {datos_f.tipo1[year].map((solicitud, index) => (
                                         <div key={solicitud.id}>
                                             <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
-                                                <div className="p-2 h-10">{solicitud.comentario} ({solicitud.files?.length})</div>
+                                                <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
                                                 <div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label></div>
                                             </div>
                                             <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
                                                 {solicitud.files ? (
-                                                    solicitud.files.map((archivo) => (
+                                                    solicitud.files.map((archivo) =>{
+                                                        const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
+                                                       return(
                                                         <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
                                                             <div className="w-12 relative">
-
                                                                 <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                                {select == archivo.id ? (
+                                                               
+                                                               {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+            
+                                                                {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
                                                                     <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
                                                                 ) : null}
+                                                                
                                                             </div>
                                                             <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
                                                                 {archivo.nombre}
                                                             </span>
+                                                           
                                                         </div>
-                                                    ))
+                                                    )}) 
                                                 ) : <div>No hay facturas subidas</div>}
                                             </div>
                                         </div>
@@ -305,27 +308,33 @@ export default function Panel({ auth, msj, clientes }) {
                                             <div key={solicitud.id} >
                                                 <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
 
-                                                    <div className="p-2 h-10">{solicitud.comentario} ({solicitud.files?.length})</div>
+                                                    <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
                                                     <div className="p-2 h-10">                                            <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label>
                                                     </div>
                                                 </div>
                                                 <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
 
                                                     {solicitud.files ? (
-                                                        solicitud.files.map((archivo) => (
+                                                        solicitud.files.map((archivo) =>{
+                                                            const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
+                                                           return(
                                                             <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
-
                                                                 <div className="w-12 relative">
                                                                     <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                                    {select == archivo.id ? (
+                                                                   
+                                                                   {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+                
+                                                                    {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
                                                                         <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
                                                                     ) : null}
+                                                                    
                                                                 </div>
                                                                 <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
                                                                     {archivo.nombre}
                                                                 </span>
+                                                               
                                                             </div>
-                                                        ))
+                                                        )}) 
                                                     ) : <div>No hay facturas subidas</div>}
                                                 </div>
                                             </div>

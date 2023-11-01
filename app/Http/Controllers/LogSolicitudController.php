@@ -56,7 +56,7 @@ class LogSolicitudController extends Controller
             if($request->created_at){
                
                 $request->merge([
-                    'descripcion' => "Se ha creado el bloque de " . ($request->tipo_id == 1 ? "Compras" : "Ventas") . " " . $request->comentario,
+                    'descripcion' => "Se ha creado el bloque de " . ($request->tipo_id == 1 ? "Compras" : "Ventas") . " " . $request->descripcion,
                 ]);
                 
             }else if($request->status_ant){

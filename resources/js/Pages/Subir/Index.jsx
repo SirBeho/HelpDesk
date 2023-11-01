@@ -88,10 +88,10 @@ export default function subir({auth,file,solicitudes}) {
                     <div className="flex flex-col">
 
                         <label htmlFor="coment" className="text-xs">
-                            Comentarios
+                            Descripcion
                         </label>
 
-                        <textarea placeholder="Escribe tu comentario" name="coment" id="coment" className="w-full resize-none h-44 p-3 outline-none "></textarea>
+                        <textarea placeholder="Escribe tu descripcion" name="coment" id="coment" className="w-full resize-none h-44 p-3 outline-none "></textarea>
                     </div>
 
 

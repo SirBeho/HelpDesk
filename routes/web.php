@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProfileController;
@@ -66,8 +67,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('form');
 
     Route::get('/reportes', function () {
-        return Inertia::render('Reportes/Index');
+
+        
+        return Inertia::render('Reportes/Index',[
+            'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
+        ]);
+       
     })->name('reportes');
+
+    Route::get('/reportes1', function () {
+        return Inertia::render('Reportes/reporte_documentos');
+       
+    });
+    Route::get('/reportes2', function () {
+        return Inertia::render('Reportes/reporte_documentos');
+       
+    });
+
+   
   
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
     Route::post('upload', [FileController::class, 'upload'])->name('upload');
@@ -75,6 +92,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');
     Route::post('/download', [FileController::class, 'download'])->name('download');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
+
+    Route::post('/coment', [ComentarioController::class, 'create'])->name('comentario.create');
+    Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
 
 });
 
