@@ -74,11 +74,19 @@ Asegúrate de tener instalado lo siguiente en tu sistema antes de comenzar:
 
         php artisan serve | npm run dev
 
+<<<<<<< HEAD
 ### El proyecto esrá disponible en http://localhost ###
+=======
+### El proyecto esrá disponible en http://localhost:8000 ###
+>>>>>>> b0835cf3ee6296b7319a7b158de34a86c8f238f9
 
 
 ## Autores
 
 
 - **Jorge Sosa**: [LinkedIn](https://github.com/Joregesosa/Tesoria)
+<<<<<<< HEAD
 - **Benjamin Tavarez**: [LinkedIn](https://www.linkedin.com/in/benjamin-tavarez-cruceta-052aa623b/)
+=======
+- **Benjamin Tavarez**: [LinkedIn](https://www.linkedin.com/in/benjamin-tavarez-cruceta-052aa623b/)
+>>>>>>> b0835cf3ee6296b7319a7b158de34a86c8f238f9

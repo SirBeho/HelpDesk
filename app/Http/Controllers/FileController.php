@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Notificacion;
 use App\Models\Solicitud;
+use App\Models\User;
+use App\Notifications\NewDocumentsNotification;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
-use function Ramsey\Uuid\v1;
-use Illuminate\Support\Facades\Log;
 
 
 class FileController extends Controller
@@ -96,6 +97,8 @@ class FileController extends Controller
                         File::create($data);
 
                         Storage::disk('uploads')->put($name, $encryptedData);
+
+
                         //$file->storeAs('uploads', $name, 'public');
 
                         $mensajesExitosos[] = "Archivo " . $request->nombre[$index] . " subido con éxito.";
@@ -118,6 +121,7 @@ class FileController extends Controller
                     $mensajesErrores[] = "Error el archibo no es valido ";
                 }
             }
+
             if ($mensajesErrores == null) {
                 $mensajesExitosos = ["Todos los archivos subidos con exito"];
             }
@@ -125,14 +129,51 @@ class FileController extends Controller
             session()->put('msj', ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
 
 
+            if ($mensajesExitosos) :
+                $user_id = Solicitud::find($request->solicitud_id)->user_id;
+                $user = User::find($user_id);
 
-            if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
-                return redirect('panel');
-            }
-            return redirect('admsolicitudes');
+                if (auth()->user()->rol_id == 2) :
+
+                    $recipientEmail = 'contacto@tesoriard.com';
+
+                    Notificacion::create(
+                        [
+                            'solicitud_id' => $request->solicitud_id,
+                            'emisor_id' => Auth::user()->id,
+                            'message' => "Has recibido un nuevo documentos en la solicitud: $solicitud_numero"
+                        ]
+                    );
+                    $user->notify(new NewDocumentsNotification($recipientEmail, $solicitud_numero));
+
+                else :
+
+                    $recipientEmail = $user->email;
+
+                    Notificacion::create(
+                        [
+                            'solicitud_id' => $request->solicitud_id,
+                            'emisor_id' => Auth::user()->id,
+                            'receptor_id' => $user_id,
+                            'message' =>  "Has recibido un nuevos documentos en la solicitud: $solicitud_numero"
+                        ]
+                    );
+                    $user->notify(new NewDocumentsNotification($recipientEmail, $solicitud_numero));
+                endif;
+
+
+
+
+            endif;
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error en la acción realizada' . $e], 500);
+            session()->put('msj', ['error' => 'Error en la acción realizada ']);
         }
+
+        if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
+            return redirect('panel');
+        }
+
+        return redirect('admsolicitudes');
     }
 
     public function download(Request $request)
