@@ -5,6 +5,7 @@ import Dropdown from './Dropdown'
 import { Head, Link, useForm } from '@inertiajs/react';
 import Modal from "@/Components/Modal";
 import Loading from "./Loading";
+import { copyStringIntoBuffer } from "pdf-lib";
 
 export default function NavBar({ user, solicitud_id, countNotificaciones, msj }) {
 
@@ -30,9 +31,8 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
   const [errorMessage, setErrorMessage] = useState(null);
   const [archivo_error, setArchivo_error] = useState([]);
 
-
   useEffect(() => {
-
+   
     setLoading(false);
 
     if (!(msj?.error == null || msj?.error == [])) {
@@ -70,6 +70,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
 
   };
+
 
   const limpiar = (e) => {
     setErrorMessage([]);
@@ -273,7 +274,8 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
                             <li className="flex gap-3 items-center" key={index}>
                               <div className="relative">
-                                <img src={`assets/svg/${data.extencion[index]}.svg`} className="w-8" alt=" " />
+                             
+                                <img src={`assets/svg/${data.extencion[index]}.svg`} onError={(event) => event.target.src = 'assets/svg/doc.svg'}  className="w-8" alt=" " />
                                 {data.confidencial[index] ? (<img src={`assets/confidencial.png`} className="absolute top-0 left-0 " alt=" " />) : null}
                               </div>
                               <input type="text"
@@ -323,7 +325,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
 
                 </label>
                 {errorMessage && (
-                  errorMessage.map((msj, index) => (<h1 key={"msj" + index} className="text-red-400 text-center">{msj}</h1>))
+                  errorMessage.map((msj, index) => (<h1 key={"msj" + index} className="text-red-400 text-center block w-full">{msj}</h1>))
                 )}
 
 

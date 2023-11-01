@@ -11,7 +11,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
 
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
-    console.log(msj)
+
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
@@ -252,18 +252,16 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                         ))
                                     }
                                 </div>
+                                {(auth.user.rol_id != 2) &&
                                 <div className="flex justify-between w-full gap-5">
-
-                                <span className="w-20">Tesoria:</span><input value={comentario} onChange={(e) => setComentario(e.target.value)} type="text" className="h-8 w-full rounded-md" />
-                                    {(auth.user.rol_id != 2) &&
-                                        <label onClick={() => post(route("comentario.create", { solicitud_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit"> Agregar</label>
-                                    }
-                                </div>
+                                    <span className="w-20">Tesoria:</span><input value={comentario} onChange={(e) => setComentario(e.target.value)} type="text" className="h-8 w-full rounded-md" />
+                                    <label onClick={() => post(route("comentario.create", { solicitud_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit cursor-pointer"> Agregar</label>
+                                </div>}
 
                                 <div className="flex flex-wrap gap-1">
                                     {dato.comentarios.filter(
                                         (comentario) => (comentario.status == 1)
-                                    ).map((comentario) =>(
+                                    ).map((comentario) => (
                                         <div key={comentario.id} className="flex gap-3 w-full group ">
                                             <div className="flex flex-col justify-between">
                                                 <div className="flex flex-col">
@@ -318,7 +316,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             </div>
                                         )
                                     })}
-                                    
+
                                 </div>
                             </div>
 

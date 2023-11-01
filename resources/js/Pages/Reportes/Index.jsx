@@ -8,30 +8,34 @@ import Reporte_doc from "./reporte_documentos"
 import ReactDOM from 'react-dom';
 
 export default function documentos({ auth ,tipo_solicitudes}) {
+
+  const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
+  
+
   const documentos = [];
-  auth.user.solicitudes.forEach((solicitud) => {
+  solicitudes.forEach((solicitud) => {
     if (solicitud.files && solicitud.files.length > 0) {
       documentos.push(...solicitud.files);
     }
   });
   const [documentos_f, setDocumentos_f] = useState(documentos);
-  const [solicitudes_f, setSolicitudes_f] = useState(auth.user.solicitudes);
+  const [solicitudes_f, setSolicitudes_f] = useState(solicitudes);
   const [reportes, setReportes] = useState(0);
   const [rangoFecha, setRangoFecha] = useState({
     inicio: "",
     fin: "",
     tipo: 0,
   });
-console.log(solicitudes_f)
+
   useEffect(() => {
     filterDataByDate()
-    console.log(rangoFecha)
+
   }, [rangoFecha])
 
   const filterDataByDate = () => {
-    const solicitudes_filtradas = auth.user.solicitudes.filter((soli) => {
+    const solicitudes_filtradas = solicitudes.filter((soli) => {
       const fechaCreacion = new Date(soli.created_at);
-      console.log(rangoFecha.inicio, rangoFecha.fin);
+
      if(!rangoFecha.tipo || soli.tipo_id == rangoFecha.tipo){
       if (rangoFecha.inicio && rangoFecha.fin) {
         return fechaCreacion >= new Date(rangoFecha.inicio) && fechaCreacion <= new Date(rangoFecha.fin);
@@ -49,7 +53,7 @@ console.log(solicitudes_f)
 
     const documentos_filtrados = documentos.filter((documento) => {
       const fechaCreacion = new Date(documento.created_at);
-      console.log(rangoFecha.inicio, rangoFecha.fin);
+
       if (rangoFecha.inicio && rangoFecha.fin) {
         return fechaCreacion >= new Date(rangoFecha.inicio) && fechaCreacion <= new Date(rangoFecha.fin);
       } else if (rangoFecha.inicio) {
@@ -198,9 +202,6 @@ console.log(solicitudes_f)
                     <thead>
                       <tr>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          ID
-                        </th>
-                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           # Solicitud
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -221,9 +222,7 @@ console.log(solicitudes_f)
                       {solicitudes_f && (
                         solicitudes_f.map((user, i) => (
                           <tr key={i}>
-                            <td className="px-5 py-3 border-b border-gray-200 bg-white text-base font-medium">
-                              {user.id}
-                            </td>
+                            
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.numero}</p>
                             </td>

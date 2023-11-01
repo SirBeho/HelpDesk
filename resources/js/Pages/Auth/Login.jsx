@@ -40,6 +40,7 @@ export default function Login({ status, canResetPassword }) {
                     <p className="text-textgray w-96 p-5">
                         Tu destino en linea para hacer negocios con tesoria
                     </p>
+                    <a className='ms-5 hover:underline' href="https://tesoria.online/">← Ir a Tesoria</a>
                 </div>
 
                 <div className="flex items-center justify-center">
