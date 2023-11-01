@@ -90,9 +90,8 @@ export default function Panel({ auth, msj, clientes }) {
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
         } else if (msj && msj.error) {
-            setMessage(msj.error);
+            setMessage(typeof msj.error === "string" ? msj.error : null);
         } else if (msj && !msj.error) {
-
             setMessage(msj.success);
             setShowmsj(true);
             setData("month", "")
@@ -151,7 +150,7 @@ export default function Panel({ auth, msj, clientes }) {
                             onChange={(e) => cliente(e.target.value)}
                             className="w-[calc(100%-3rem)]   rounded-md  h-12   outline-none px-2"
                         >
-                            <option value="0">Seleccione Solicitud</option>
+                            <option value="0">Seleccione el cliente</option>
 
                             {clientes?.map((cliente) =>
                                 <option key={cliente.id} value={cliente.id}>
@@ -164,7 +163,7 @@ export default function Panel({ auth, msj, clientes }) {
                 ) : (null)}
 
 
-            {(opencliente?.rol_id == 2 && auth.user.rol_id != 2 ) ?
+            {(opencliente?.rol_id == 2 && auth.user.rol_id != 2) ?
                 (<div className=' m-6 mt-0 border-2 w-fit border-black rounded-md p-1  flex gap-2 '>
 
                     <div>
@@ -217,8 +216,8 @@ export default function Panel({ auth, msj, clientes }) {
 
 
                         </button>) : (
-                             
-                        <h1 className='h-9 px-2 gap-2  items-center '></h1>
+
+                            <h1 className='h-9 px-2 gap-2  items-center '></h1>
                         )}
 
                     </h3>
@@ -240,30 +239,31 @@ export default function Panel({ auth, msj, clientes }) {
                                         <div key={solicitud.id}>
                                             <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
                                                 <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
-                                                <div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label></div>
+                                                {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label></div>)}
                                             </div>
                                             <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
                                                 {solicitud.files ? (
-                                                    solicitud.files.map((archivo) =>{
+                                                    solicitud.files.map((archivo) => {
                                                         const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
-                                                       return(
-                                                        <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
-                                                            <div className="w-12 relative">
-                                                                <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                               
-                                                               {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
-            
-                                                                {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
-                                                                    <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
-                                                                ) : null}
-                                                                
+                                                        return (
+                                                            <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
+                                                                <div className="w-12 relative">
+                                                                    <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
+
+                                                                    {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+
+                                                                    {(select == archivo.id && (!archivo.confidencial || acceso)) ? (
+                                                                        <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
+                                                                    ) : null}
+
+                                                                </div>
+                                                                <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
+                                                                    {archivo.nombre}
+                                                                </span>
+
                                                             </div>
-                                                            <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                                {archivo.nombre}
-                                                            </span>
-                                                           
-                                                        </div>
-                                                    )}) 
+                                                        )
+                                                    })
                                                 ) : <div>No hay facturas subidas</div>}
                                             </div>
                                         </div>
@@ -279,14 +279,14 @@ export default function Panel({ auth, msj, clientes }) {
 
                 <div className="h-full w-full bg-[#f2f2f2]">
                     <h3 className="w-full bg-[#1e85e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Ventas
-                    {(auth.user.rol_id == 2) ? ( <button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                        {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                             Crear Bloque +
 
                         </button>) : (
-                             
-                        <h1 className='h-9 px-2 gap-2  items-center '></h1>
-                        )}                                           
-                        
+
+                            <h1 className='h-9 px-2 gap-2  items-center '></h1>
+                        )}
+
                     </h3>
 
                     <div className="flex flex-col h-5/6 overflow-hidden ">
@@ -309,32 +309,32 @@ export default function Panel({ auth, msj, clientes }) {
                                                 <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
 
                                                     <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
-                                                    <div className="p-2 h-10">                                            <label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label>
-                                                    </div>
+                                                    {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label></div>)}
                                                 </div>
                                                 <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
 
                                                     {solicitud.files ? (
-                                                        solicitud.files.map((archivo) =>{
+                                                        solicitud.files.map((archivo) => {
                                                             const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
-                                                           return(
-                                                            <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
-                                                                <div className="w-12 relative">
-                                                                    <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
-                                                                   
-                                                                   {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
-                
-                                                                    {(select == archivo.id && (!archivo.confidencial || acceso) ) ? (
-                                                                        <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
-                                                                    ) : null}
-                                                                    
+                                                            return (
+                                                                <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
+                                                                    <div className="w-12 relative">
+                                                                        <img className="w-full" src={`/assets/svg/${archivo.extencion}.svg`} alt="" onError={(e) => (e.target.src = "/assets/svg/file3.svg")} />
+
+                                                                        {archivo.confidencial ? (<img src="/assets/confidencial.png" className={`absolute top-0 ${acceso && "w-1/2"} `} alt="" />) : null}
+
+                                                                        {(select == archivo.id && (!archivo.confidencial || acceso)) ? (
+                                                                            <img onClick={() => handleDownload(archivo)} src="/assets/svg/descargar.svg" alt="" className="z-20 top-10 left-14 w-8 absolute transform -translate-x-1/2 hover:scale-125 " />
+                                                                        ) : null}
+
+                                                                    </div>
+                                                                    <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
+                                                                        {archivo.nombre}
+                                                                    </span>
+
                                                                 </div>
-                                                                <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                                    {archivo.nombre}
-                                                                </span>
-                                                               
-                                                            </div>
-                                                        )}) 
+                                                            )
+                                                        })
                                                     ) : <div>No hay facturas subidas</div>}
                                                 </div>
                                             </div>
@@ -364,8 +364,8 @@ export default function Panel({ auth, msj, clientes }) {
                     <div className='flex gap-4'>
 
                         <label className="text-base flex flex-col w-2/3">
-                        <span className='whitespace-nowrap'>Seleccione el mes </span>
-                          
+                            <span className='whitespace-nowrap'>Seleccione el mes </span>
+
                             <select
                                 required
                                 name="month"
@@ -408,12 +408,11 @@ export default function Panel({ auth, msj, clientes }) {
                         </label>
                     </div>
 
-
-                    {Message && (
+                       {Message && (
                         <div className="alert alert-danger">
                             {Message}
                         </div>
-                    )}
+                    )} 
 
                     <button className={`border py-1 w-36 rounded-xl ${data.tipo_id == 1 ? "bg-[#1ec0e6]" : "bg-[#1e85e6]"}  hover:bg-gray-200 text-white self-center justify-center mr-5 mt-8`}>
                         Crear

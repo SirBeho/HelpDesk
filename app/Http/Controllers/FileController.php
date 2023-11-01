@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class FileController extends Controller
 {
- 
+
     public function upload(Request $request)
     {
         $mensajes = [
@@ -25,6 +25,7 @@ class FileController extends Controller
             'file.*.file' => 'El archivo debe ser un archivo válido.',
             'file.*.mimes' => 'El archivo debe ser una imagen o un archivo PDF, Word o Exel.',
             'file.*.max' => 'El archivo no debe ser mayor de 2MB.',
+            'file.*.uploaded' => 'El archivo no es valido.',
             'solicitud_id.exists' => 'La solicitud no existe.',
             // 'nombre.*.unique_name' => 'El nombre esta duplicado.',
         ];
@@ -127,6 +128,7 @@ class FileController extends Controller
 
             session()->put('msj', ['success' => $mensajesExitosos, 'error' => $mensajesErrores], 200);
 
+
             if ($mensajesExitosos) :
                 $user_id = Solicitud::find($request->solicitud_id)->user_id;
                 $user = User::find($user_id);
@@ -210,4 +212,5 @@ class FileController extends Controller
             return response()->json(['error' => 'Error interno del servidor'], 500);
         }
     }
+
 }
