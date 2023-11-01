@@ -67,16 +67,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('form');
 
     Route::get('/reportes', function () {
-
-        
         return Inertia::render('Reportes/Index',[
             'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
         ]);
-       
     })->name('reportes');
 
     Route::get('/reportes1', function () {
-        return Inertia::render('Reportes/reporte_documentos');
+        return Inertia::render('Reportes/reporte_solicitudes');
        
     });
     Route::get('/reportes2', function () {

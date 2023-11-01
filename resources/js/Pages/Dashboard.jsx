@@ -8,8 +8,10 @@ export default function Dashboard({ auth  }) {
         <AuthenticatedLayout
             countNotificaciones={auth.countNotificaciones}
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
+           
         >
+             <Head title="Dashboard" />
+
             <div className=" grid grid-cols-2 text-[#767171]  mt-10 h-full">
 
                 <div className="px-16">

@@ -141,7 +141,7 @@ class SolicitudController extends Controller
                 session()->put('msj', ["error" => 'No se pudo registrar el Solicitud' ]);
             }
 
-            // return response()->json(['error' => 'Error en la acción realizada: ' . $errormsj], 500);
+          
 
         } catch (Exception $e) {
             session()->put('msj', ["error" => 'Error en la accion realizada' ]);

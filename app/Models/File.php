@@ -10,7 +10,7 @@ class File extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+   
     protected $table = "files";
     protected $fillable = [
         'referencia',

@@ -24,6 +24,7 @@ class FileController extends Controller
             'file.*.file' => 'El archivo debe ser un archivo válido.',
             'file.*.mimes' => 'El archivo debe ser una imagen o un archivo PDF, Word o Exel.',
             'file.*.max' => 'El archivo no debe ser mayor de 2MB.',
+            'file.*.uploaded' => 'El archivo no es valido.',
             'solicitud_id.exists' => 'La solicitud no existe.',
             // 'nombre.*.unique_name' => 'El nombre esta duplicado.',
         ];
