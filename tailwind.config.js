@@ -13,6 +13,7 @@ export default {
     theme: {
         extend: {
             colors: {
+                customGray: '#f7f7f7',
                 offwhite: '#ffffff',
                 softgray: '#f2f2f2',
                 darkgray: '#57687a',
