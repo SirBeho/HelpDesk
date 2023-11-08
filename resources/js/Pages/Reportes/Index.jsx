@@ -29,20 +29,27 @@ export default function documentos({ auth ,tipo_solicitudes}) {
 
   useEffect(() => {
     filterDataByDate()
-
   }, [rangoFecha])
 
   const filterDataByDate = () => {
+
+    const inicio = new Date(rangoFecha.inicio+' 00:00:00');
+    const fin = new Date(rangoFecha.fin+' 23:59:59');
+
+
     const solicitudes_filtradas = solicitudes.filter((soli) => {
       const fechaCreacion = new Date(soli.created_at);
-
+         
      if(!rangoFecha.tipo || soli.tipo_id == rangoFecha.tipo){
       if (rangoFecha.inicio && rangoFecha.fin) {
-        return fechaCreacion >= new Date(rangoFecha.inicio) && fechaCreacion <= new Date(rangoFecha.fin);
+
+        return fechaCreacion >= inicio && fechaCreacion <= fin;
       } else if (rangoFecha.inicio) {
-        return fechaCreacion >= new Date(rangoFecha.inicio);
+
+        return fechaCreacion >= inicio;
+
       } else if (rangoFecha.fin) {
-        return fechaCreacion <= new Date(rangoFecha.fin);
+        return fechaCreacion <= fin;
       }
       return true;
      
@@ -55,11 +62,11 @@ export default function documentos({ auth ,tipo_solicitudes}) {
       const fechaCreacion = new Date(documento.created_at);
 
       if (rangoFecha.inicio && rangoFecha.fin) {
-        return fechaCreacion >= new Date(rangoFecha.inicio) && fechaCreacion <= new Date(rangoFecha.fin);
+        return fechaCreacion >= inicio && fechaCreacion <= fin;
       } else if (rangoFecha.inicio) {
-        return fechaCreacion >= new Date(rangoFecha.inicio);
+        return fechaCreacion >= inicio;
       } else if (rangoFecha.fin) {
-        return fechaCreacion <= new Date(rangoFecha.fin);
+        return fechaCreacion <= fin;
       }
       return true;
     });
