@@ -32,12 +32,16 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
 
-
-
-        $request->validate([
+        $validator = validator($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
         ]);
+       
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+           
+        }
 
         $password = Str::random(12);
 
@@ -53,14 +57,8 @@ class RegisteredUserController extends Controller
         // // Envía la notificación por correo electrónico
         $user->notify(new UserCreatedNotification($password));
 
-
-        $users = User::select('id', 'name', 'telefono', 'email', 'status', 'rol_id')->with('rol')->get();
-
-        $roles = Rol::select('id', 'nombre')->where('status', 1)->get();
-
-        return Inertia::render('Usuarios/Index', [
-            'users' => $users,
-            'roles' => $roles
-        ]);
+        session()->put('msj', ["success" => 'Usuario registrado con exito']);
+        return redirect(route('usuarios.index'));
+        
     }
 }

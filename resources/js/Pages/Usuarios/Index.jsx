@@ -11,7 +11,7 @@ import Loading from '@/Components/Loading';
 
 
 
-export default function Usuarios({ auth, users, roles }) {
+export default function Usuarios({ auth, users, roles, msj }) {
 
   const [sortingData, setSortingData] = useState(users);
   const [searchValue, setSearchValue] = useState('');
@@ -21,7 +21,14 @@ export default function Usuarios({ auth, users, roles }) {
   const [newUser, setNewUser] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [loading, setLoading] = useState(false);
- 
+
+  const [show, setShow] = useState(msj != null);
+
+  useEffect(() => {
+
+    setShow(msj?.success != undefined);
+
+  }, [msj]);
 
   const { data, setData, post, reset } = useForm({
     name: '',
@@ -82,7 +89,7 @@ export default function Usuarios({ auth, users, roles }) {
   }
 
   const submit = (e) => {
-     
+
 
     setNewUser(false);
     setLoading(true);
@@ -138,6 +145,7 @@ export default function Usuarios({ auth, users, roles }) {
       reset('password', 'password_confirmation');
     };
   }, []);
+
   return (
 
     <AuthenticatedLayout
@@ -181,6 +189,26 @@ export default function Usuarios({ auth, users, roles }) {
 
       <Modal show={loading}>
         <Loading />
+      </Modal>
+
+      <Modal show={show} maxWidth="sm" onClose={() => setShow(false)}>
+        <img
+          className="z-50 w-20 absolute left-1/2 transform -translate-x-1/2 -top-10 bg-white rounded-full p-2  "
+          src="/assets/svg/check.svg"
+          alt=""
+        />
+
+        <div className="text-center relative mb-2 ">
+          <h1 className="mt-14 mb-8 font-semibold">{msj?.success || msj?.error}</h1>
+
+          <div className="hover:scale-110">
+            <button onClick={() => setShow(false)} className="bg-green-600 rounded-lg px-3 py-1 text-lg font-bold text-white  " >
+              Cerrar
+            </button>
+          </div>
+
+
+        </div>
       </Modal>
 
       <div className="container mx-auto px-4 sm:px-8">
