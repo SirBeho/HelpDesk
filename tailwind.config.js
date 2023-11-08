@@ -12,6 +12,7 @@ export default {
 
     theme: {
         extend: {
+            
             colors: {
                 customGray: '#f7f7f7',
                 offwhite: '#ffffff',

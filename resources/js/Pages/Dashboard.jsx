@@ -14,6 +14,7 @@ export default function Dashboard({ auth }) {
     const mestiloEnLinea = {
         transform: 'skewX(-12deg)',
     };
+   
 
     return (
         <AuthenticatedLayout
@@ -54,16 +55,15 @@ export default function Dashboard({ auth }) {
                         <img className=' w-[200%] max-w-none  h-full object-cover  bg-customGray ' style={mestiloEnLinea} src={dashimg} alt="" />
 
                         <div className="absolute top-0 left-0 overflow-hidden w-full h-full bg-transparent  ">
-                            <div className="absolute w-[8%] h-full z-10  left-0 top-0 bg-customGray "></div>
-                            <div className="absolute w-[8%] h-full z-10  right-0 top-0 bg-customGray "></div>
+                            <div className="absolute w-[9%] h-full z-10  left-0 top-0 bg-customGray "></div>
+                            <div className="absolute w-[9%] h-full z-10  right-0 top-0 bg-customGray "></div>
 
-                            <div className="absolute w-1/6 h-full z-10 opacity-75 left-0 top-[-40%] bg-cyan-500 "></div>
-                             <div className="absolute w-1/6 translate-x-1/2 h-full z-[9] opacity-60 -left-1 top-[45%] bg-blue-900"></div>
-                            <div className="absolute w-[8%] translate-x-1/2 h-full z-10  left-0 top-[80%] bg-blue-500"></div>
-
-                            <div className="absolute w-1/6 h-full z-10 opacity-75 right-0 top-[40%] bg-cyan-500 "></div>
-                            <div className="absolute w-1/6 -translate-x-1/2 h-full z-[9] opacity-75 right-0 top-[-45%] bg-blue-900"></div>
-                            <div className="absolute w-[8%] -translate-x-1/2 h-full z-10 right-0 top-[-80%] bg-blue-500"></div>
+                            <div className="animacion-up-down- absolute w-1/12 h-[20%] z-10  right-0 top-0 bg-blue-500"></div> 
+                            <div className="animacion-up-down- absolute w-1/6  h-[65%] z-[9] right-0 top-0 bg-blue-900 opacity-75"></div>
+                            <div className="animacion-up-down  absolute w-1/6  h-[60%] z-10  left-0  top-0 bg-cyan-500 opacity-75"></div>
+                            <div className="animacion-down-up- absolute w-1/12 h-[20%] z-10  left-0  bottom-0 bg-blue-500"></div>
+                            <div className="animacion-down-up- absolute w-1/6  h-[65%] z-[9] left-0  bottom-0 bg-blue-900 opacity-60 "></div>
+                            <div className="animacion-down-up  absolute w-1/6  h-[60%] z-10  right-0 bottom-0 bg-cyan-500 opacity-75"></div>
                         </div>
                     </div>
                 </div>
