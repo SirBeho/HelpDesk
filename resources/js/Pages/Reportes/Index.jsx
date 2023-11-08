@@ -25,6 +25,7 @@ export default function documentos({ auth ,tipo_solicitudes}) {
     inicio: "",
     fin: "",
     tipo: 0,
+    cliente: 0,
   });
 
   useEffect(() => {
@@ -40,34 +41,34 @@ export default function documentos({ auth ,tipo_solicitudes}) {
     const solicitudes_filtradas = solicitudes.filter((soli) => {
       const fechaCreacion = new Date(soli.created_at);
          
-     if(!rangoFecha.tipo || soli.tipo_id == rangoFecha.tipo){
-      if (rangoFecha.inicio && rangoFecha.fin) {
-
-        return fechaCreacion >= inicio && fechaCreacion <= fin;
-      } else if (rangoFecha.inicio) {
-
-        return fechaCreacion >= inicio;
-
-      } else if (rangoFecha.fin) {
-        return fechaCreacion <= fin;
+      if (rangoFecha.inicio && fechaCreacion < inicio) {
+        return false; 
       }
-      return true;
-     
-    }else{
-      return false;
+    
+      if (rangoFecha.fin && fechaCreacion > fin) {
+        return false; 
       }
+      console.log(rangoFecha.tipo,soli.tipo_id)
+      if (rangoFecha.tipo && soli.tipo_id !== rangoFecha.tipo) {
+        return false;
+      }
+    
+      return true; 
+
     });
 
     const documentos_filtrados = documentos.filter((documento) => {
       const fechaCreacion = new Date(documento.created_at);
 
-      if (rangoFecha.inicio && rangoFecha.fin) {
-        return fechaCreacion >= inicio && fechaCreacion <= fin;
-      } else if (rangoFecha.inicio) {
-        return fechaCreacion >= inicio;
-      } else if (rangoFecha.fin) {
-        return fechaCreacion <= fin;
+      if (rangoFecha.inicio && fechaCreacion < inicio) {
+        return false; 
       }
+    
+      if (rangoFecha.fin && fechaCreacion > fin) {
+        return false; 
+      }
+    
+      
       return true;
     });
 
