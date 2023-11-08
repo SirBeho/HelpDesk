@@ -2,3 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+.animacion-up-down {
+    animation: up-down 1.5s ease-in forwards;
+}
+
+.animacion-up-down- {
+    animation: -up-down 1.5s ease-in forwards;
+}
+
+.animacion-down-up {
+    animation: down-up 1.5s ease-in forwards;
+}
+
+.animacion-down-up- {
+    animation: -down-up 1.5s ease-in forwards;
+}
+
+@keyframes up-down {
+    0% {
+        transform: translateY(-100%) ;
+    }
+    100% {
+        transform: translateY(0) ;
+    }
+}
+
+@keyframes -up-down {
+    0% {
+        transform: translateY(-100%) translateX(-50%) ;
+    }
+    100% {
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
+@keyframes down-up {
+    0% {
+        transform: translateY(100%) ;
+    }
+    100% {
+        transform: translateY(0) ;
+    }
+}
+
+@keyframes -down-up {
+    0% {
+        transform: translateY(100%) translateX(50%);
+    }
+    100% {
+        transform: translateY(0) translateX(50%);
+    }
+}

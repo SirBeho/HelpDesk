@@ -25,42 +25,50 @@ export default function documentos({ auth ,tipo_solicitudes}) {
     inicio: "",
     fin: "",
     tipo: 0,
+    cliente: 0,
   });
 
   useEffect(() => {
     filterDataByDate()
-
   }, [rangoFecha])
 
   const filterDataByDate = () => {
+
+    const inicio = new Date(rangoFecha.inicio+' 00:00:00');
+    const fin = new Date(rangoFecha.fin+' 23:59:59');
+
+
     const solicitudes_filtradas = solicitudes.filter((soli) => {
       const fechaCreacion = new Date(soli.created_at);
+         
+      if (rangoFecha.inicio && fechaCreacion < inicio) {
+        return false; 
+      }
+    
+      if (rangoFecha.fin && fechaCreacion > fin) {
+        return false; 
+      }
+      console.log(rangoFecha.tipo,soli.tipo_id)
+      if (rangoFecha.tipo && soli.tipo_id !== rangoFecha.tipo) {
+        return false;
+      }
+    
+      return true; 
 
-     if(!rangoFecha.tipo || soli.tipo_id == rangoFecha.tipo){
-      if (rangoFecha.inicio && rangoFecha.fin) {
-        return fechaCreacion >= new Date(rangoFecha.inicio) && fechaCreacion <= new Date(rangoFecha.fin);
-      } else if (rangoFecha.inicio) {
-        return fechaCreacion >= new Date(rangoFecha.inicio);
-      } else if (rangoFecha.fin) {
-        return fechaCreacion <= new Date(rangoFecha.fin);
-      }
-      return true;
-     
-    }else{
-      return false;
-      }
     });
 
     const documentos_filtrados = documentos.filter((documento) => {
       const fechaCreacion = new Date(documento.created_at);
 
-      if (rangoFecha.inicio && rangoFecha.fin) {
-        return fechaCreacion >= new Date(rangoFecha.inicio) && fechaCreacion <= new Date(rangoFecha.fin);
-      } else if (rangoFecha.inicio) {
-        return fechaCreacion >= new Date(rangoFecha.inicio);
-      } else if (rangoFecha.fin) {
-        return fechaCreacion <= new Date(rangoFecha.fin);
+      if (rangoFecha.inicio && fechaCreacion < inicio) {
+        return false; 
       }
+    
+      if (rangoFecha.fin && fechaCreacion > fin) {
+        return false; 
+      }
+    
+      
       return true;
     });
 
