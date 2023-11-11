@@ -1,7 +1,7 @@
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Head, Link, useForm } from "@inertiajs/react";
+import { useEffect, useState } from 'react';
+import { Head, useForm } from "@inertiajs/react";
 import Modal from '@/Components/Modal';
 import Register from '@/Components/Register';
 import EditUser from '@/Components/EditUser';
@@ -12,30 +12,38 @@ import Loading from '@/Components/Loading';
 
 
 export default function Usuarios({ auth, users, roles, msj }) {
-
+console.log(typeof msj)
   const [sortingData, setSortingData] = useState(users);
   const [searchValue, setSearchValue] = useState('');
-  const [isCliente, setIsCliente] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [isCliente, setIsCliente] = useState();
   const [updateUser, setUpdateUser] = useState(false);
   const [deleteUser, setDeleteUser] = useState(false);
   const [newUser, setNewUser] = useState(false);
-  const [selectedUser, setSelectedUser] = useState({});
   const [loading, setLoading] = useState(false);
-
+  const [msjError, setmsjError] = useState({});
   const [show, setShow] = useState(msj != null);
 
   useEffect(() => {
 
     setShow(msj?.success != undefined);
 
+    setNewUser(msj?.error != null);
+
+    setmsjError(msj);
+
+ 
+
   }, [msj]);
 
   const { data, setData, post, reset } = useForm({
-    name: '',
-    email: '',
-    telefono: '',
-    rol_id: 0,
-    status: 0
+    name: null,
+    email: null,
+    telefono: null,
+    rnc: null,
+    empresa: null,
+    rol_id: null,
+    status: null
   });
 
   const changeRol = (e) => {
@@ -89,7 +97,7 @@ export default function Usuarios({ auth, users, roles, msj }) {
   }
 
   const submit = (e) => {
-
+    e.preventDefault();
 
     setNewUser(false);
     setLoading(true);
@@ -97,8 +105,10 @@ export default function Usuarios({ auth, users, roles, msj }) {
     post(route('register'), {
       onSuccess: () => {
         setLoading(false);
+
       }
     });
+
   };
 
   const create = () => {
@@ -109,15 +119,19 @@ export default function Usuarios({ auth, users, roles, msj }) {
     e.preventDefault();
 
     setUpdateUser(false);
+
     setLoading(true);
+
     post(route('usuario.update', selectedUser.id), {
+
       onSuccess: () => {
+
         setLoading(false);
-        setSelectedUser({});
+
+        setSelectedUser({})
+
       }
     });
-
-
   };
 
   const destroy = (e) => {
@@ -146,6 +160,10 @@ export default function Usuarios({ auth, users, roles, msj }) {
     };
   }, []);
 
+  useEffect(() => {
+    setIsCliente(selectedUser.rol_id == 2)
+  }, [selectedUser])
+
   return (
 
     <AuthenticatedLayout
@@ -157,19 +175,24 @@ export default function Usuarios({ auth, users, roles, msj }) {
 
       <Modal show={newUser}>
         <Register
+          msj={msjError}
           roles={roles}
           setData={setData}
           isCliente={isCliente}
           data={data}
           submit={submit}
           changeRol={changeRol}
-          hideModal={() => setNewUser(false)}
+          hideModal={() => {setNewUser(false), reset(), setmsjError({})}}
+          
         />
       </Modal>
 
       <Modal show={updateUser}>
         <EditUser
+          data={data}
           roles={roles}
+          isCliente={isCliente}
+          msj={msj}
           changeRol={changeRol}
           hideModal={() => setUpdateUser(false)}
           update={update}

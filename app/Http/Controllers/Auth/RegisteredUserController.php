@@ -32,14 +32,22 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
 
+        $mensajes = [
+            'name' => 'El nombre es invalido',
+            'email.required' => 'El email no puede estar en blanco',
+            'email.email' => 'Email no valido',
+            'email.unique' => 'Ya existe una cuenta con este email'
+        ];
+
         $validator = validator($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
-        ]);
+        ], $mensajes);
        
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+             
+            return redirect()->route('usuarios.index')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
            
         }
 
