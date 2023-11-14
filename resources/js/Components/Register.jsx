@@ -65,14 +65,14 @@ export default function Register({ roles, setData, isCliente, data, submit, chan
                             <label htmlFor="name" className="text-xs">
                                 Empresa
                             </label>
-                            <input type="text" name="name" id="name" className="h-9 rounded-md outline-none px-2" />
+                            <input type="text" name="name" id="name" className="h-9 rounded-md outline-none px-2" onChange={(e) => setData('empresa', e.target.value)}/>
                         </div>
 
                         <div className="flex flex-col w-2/4">
                             <label htmlFor="rnc" className="text-xs">
                                 RNC
                             </label>
-                            <input type="text" name="rnc" id="rnc" className="h-9 rounded-md outline-none px-2" />
+                            <input type="text" name="rnc" id="rnc" className="h-9 rounded-md outline-none px-2" onChange={(e) => setData('rnc', e.target.value)}/>
                         </div>
                     </div>
                 }

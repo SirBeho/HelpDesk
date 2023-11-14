@@ -43,12 +43,11 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
         ], $mensajes);
-       
+
 
         if ($validator->fails()) {
-             
-            return redirect()->route('usuarios.index')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
-           
+
+            return redirect()->route('usuarios.index')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
         }
 
         $password = Str::random(12);
@@ -59,7 +58,9 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($password),
             'telefono' => $request->telefono,
-            'rol_id' => $request->rol_id
+            'rol_id' => $request->rol_id,
+            'empresa' => $request->empresa,
+            'rnc' => $request->rnc
         ]);
 
         // // Envía la notificación por correo electrónico
@@ -67,6 +68,5 @@ class RegisteredUserController extends Controller
 
         session()->put('msj', ["success" => 'Usuario registrado con exito']);
         return redirect(route('usuarios.index'));
-        
     }
 }
