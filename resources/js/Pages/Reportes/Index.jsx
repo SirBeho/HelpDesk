@@ -5,12 +5,14 @@ import jsPDF from 'jspdf';
 import { format } from "date-fns";
 import Reporte_soli from "./reporte_solicitudes"
 import Reporte_doc from "./reporte_documentos"
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
-export default function documentos({ auth ,tipo_solicitudes}) {
+export default function documentos({ auth, tipo_solicitudes, clientes, estados }) {
+
+  
 
   const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
-  
+
 
   const documentos = [];
   solicitudes.forEach((solicitud) => {
@@ -21,82 +23,102 @@ export default function documentos({ auth ,tipo_solicitudes}) {
   const [documentos_f, setDocumentos_f] = useState(documentos);
   const [solicitudes_f, setSolicitudes_f] = useState(solicitudes);
   const [reportes, setReportes] = useState(0);
-  const [rangoFecha, setRangoFecha] = useState({
-    inicio: "",
-    fin: "",
+  const [datos, setDatos] = useState({
+    inicio: 0,
+    fin: 0,
     tipo: 0,
     cliente: 0,
+    estado: 0,
+
+    fecha: new Date().toLocaleDateString(),
+    hora: new Date().toLocaleTimeString('en-US', { hour12: true }),
+    usuario: auth.user.name,
+
   });
 
   useEffect(() => {
+    console.log(datos)
     filterDataByDate()
-  }, [rangoFecha])
+  }, [datos])
 
   const filterDataByDate = () => {
 
-    const inicio = new Date(rangoFecha.inicio+' 00:00:00');
-    const fin = new Date(rangoFecha.fin+' 23:59:59');
+    const inicio = new Date(datos.inicio + ' 00:00:00');
+    const fin = new Date(datos.fin + ' 23:59:59');
 
 
     const solicitudes_filtradas = solicitudes.filter((soli) => {
+
       const fechaCreacion = new Date(soli.created_at);
-         
-      if (rangoFecha.inicio && fechaCreacion < inicio) {
-        return false; 
-      }
-    
-      if (rangoFecha.fin && fechaCreacion > fin) {
-        return false; 
-      }
-      console.log(rangoFecha.tipo,soli.tipo_id)
-      if (rangoFecha.tipo && soli.tipo_id !== rangoFecha.tipo) {
+
+      if (datos.inicio && fechaCreacion < inicio) {
         return false;
       }
-    
-      return true; 
 
-    });
-
-    const documentos_filtrados = documentos.filter((documento) => {
-      const fechaCreacion = new Date(documento.created_at);
-
-      if (rangoFecha.inicio && fechaCreacion < inicio) {
-        return false; 
+      if (datos.fin && fechaCreacion > fin) {
+        return false;
       }
-    
-      if (rangoFecha.fin && fechaCreacion > fin) {
-        return false; 
+      if (datos.tipo && soli.tipo_id !== datos.tipo) {
+        return false;
       }
-    
-      
+      if (datos.cliente && soli.user.name !== datos.cliente) {
+        return false;
+      }
+
+      if (datos.estado && soli.status_id !== datos.estado) {
+        return false;
+      }
+
       return true;
     });
 
-    if(reportes == 0){
+    const documentos_filtrados = documentos.filter((documento) => {
+
+      const fechaCreacion = new Date(documento.created_at);
+      if (datos.inicio && fechaCreacion < inicio) {
+        return false;
+      }
+      if (datos.fin && fechaCreacion > fin) {
+        return false;
+      }
+      if (datos.cliente && documento.user.name !== datos.cliente) {
+        return false;
+      }
+
+
+      return true;
+    });
+
+    if (reportes == 0) {
       setSolicitudes_f(solicitudes_filtradas);
-    }else{
+    } else {
       setDocumentos_f(documentos_filtrados);
+      console.log(documentos_filtrados)
     }
-    
+
   };
 
 
   const descargarPDF = (reporte) => {
+
     const pdf = new jsPDF('p', 'pt', 'a4'); // Tamaño de página A4 (595.28 x 841.89 puntos)
     pdf.setFontSize(5);
-
     const container = document.createElement('div');
+    const root = createRoot(container);
+
+    const data = { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Innicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Finn" }
+
     document.body.appendChild(container);
     if (reporte == 0) {
+      root.render(<Reporte_soli solicitudes_f={solicitudes_f} datos={data} />);
 
-      ReactDOM.render(<Reporte_soli solicitudes_f={solicitudes_f} rangoFecha={rangoFecha} />, container);
     } else if (reporte == 1) {
-      ReactDOM.render(<Reporte_doc documentos_f={documentos_f} rangoFecha={rangoFecha} />, container);
-     
+      root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} />);
     }
 
     const contentWidth = container.offsetWidth;
-    const a4Width = 595.28; // Ancho de una página A4 en puntos
+    const a4Width = 590; // Ancho de una página A4 en puntos
+    console.log(contentWidth, a4Width)
     const scale = a4Width / contentWidth;
 
     pdf.html(container, {
@@ -105,10 +127,45 @@ export default function documentos({ auth ,tipo_solicitudes}) {
       html2canvas: { scale: scale },
       callback: function (pdf) {
         pdf.save('report.pdf');
-        ReactDOM.unmountComponentAtNode(container);
+        root.unmount();
         document.body.removeChild(container);
       }
     });
+
+
+  };
+
+
+  const descargarExel = () => {
+
+    const data = [{
+      ruta: '/reportes/generar/soli',
+      nombre: 'reporte_solicitudes.xlsx',
+      datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
+      solicitudes_f: solicitudes_f,
+    },{
+      ruta: '/reportes/generar/docu',
+      nombre: 'reporte_documentos.xlsx',
+      datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
+      documentos_f: documentos_f,
+    }
+  ]
+
+    console.log(data[reportes].ruta)
+    axios
+      .post(data[reportes].ruta, {data : data[reportes]}, { responseType: 'blob' })
+      .then((response) => {
+        console.log(response)
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', data[reportes].nombre);
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => {
+        console.error('Error al descargar el archivo:', error);
+      });
   };
 
   return (
@@ -120,94 +177,163 @@ export default function documentos({ auth ,tipo_solicitudes}) {
       <>
         <Head title="Reportes" />
         <div className='mx-10 mt-3'>
-          <div className='flex gap-2'>
-            <button
-              onClick={() => setReportes(0)}
-
-              className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 0 ? "border-black scale-90" : ""
-                } rounded-md text-white font-semibold text-base `}
-
-            >
-              <img
-                src="/assets/svg/export.svg"
-                width={30}
-                height={30}
-                alt="icon documento"
-              />
-              Solicitudes
-            </button>
 
 
-            <button
-              onClick={() => setReportes(1)}
 
-              className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 1 ? "border-black scale-90" : ""
-                } rounded-md text-white font-semibold text-base `}
+          <div className='mb-4 bg-white p-4 rounded-lg shadow-md'>
 
-            >
-              <img
-                src="/assets/svg/document2.svg"
-                width={40}
-                height={40}
-                alt="icon documento"
-              />
-              Documentos
-            </button>
+            <div className='flex gap-2'>
+              <button
+                onClick={() => setReportes(0)}
 
-          </div>
+                className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 0 ? "border-black scale-90" : ""
+                  } rounded-md text-white font-semibold text-base `}
+
+              >
+                <img
+                  src="/assets/svg/export.svg"
+                  width={30}
+                  height={30}
+                  alt="icon documento"
+                />
+                Solicitudes
+              </button>
 
 
-          <div className=' gap-2 flex'>
+              <button
+                onClick={() => setReportes(1)}
 
-            <label className="flex gap-2 my-3" >Fecha de inicio:
-              <input max={rangoFecha.fin} className='p-0 px-2 rounded-md' type="date" value={rangoFecha.inicio} onChange={(e) => setRangoFecha({ ...rangoFecha, inicio: e.target.value })} />
-            </label>
+                className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 1 ? "border-black scale-90" : ""
+                  } rounded-md text-white font-semibold text-base `}
 
-            <label className="flex gap-2 my-3" >Fecha de fin:
-              <input min={rangoFecha.inicio} className='p-0 px-2 rounded-md' type="date" value={rangoFecha.fin} onChange={(e) => setRangoFecha({ ...rangoFecha, fin: e.target.value })} />
-            </label>
+              >
+                <img
+                  src="/assets/svg/document2.svg"
+                  width={40}
+                  height={40}
+                  alt="icon documento"
+                />
+                Documentos
+              </button>
 
-            {reportes == 0 && (
+            </div>
 
-                  <label className="flex items-center gap-3"  >
-                  Tipo Solicitudes:
-                  <select
+            <div className='flex gap-8 my-3'>
+
+              <label className=" flex flex-col " >
+                <span className='font-semibold'>Fecha de inicio</span>
+                <input max={datos.fin} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.inicio} onChange={(e) => setDatos({ ...datos, inicio: e.target.value })} />
+              </label>
+
+              <label className="flex flex-col " >
+                <span className='font-semibold'>Fecha de fin</span>
+
+                <input min={datos.inicio} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.fin} onChange={(e) => setDatos({ ...datos, fin: e.target.value })} />
+              </label>
+
+              <label className="flex  flex-col"  >
+
+                <span className='font-semibold'>Cliente:</span>
+
+                <select
+                  required
+                  value={datos.cliente}
+                  onChange={(e) => setDatos({ ...datos, cliente: e.target.value })}
+                  name="cliente"
+                  id="cliente"
+                  className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
+                >
+                  <option value={''} select>Todos</option>
+                  {clientes.map((cliente) => (
+                    <option key={cliente.id} value={cliente.name}>
+                      {cliente.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+
+            </div>
+
+           
+              {reportes == 0 && (
+                <div className='flex gap-8'>
+                  <label className="flex  flex-col "  >
+                    <span className='font-semibold'> Tipo Solicitudes:</span>
+
+                    <select
                       required
-                      value={rangoFecha.tipo}
-                      onChange={(e) => setRangoFecha({ ...rangoFecha, tipo: parseInt(e.target.value) })}
+                      value={datos.tipo}
+                      onChange={(e) => setDatos({ ...datos, tipo: parseInt(e.target.value) })}
                       name="tipo_id"
                       id="tipo_id"
-                      className="p-0 px-2 w-fit rounded-md "
-                  >
+                      className="p-0 px-2 w-fit rounded-md h-8"
+                    >
                       <option value={0} select>Todas</option>
                       {tipo_solicitudes.map((solicitud) => (
-                          <option key={solicitud.id} value={solicitud.id}>
-                              {solicitud.nombre}
-                          </option>
+                        <option key={solicitud.id} value={solicitud.id}>
+                          {solicitud.nombre}
+                        </option>
                       ))}
-                  </select>
+                    </select>
+                  </label>
+
+                  <label className="flex  flex-col"  >
+
+                    <span className='font-semibold'>Estados:</span>
+
+                    <select
+                      required
+                      value={datos.estado}
+                      onChange={(e) => setDatos({ ...datos, estado: parseInt(e.target.value)  })}
+                      name="estado"
+                      id="estado"
+                      className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
+                    >
+                      <option value={''} select>Todos</option>
+                      {estados.map((estado) => (
+                        <option key={estado.id} value={estado.id}>
+                          {estado.nombre}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
 
-            )}
+                </div>
+
+              )}
+         
+
+
+
           </div>
 
-          <div className=' flex items-center gap-3'>
-              <span>Exportar</span>
-              <button onClick={() => descargarPDF(reportes)}>
-                <img src="/assets/svg/pdf.svg" width={30} height={30} alt="icon documento" />
-              </button>
-            </div>
+
 
 
           {reportes == 0 ? (<div >
-           
+
 
             <div id='contenido' className=''>
               <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+                  <div className='bg-white w-full px-3 py-2'>
+                    <div className=' flex items-center gap-3 font-bold '>
+                      <span>Exportar</span>
+                      <button className='hover:scale-125' onClick={() => descargarPDF(reportes)}>
+                        <img src="/assets/svg/pdf.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+
+                      <button className='hover:scale-125' onClick={() => descargarExel()}>
+                        <img src="/assets/svg/xlsx.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+                    </div>
+                  </div>
                   <table className="min-w-full leading-normal overflow-hidden">
-                    <thead>
+
+                    <thead >
+
                       <tr>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           # Solicitud
@@ -230,7 +356,7 @@ export default function documentos({ auth ,tipo_solicitudes}) {
                       {solicitudes_f && (
                         solicitudes_f.map((user, i) => (
                           <tr key={i}>
-                            
+
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.numero}</p>
                             </td>
@@ -256,11 +382,26 @@ export default function documentos({ auth ,tipo_solicitudes}) {
             </div>
 
           </div>) : (<div >
-            
+
 
             <div id='contenido' className=''>
+
               <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+
+                  <div className='bg-white w-full px-3 py-2'>
+                    <div className=' flex items-center gap-3 font-bold '>
+                      <span>Exportar</span>
+                      <button className='hover:scale-125' onClick={() => descargarPDF(reportes)}>
+                        <img src="/assets/svg/pdf.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+
+                      <button className='hover:scale-125' onClick={() => descargarExel()}>
+                        <img src="/assets/svg/xlsx.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+                    </div>
+                  </div>
+
                   <table className="min-w-full leading-normal overflow-hidden">
                     <thead>
                       <tr>
@@ -276,7 +417,7 @@ export default function documentos({ auth ,tipo_solicitudes}) {
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Usuario
                         </th>
-                       
+
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Fecha
                         </th>
@@ -301,7 +442,7 @@ export default function documentos({ auth ,tipo_solicitudes}) {
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.created_at && format(new Date(user.created_at), "dd/MM/yyyy hh:mm:ss a")}</p>
                             </td>
-                           
+
                           </tr>
                         ))
                       )}

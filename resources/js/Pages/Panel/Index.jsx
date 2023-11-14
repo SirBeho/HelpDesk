@@ -140,6 +140,8 @@ export default function Panel({ auth, msj, clientes }) {
         >
             <Head title="Panel" />
 
+        <div className='pb-1'>
+            <div className='bg-white shadow-md h-full mx-5 rounded-md p-2 mt-3 mb-3'>
 
             {(auth.user.rol_id != 2) ?
                 (
@@ -207,7 +209,7 @@ export default function Panel({ auth, msj, clientes }) {
 
 
 
-            <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] flex gap-4  m-6 rounded-md ">
+            <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] flex gap-4  m-6 rounded-md  mb-2">
 
                 <div className="h-full w-full bg-[#f2f2f2]">
                     <h3 className="w-full bg-[#1ec0e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de costos/gastos
@@ -348,6 +350,9 @@ export default function Panel({ auth, msj, clientes }) {
 
                     </div>
                 </div>
+
+            </div>
+            </div>
 
             </div>
 
