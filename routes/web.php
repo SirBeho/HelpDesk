@@ -11,7 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\SolicitudController;
-
+use App\Http\Controllers\TipoSolicitudController;
 use App\Models\Notificacion;
 
 use App\Models\File;
@@ -92,6 +92,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/coment', [ComentarioController::class, 'create'])->name('comentario.create');
     Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
+
+    Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
 
 });
 

@@ -50,6 +50,13 @@ const navItems = [
         title: "REPORTES",
         route:  route('reportes'),
         rol: [1,3,4]
+    },
+    {
+        id: 8,
+        icon: "/assets/svg/database.svg",
+        title: "MANTENIMIENTO",
+        route:  route('tipoSolicitud.index'),
+        rol: [1]
     }
 ];
 

@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TipoSolicitudController extends Controller
 {
@@ -18,25 +19,27 @@ class TipoSolicitudController extends Controller
     public function index()
     {
 
-        return TipoSolicitud::all();
+        $TipoSolicitudes =  TipoSolicitud::all();
 
+        return Inertia::render('Mantenimiento/Index', [
+            'TipoSolicitudes' => $TipoSolicitudes
+        ]);
     }
 
-    
     public function show($id)
     {
 
         $validator = validator(['id' => $id], [
             'id' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
         try {
             $TipoSolicitud = TipoSolicitud::findOrFail($id);
-       
+
 
             return $TipoSolicitud;
         } catch (ModelNotFoundException $e) {
@@ -44,40 +47,38 @@ class TipoSolicitudController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
-
     }
 
     public function create(Request $request)
-    {               
+    {
         try {
 
             $validator = validator($request->all(), [
-                'nombre'=> 'required',
+                'nombre' => 'required',
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
             TipoSolicitud::create($request->all());
-           
-          
+
+
             return response()->json(['msj' =>  $request->description], 200);
-        
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el TipoSolicitud'.$e->getMessage()], 404);
+            return response()->json(['error' => 'No se pudo registrar el TipoSolicitud' . $e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
     }
 
-    public function update($id,Request $request)
+    public function update($id, Request $request)
     {
-        
+
         try {
             $validator = validator($request->all(), [
-                'nombre'=> 'required',
+                'nombre' => 'required',
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
@@ -86,7 +87,7 @@ class TipoSolicitudController extends Controller
             $TipoSolicitud->update($request->all());
             $TipoSolicitud->save();
 
-           
+
 
             return response()->json(['msj' => 'TipoSolicitud actualizado correctamente'], 200);
         } catch (ModelNotFoundException $e) {
@@ -101,7 +102,7 @@ class TipoSolicitudController extends Controller
         $validator = validator(['id' => $id], [
             'id' => 'required|numeric'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
