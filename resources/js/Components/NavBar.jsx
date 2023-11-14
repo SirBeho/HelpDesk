@@ -89,7 +89,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
   const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`; // Formatea la fecha como dd/mm/yyyy
 
   return (
-    <header className='flex items-center w-full bg-nav fixed z-10 h-16'>
+    <header className='flex items-center w-full bg-nav fixed top-0 z-10 h-16'>
 
       <div className='flex items-center w-3/4'>
         <img className='p-4' src={logo} width={120} height={120} alt='logo' />

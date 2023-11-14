@@ -1,9 +1,9 @@
 import { format } from "date-fns";
 
-export default function Reporte({ documentos_f, rangoFecha }) {
+export default function Reporte({ documentos_f, datos }) {
 
 
-
+console.log(datos)
   function formato_0(id, longitud) {
     const idString = id.toString();
     const cerosFaltantes = longitud - idString.length;
@@ -45,7 +45,7 @@ export default function Reporte({ documentos_f, rangoFecha }) {
           <tr className="w-full flex" >
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium ">Fecha:</h1>
-              {rangoFecha?.inicio || "Inicio"}
+              {datos?.inicio || "Inicio"}
             </td>
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium">Fecha:</h1>
@@ -56,20 +56,20 @@ export default function Reporte({ documentos_f, rangoFecha }) {
           <tr className="w-full flex" >
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium ">Hasta:</h1>
-              {rangoFecha?.fin || "Actual"}
+              {datos?.fin || "Actual"}
             </td>
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium">Hora:</h1>
               5:28:45 p.m.
             </td>
           </tr>
-
-          {rangoFecha?.tipo ? (
+          
+          {datos?.cliente ? (
 
             <tr className="w-full flex" >
               <td className="flex w-1/2">
-                <h1 className="w-20  font-medium ">Tipo de solicitudes:</h1>
-                {solicitudes_f[0].tipo.nombre}
+                <h1 className="w-20  font-medium ">Cliente:</h1>
+                {documentos_f[0].user.name}
               </td>
 
             </tr>

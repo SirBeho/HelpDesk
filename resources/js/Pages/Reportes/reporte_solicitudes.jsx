@@ -55,7 +55,7 @@ export default function Reporte({ solicitudes_f, datos }) {
             <tr className="w-full flex" >
             {datos?.tipo ? (
               <td className="flex w-1/2">
-                <h1 className="w-20  font-medium ">Tipo de solicitudes:</h1>
+                <h1 className="w-20  font-medium ">Tipo:</h1>
                 {solicitudes_f[0].tipo.nombre}
               </td>
                 ) : null}
@@ -69,9 +69,26 @@ export default function Reporte({ solicitudes_f, datos }) {
                 ) : null}
 
 
+          {!(datos?.tipo && datos?.cliente) && datos?.estado ? (
+              <td className="flex w-1/2">
+                <h1 className="w-20  font-medium ">Estado:</h1>
+                {solicitudes_f[0].status.nombre}
+              </td>
+              
+                ) : null}
 
 
             </tr>
+
+            {datos?.tipo && datos?.cliente && datos?.estado ? (
+              <tr>
+              <td className="flex w-1/2">
+                <h1 className="w-20  font-medium ">Estado de solicitud:</h1>
+                {solicitudes_f[0].status.nombre}
+              </td>
+              </tr>
+              
+                ) : null}
         
 
 

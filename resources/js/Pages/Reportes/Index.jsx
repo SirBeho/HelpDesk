@@ -7,7 +7,9 @@ import Reporte_soli from "./reporte_solicitudes"
 import Reporte_doc from "./reporte_documentos"
 import { createRoot } from 'react-dom/client';
 
-export default function documentos({ auth, tipo_solicitudes,clientes }) {
+export default function documentos({ auth, tipo_solicitudes, clientes, estados }) {
+
+  
 
   const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
 
@@ -26,6 +28,7 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
     fin: 0,
     tipo: 0,
     cliente: 0,
+    estado: 0,
 
     fecha: new Date().toLocaleDateString(),
     hora: new Date().toLocaleTimeString('en-US', { hour12: true }),
@@ -45,6 +48,7 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
 
 
     const solicitudes_filtradas = solicitudes.filter((soli) => {
+
       const fechaCreacion = new Date(soli.created_at);
 
       if (datos.inicio && fechaCreacion < inicio) {
@@ -61,10 +65,15 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
         return false;
       }
 
+      if (datos.estado && soli.status_id !== datos.estado) {
+        return false;
+      }
+
       return true;
     });
 
     const documentos_filtrados = documentos.filter((documento) => {
+
       const fechaCreacion = new Date(documento.created_at);
       if (datos.inicio && fechaCreacion < inicio) {
         return false;
@@ -72,6 +81,11 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
       if (datos.fin && fechaCreacion > fin) {
         return false;
       }
+      if (datos.cliente && documento.user.name !== datos.cliente) {
+        return false;
+      }
+
+
       return true;
     });
 
@@ -79,6 +93,7 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
       setSolicitudes_f(solicitudes_filtradas);
     } else {
       setDocumentos_f(documentos_filtrados);
+      console.log(documentos_filtrados)
     }
 
   };
@@ -123,23 +138,28 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
 
   const descargarExel = () => {
 
-
-
-
-    const data = {
-      datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Innicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Finn" },
+    const data = [{
+      ruta: '/reportes/generar/soli',
+      nombre: 'reporte_solicitudes.xlsx',
+      datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
       solicitudes_f: solicitudes_f,
+    },{
+      ruta: '/reportes/generar/docu',
+      nombre: 'reporte_documentos.xlsx',
+      datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
+      documentos_f: documentos_f,
     }
+  ]
 
-    console.log(data)
+    console.log(data[reportes].ruta)
     axios
-      .post('/reportes/generar/soli', { data }, { responseType: 'blob' })
+      .post(data[reportes].ruta, {data : data[reportes]}, { responseType: 'blob' })
       .then((response) => {
         console.log(response)
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'reporte.xlsx');
+        link.setAttribute('download', data[reportes].nombre);
         document.body.appendChild(link);
         link.click();
       })
@@ -157,117 +177,139 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
       <>
         <Head title="Reportes" />
         <div className='mx-10 mt-3'>
-          <div className='flex gap-2'>
-            <button
-              onClick={() => setReportes(0)}
-
-              className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 0 ? "border-black scale-90" : ""
-                } rounded-md text-white font-semibold text-base `}
-
-            >
-              <img
-                src="/assets/svg/export.svg"
-                width={30}
-                height={30}
-                alt="icon documento"
-              />
-              Solicitudes
-            </button>
 
 
-            <button
-              onClick={() => setReportes(1)}
 
-              className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 1 ? "border-black scale-90" : ""
-                } rounded-md text-white font-semibold text-base `}
+          <div className='mb-4 bg-white p-4 rounded-lg shadow-md'>
 
-            >
-              <img
-                src="/assets/svg/document2.svg"
-                width={40}
-                height={40}
-                alt="icon documento"
-              />
-              Documentos
-            </button>
+            <div className='flex gap-2'>
+              <button
+                onClick={() => setReportes(0)}
 
-          </div>
+                className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 0 ? "border-black scale-90" : ""
+                  } rounded-md text-white font-semibold text-base `}
 
-
-<div className='mb-5'>
-
-
-          <div className=' gap-2 flex'>
-
-            <label className="flex gap-2 my-3" >Fecha de inicio:
-              <input max={datos.fin} className='p-0 px-2 rounded-md' type="date" value={datos.inicio} onChange={(e) => setDatos({ ...datos, inicio: e.target.value })} />
-            </label>
-
-            <label className="flex gap-2 my-3" >Fecha de fin:
-              <input min={datos.inicio} className='p-0 px-2 rounded-md' type="date" value={datos.fin} onChange={(e) => setDatos({ ...datos, fin: e.target.value })} />
-            </label>
-          </div>
+              >
+                <img
+                  src="/assets/svg/export.svg"
+                  width={30}
+                  height={30}
+                  alt="icon documento"
+                />
+                Solicitudes
+              </button>
 
 
-          <div  className=' gap-2 flex'>
+              <button
+                onClick={() => setReportes(1)}
 
-            {reportes == 0 && (
+                className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 1 ? "border-black scale-90" : ""
+                  } rounded-md text-white font-semibold text-base `}
 
-              <label className="flex items-center gap-3"  >
-                Tipo Solicitudes:
+              >
+                <img
+                  src="/assets/svg/document2.svg"
+                  width={40}
+                  height={40}
+                  alt="icon documento"
+                />
+                Documentos
+              </button>
+
+            </div>
+
+            <div className='flex gap-8 my-3'>
+
+              <label className=" flex flex-col " >
+                <span className='font-semibold'>Fecha de inicio</span>
+                <input max={datos.fin} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.inicio} onChange={(e) => setDatos({ ...datos, inicio: e.target.value })} />
+              </label>
+
+              <label className="flex flex-col " >
+                <span className='font-semibold'>Fecha de fin</span>
+
+                <input min={datos.inicio} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.fin} onChange={(e) => setDatos({ ...datos, fin: e.target.value })} />
+              </label>
+
+              <label className="flex  flex-col"  >
+
+                <span className='font-semibold'>Cliente:</span>
+
                 <select
                   required
-                  value={datos.tipo}
-                  onChange={(e) => setDatos({ ...datos, tipo: parseInt(e.target.value) })}
-                  name="tipo_id"
-                  id="tipo_id"
-                  className="p-0 px-2 w-fit rounded-md "
+                  value={datos.cliente}
+                  onChange={(e) => setDatos({ ...datos, cliente: e.target.value })}
+                  name="cliente"
+                  id="cliente"
+                  className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
                 >
-                  <option value={0} select>Todas</option>
-                  {tipo_solicitudes.map((solicitud) => (
-                    <option key={solicitud.id} value={solicitud.id}>
-                      {solicitud.nombre}
+                  <option value={''} select>Todos</option>
+                  {clientes.map((cliente) => (
+                    <option key={cliente.id} value={cliente.name}>
+                      {cliente.name}
                     </option>
                   ))}
                 </select>
               </label>
 
 
-            )}
+            </div>
 
-            <label className="flex items-center gap-3 "  >
-              Cliente:
-              <select
-                required
-                value={datos.cliente}
-                onChange={(e) => setDatos({ ...datos, cliente: e.target.value})}
-                name="cliente"
-                id="cliente"
-                className="p-0 px-2 pe-6 w-fit rounded-md "
-              >
-                <option value={''}  select>Todos</option>
-                {clientes.map((cliente) => (
-                  <option key={cliente.id} value={cliente.name}>
-                    {cliente.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+           
+              {reportes == 0 && (
+                <div className='flex gap-8'>
+                  <label className="flex  flex-col "  >
+                    <span className='font-semibold'> Tipo Solicitudes:</span>
+
+                    <select
+                      required
+                      value={datos.tipo}
+                      onChange={(e) => setDatos({ ...datos, tipo: parseInt(e.target.value) })}
+                      name="tipo_id"
+                      id="tipo_id"
+                      className="p-0 px-2 w-fit rounded-md h-8"
+                    >
+                      <option value={0} select>Todas</option>
+                      {tipo_solicitudes.map((solicitud) => (
+                        <option key={solicitud.id} value={solicitud.id}>
+                          {solicitud.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="flex  flex-col"  >
+
+                    <span className='font-semibold'>Estados:</span>
+
+                    <select
+                      required
+                      value={datos.estado}
+                      onChange={(e) => setDatos({ ...datos, estado: parseInt(e.target.value)  })}
+                      name="estado"
+                      id="estado"
+                      className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
+                    >
+                      <option value={''} select>Todos</option>
+                      {estados.map((estado) => (
+                        <option key={estado.id} value={estado.id}>
+                          {estado.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+
+                </div>
+
+              )}
+         
+
+
+
           </div>
 
-          </div>
 
-
-          <div className=' flex items-center gap-3'>
-            <span>Exportar</span>
-            <button onClick={() => descargarPDF(reportes)}>
-              <img src="/assets/svg/pdf.svg" width={30} height={30} alt="icon documento" />
-            </button>
-
-            <button onClick={() => descargarExel()}>
-              <img src="/assets/svg/xlsx.svg" width={30} height={30} alt="icon documento" />
-            </button>
-          </div>
 
 
           {reportes == 0 ? (<div >
@@ -276,8 +318,22 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
             <div id='contenido' className=''>
               <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+                  <div className='bg-white w-full px-3 py-2'>
+                    <div className=' flex items-center gap-3 font-bold '>
+                      <span>Exportar</span>
+                      <button className='hover:scale-125' onClick={() => descargarPDF(reportes)}>
+                        <img src="/assets/svg/pdf.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+
+                      <button className='hover:scale-125' onClick={() => descargarExel()}>
+                        <img src="/assets/svg/xlsx.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+                    </div>
+                  </div>
                   <table className="min-w-full leading-normal overflow-hidden">
-                    <thead>
+
+                    <thead >
+
                       <tr>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           # Solicitud
@@ -329,8 +385,23 @@ export default function documentos({ auth, tipo_solicitudes,clientes }) {
 
 
             <div id='contenido' className=''>
+
               <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
                 <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+
+                  <div className='bg-white w-full px-3 py-2'>
+                    <div className=' flex items-center gap-3 font-bold '>
+                      <span>Exportar</span>
+                      <button className='hover:scale-125' onClick={() => descargarPDF(reportes)}>
+                        <img src="/assets/svg/pdf.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+
+                      <button className='hover:scale-125' onClick={() => descargarExel()}>
+                        <img src="/assets/svg/xlsx.svg" width={30} height={30} alt="icon documento" />
+                      </button>
+                    </div>
+                  </div>
+
                   <table className="min-w-full leading-normal overflow-hidden">
                     <thead>
                       <tr>
