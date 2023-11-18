@@ -22,7 +22,7 @@ class TipoSolicitudController extends Controller
         $TipoSolicitudes =  TipoSolicitud::all();
 
         return Inertia::render('Mantenimiento/Index', [
-            'TipoSolicitudes' => $TipoSolicitudes
+            'tipoSolicitudes' => $TipoSolicitudes
         ]);
     }
 
