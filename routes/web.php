@@ -54,6 +54,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
     Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
 
+    Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
+    Route::post('/configuracion/create', [TipoSolicitudController::class, 'create'])->name('tipoSolicitud.create');
+    Route::post('/configuracion/{id}', [TipoSolicitudController::class, 'update'])->name('tipoSolicitud.update');
+    Route::post('/configuracion/delete/{id}', [TipoSolicitudController::class, 'destroy'])->name('tipoSolicitud.delete');
+    
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
@@ -92,10 +97,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/coment', [ComentarioController::class, 'create'])->name('comentario.create');
     Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
-
-    Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
-    Route::post('/configuracion/create', [TipoSolicitudController::class, 'create'])->name('tipoSolicitud.create');
-    Route::post('/configuracion/update', [TipoSolicitudController::class, 'update'])->name('tipoSolicitud.update');
 
 });
 

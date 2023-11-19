@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
-import Modal from './Modal'
-import { useForm } from '@inertiajs/inertia-react';
+import React, { useEffect, useState } from 'react';
+import Modal from './Modal';
+import { useForm } from "@inertiajs/react";
 
 
-export function EditTipoSolicitud({ submit, hideModal, show, msj, tipoSolicitudData }) {
+export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, setLoading }) {
     const [mensaje, setMensaje] = useState(msj);
 
-
+    useEffect(() => {
+        setMensaje(msj)
+        console.log(msj)
+    }, [msj])
+    
     const categorySolicitud = [
         { id: 1, category: 'Servicios' },
         { id: 2, category: 'Certificacioens' },
         { id: 3, category: 'Estados Financieros' },
         { id: 4, category: 'Reportes Generales' }
     ]
+
     const { data, setData, post, reset } = useForm({
         id: tipoSolicitudData?.id,
         nombre: tipoSolicitudData?.nombre,
@@ -22,22 +27,25 @@ export function EditTipoSolicitud({ submit, hideModal, show, msj, tipoSolicitudD
 
     function submit(e) {
         e.preventDefault();
-        console.log(data)
-         
-        post(route('tipoSolicitud.update'), {
+        hideModal()
+        setLoading(true);
+
+        post(route('tipoSolicitud.update', tipoSolicitudData.id), {
             onSuccess: () => {
-                console.log('succes')
+                reset()
+                setLoading(false);
             }
         });
 
     }
+
 
     return (
 
         <Modal show={show} maxWidth='md'>
             <h1 className='w-100% py-4 text-lg text-center font-bold'>Editar Tipo de Solicitud</h1>'
 
-            <form onSubmit={submit} className="flex flex-col gap-4 text-textgray">
+            <form className="flex flex-col gap-4 text-textgray">
 
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-full">
@@ -103,20 +111,21 @@ export function EditTipoSolicitud({ submit, hideModal, show, msj, tipoSolicitudD
                     </div>
                 </div>
                 {mensaje?.error && <span className='text-red-500 text-xs italic'>{mensaje?.error[0]}</span>}
-                <div className='flex justify-end'>
-                    <button type='button' className="border py-1 w-32 rounded-xl bg-red-500 hover:bg-red-400 text-offwhite q mr-4 mt-5"
-                        onClick={hideModal}
-                    >
-                        Cancelar
-                    </button>
 
-                    <button type='submit' onClick={submit}
-                        className="border py-1 w-32 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end  mt-5">
-                        Guardar
-                    </button>
-                </div>
 
             </form>
+            <div className='flex justify-end'>
+                <button type='button' className="border py-1 w-32 rounded-xl bg-red-500 hover:bg-red-400 text-offwhite q mr-4 mt-5"
+                    onClick={() => { hideModal(); reset(); }}
+                >
+                    Cancelar
+                </button>
+
+                <button onClick={submit}
+                    className="border py-1 w-32 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end  mt-5">
+                    Guardar
+                </button>
+            </div>
 
         </Modal>
     )

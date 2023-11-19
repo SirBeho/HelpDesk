@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import Modal from './Modal'
-import { useForm } from '@inertiajs/inertia-react';
+import React, { useState } from 'react';
+import Modal from './Modal';
+import { useForm } from "@inertiajs/react";
 
 
-export function NewTipoSolicitud({ submit, hideModal, show, msj }) {
+export function NewTipoSolicitud({ submit, hideModal, show, msj, setLoading }) {
     const [mensaje, setMensaje] = useState(msj);
     const categorySolicitud = [
         { id: 1, category: 'Servicios' },
@@ -24,10 +24,11 @@ export function NewTipoSolicitud({ submit, hideModal, show, msj }) {
             setMensaje({ error: ['Todos los datos son campos requeridos'] })
             return;
         }
-
+        setLoading(true)
+        hideModal(true)
         post(route('tipoSolicitud.create'), {
             onSuccess: () => {
-                console.log('succes')
+                setLoading(false)
             }
         });
 
