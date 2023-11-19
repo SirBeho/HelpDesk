@@ -67,6 +67,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Form/Index');
     })->name('form');
 
+
+    Route::get('/dashboard', function () {
+        return Inertia::render('dashboard/Index',[
+            'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
+            'estados' => EstadoSolicitud::where('status', '1')->get(),
+            'solicitud' => Solicitud::all()->load('tipo', 'status', 'user','files.user','comentarios'),
+        ]);
+
+
+    })->name('dashboard');
+
     Route::get('/reportes', function () {
         return Inertia::render('Reportes/Index',[
             'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
