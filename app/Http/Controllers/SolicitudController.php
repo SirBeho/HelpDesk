@@ -42,14 +42,14 @@ class SolicitudController extends Controller
 
         $solicitud_id && session()->forget('solicitud_id');
 
-        if(!$solicitud_id){
+        if (!$solicitud_id) {
             $solicitud_id =  $request->id;
         }
 
         if ($mensaje) {
             session()->forget('msj');
         }
- 
+
         return Inertia::render('Admsolicitudes/Index', [
             'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
             'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
@@ -78,7 +78,7 @@ class SolicitudController extends Controller
                 'status_id' => 1,
             ]);
 
-          
+
 
             $validator = validator($request->all(), [
                 'tipo_id' => 'exists:tipo_solicitudes,id',
@@ -87,7 +87,7 @@ class SolicitudController extends Controller
                 'status_id' => 'exists:estado_solicitudes,id',
                 'descripcion' => 'required',
             ]);
-           
+
 
 
             if ($validator->fails()) {
@@ -100,27 +100,26 @@ class SolicitudController extends Controller
                 'solicitud_id' =>  $Solicitud->id,
             ]);
 
-            if($request->tipo_id > 2){
+            if ($request->tipo_id > 2) {
                 Notificacion::create(
                     [
                         'solicitud_id' =>  $Solicitud->id,
                         'emisor_id' => Auth::user()->id,
-                        'message' => "Has recibido una nueva solicitud"         
+                        'message' => "Has recibido una nueva solicitud"
                     ]
                 );
             }
-            
+
 
             $log = new LogSolicitudController();
 
             $respuesta = $log->create($request);
 
-            session()->put('msj', ["success" => $respuesta->original['msj'],"id" => $Solicitud->id]);
+            session()->put('msj', ["success" => $respuesta->original['msj'], "id" => $Solicitud->id]);
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
-            session()->put('msj', ["error" => 'No se pudo registrar la Solicitud' ]);
-           
+            session()->put('msj', ["error" => 'No se pudo registrar la Solicitud']);
         } catch (QueryException $e) {
 
             $errormsj = $e->getMessage();
@@ -136,16 +135,11 @@ class SolicitudController extends Controller
 
                     session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
-
-            }else{
-                session()->put('msj', ["error" => 'No se pudo registrar el Solicitud' ]);
+            } else {
+                session()->put('msj', ["error" => 'No se pudo registrar el Solicitud']);
             }
-
-          
-
         } catch (Exception $e) {
-            session()->put('msj', ["error" => 'Error en la accion realizada' ]);
-           
+            session()->put('msj', ["error" => 'Error en la accion realizada']);
         }
 
         if (isset($request->created_at)) {
@@ -165,7 +159,7 @@ class SolicitudController extends Controller
                 'status_id' => 'El estado seleccionado no existe.',
                 'descripcion' => 'La descripcion no puede estar en blanco.',
             ];
-            
+
             $validator = validator($request->all(), [
 
                 'id' => 'required|exists:solicitudes,id',
@@ -175,11 +169,11 @@ class SolicitudController extends Controller
                 'status_id' => 'exists:estado_solicitudes,id',
                 'descripcion' => 'required',
 
-            ],$mensajes);
+            ], $mensajes);
 
             if ($validator->fails()) {
 
-                return redirect()->route('admsolicitudes')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
+                return redirect()->route('admsolicitudes')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
 
             $Solicitud = Solicitud::findOrFail($request->id);
@@ -193,6 +187,11 @@ class SolicitudController extends Controller
             ]);
 
             $Solicitud->update($request->all());
+
+            if (Auth::user()->rol_id == 3) {
+                $Solicitud->usuarioAsignado_id = Auth::user()->id;
+            }
+            
             $Solicitud->save();
 
             if ($request->status_ant != $request->status_id) {
@@ -203,8 +202,8 @@ class SolicitudController extends Controller
                     [
                         'solicitud_id' => $request->id,
                         'emisor_id' => Auth::user()->id,
-                        'receptor_id' => $request->user_id, 
-                        'message' => $request->message          
+                        'receptor_id' => $request->user_id,
+                        'message' => $request->message
                     ]
                 );
             }
