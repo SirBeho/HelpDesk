@@ -31,6 +31,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
         }
+        
     }, [auth.user.solicitudes]);
 
     useEffect(() => {
@@ -219,7 +220,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                         <td className="font-bold w-44 py-2">
                                             Estatus
                                         </td>
-                                        <td className="flex gap-2">
+                                        <td className="flex gap-2 py-2">
                                             {dato.status.nombre}
                                             {auth.user.id != 2 && (<span onClick={() => setIsOpenModalStatus(true)}
                                                 className="cursor-pointer text-blue-600">
@@ -233,8 +234,16 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                         <td className="font-bold w-44 py-2">
                                             Descripcion
                                         </td>
-                                        <td className="flex gap-2">
+                                        <td>
                                             <p className="text-justify">{dato.descripcion}</p>
+                                        </td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Usuario Asignado
+                                        </td>
+                                        <td>
+                                            <p className="text-justify">{dato.user_asignado?.name || 'Sin Asignar'}</p>
                                         </td>
                                     </tr>
                                 </tbody>

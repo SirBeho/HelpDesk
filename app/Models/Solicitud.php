@@ -42,6 +42,11 @@ class Solicitud extends Model
         return $this->BelongsTo(User::class,'user_id');
     }
 
+    public function userAsignado(): BelongsTo
+    {
+        return $this->BelongsTo(User::class,'usuarioAsignado_id');
+    }
+
     public function tipo(): BelongsTo
     {
         return $this->BelongsTo(TipoSolicitud::class,'tipo_id');
