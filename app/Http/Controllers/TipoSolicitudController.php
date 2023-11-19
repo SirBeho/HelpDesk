@@ -26,75 +26,51 @@ class TipoSolicitudController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-
-        $validator = validator(['id' => $id], [
-            'id' => 'required|numeric'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        try {
-            $TipoSolicitud = TipoSolicitud::findOrFail($id);
-
-
-            return $TipoSolicitud;
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El TipoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error en la acción realizada'], 500);
-        }
-    }
-
     public function create(Request $request)
     {
         try {
 
             $validator = validator($request->all(), [
                 'nombre' => 'required',
+                'tipo' => 'required'
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
+
             TipoSolicitud::create($request->all());
-
-
-            return response()->json(['msj' =>  $request->description], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'No se pudo registrar el TipoSolicitud' . $e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
+
+        return redirect('configuracion');
     }
 
-    public function update($id, Request $request)
+    public function update(Request $request)
     {
 
         try {
             $validator = validator($request->all(), [
-                'nombre' => 'required',
+                'id' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $TipoSolicitud = TipoSolicitud::findOrFail($id);
+            $TipoSolicitud = TipoSolicitud::findOrFail($request->id);
             $TipoSolicitud->update($request->all());
-            $TipoSolicitud->save();
-
-
 
             return response()->json(['msj' => 'TipoSolicitud actualizado correctamente'], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El TipoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El TipoSolicitud ' . $request->id . ' no existe no fue encontrado'], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
+        return redirect('configuracion');
     }
 
     public function destroy($id)

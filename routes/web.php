@@ -94,6 +94,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
 
     Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
+    Route::post('/configuracion/create', [TipoSolicitudController::class, 'create'])->name('tipoSolicitud.create');
+    Route::post('/configuracion/update', [TipoSolicitudController::class, 'update'])->name('tipoSolicitud.update');
 
 });
 

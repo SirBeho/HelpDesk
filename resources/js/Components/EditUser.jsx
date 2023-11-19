@@ -54,6 +54,7 @@ export default function EditUser({ roles, changeRol, hideModal, update, selected
                         </select>
                     </div>
                 </div>
+                
             </form>
 
             <div className='flex justify-end'>

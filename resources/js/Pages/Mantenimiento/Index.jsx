@@ -1,14 +1,19 @@
 
 import { DataTable } from '@/Components/DataTable';
-import { NewSolicitudCategory } from '@/Components/NewSolicitudCategory';
+import { EditTipoSolicitud } from '@/Components/EditTipoSolicitud';
+import { NewTipoSolicitud } from '@/Components/NewTipoSolicitud';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from "@inertiajs/react";
-import { useState } from 'react';
+import { Head } from "@inertiajs/react";
+import { useEffect, useState } from 'react';
 
 
 
 export default function Mantenimiento({ auth, tipoSolicitudes }) {
-  const [show, setShow] = useState(false)
+  const [newTipoSilicitud, setNewTipoSilicitud] = useState(false)
+  const [editTipoSilicitud, setEditTipoSilicitud] = useState(false)
+  const [tipoSolicitudData, setTipoSolicitudData] = useState();
+
+
   const tbStructure = {
     'Tipo de Solicitud': 'nombre',
     'Categoria': 'categoria',
@@ -41,6 +46,12 @@ export default function Mantenimiento({ auth, tipoSolicitudes }) {
     }
 
   })
+
+  function getTipoSolicitudData(id) {
+    const data = tipoSolicitudes.filter(tipoSolicitud => tipoSolicitud.id === id);
+    setTipoSolicitudData(data[0]);
+    setEditTipoSilicitud(true)
+  }
 
 
 
@@ -75,14 +86,26 @@ export default function Mantenimiento({ auth, tipoSolicitudes }) {
             data={dataList}
             action={true}
             tbStructure={tbStructure}
-            onNew={()=>setShow(true)}
+            onNew={() => setNewTipoSilicitud(true)}
+            onUpdate={getTipoSolicitudData}
           />
 
-          <NewSolicitudCategory
-            show={show}
-            hideModal={()=>setShow(false)}
-          />
+          {newTipoSilicitud &&
+            <NewTipoSolicitud
+              show={newTipoSilicitud}
+              hideModal={() => setNewTipoSilicitud(false)}
+            />
+          }
+
+          {editTipoSilicitud &&
+            <EditTipoSolicitud
+              show={editTipoSilicitud}
+              tipoSolicitudData={tipoSolicitudData}
+              hideModal={() => setEditTipoSilicitud(false)}
+            />
+          }
         </div>
+
       </div>
 
     </AuthenticatedLayout>
