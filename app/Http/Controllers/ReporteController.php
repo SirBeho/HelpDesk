@@ -2,20 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EstadoSolicitud;
+use App\Models\Solicitud;
+use App\Models\TipoSolicitud;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Response;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use PhpOffice\PhpSpreadsheet\Style\Style;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+
 class ReporteController extends Controller
 {
+
+    public function index()
+    {
+        return Inertia::render('Reportes/Index',[
+            'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
+            'estados' => EstadoSolicitud::where('status', '1')->get(),
+        ]);
+    }
+    public function dashboard()
+    {
+        //total solicitures,solicitues pendientes, solicitudes en el ultimo mes,total clientes, nuevos clientes ultimo mes,promedio solicitudes por cliente
+        $indicadores = [
+            'total_solicitudes' => Solicitud::where('status_id', '!=', '4')->count(),
+            'solicitudes_pendientes' => Solicitud::where('status_id', '1')->count(),
+            'solicitudes_ultimo_mes' => Solicitud::where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
+            'total_clientes' => User::where('rol_id', '2')->count(),
+            'nuevos_clientes_ultimo_mes' => User::where('rol_id', '2')->where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
+            'promedio_solicitudes_por_cliente' => number_format((Solicitud::count() / User::where('rol_id', '2')->count()), 2, '.', ''),         
+            
+        ];
+       
+        return Inertia::render('dashboard/Index',[
+            'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
+            'estados' => EstadoSolicitud::where('status', '1')->get(),
+            'solicitud' => Solicitud::all()->load('tipo', 'status', 'user','files.user','comentarios'),
+            'indicadores' => $indicadores,
+        ]);
+
+    }
+
     public function solicitudes_exel(Request $request)
     {
 
-        
         $solicitudes = $request->data['solicitudes_f'];
     
       
