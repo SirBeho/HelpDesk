@@ -4,11 +4,14 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\TipoSolicitudController; 
 
 
 use App\Http\Controllers\SolicitudController;
@@ -18,15 +21,9 @@ use App\Models\Notificacion;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Solicitud;
-use App\Models\TipoSolicitud;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
+use App\Models\TipoSolicitud;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /*
@@ -55,10 +52,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
     Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
 
+    Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
+    Route::post('/configuracion/create', [TipoSolicitudController::class, 'create'])->name('tipoSolicitud.create');
+    Route::post('/configuracion/{id}', [TipoSolicitudController::class, 'update'])->name('tipoSolicitud.update');
+    Route::post('/configuracion/delete/{id}', [TipoSolicitudController::class, 'destroy'])->name('tipoSolicitud.delete');
+    
+    Route::get('/configuracion/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
+    Route::post('/configuracion/empresa/{id}', [EmpresaController::class, 'update'])->name('empresa.update');
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-  
+
     Route::get('/archivos', function () {
         return Inertia::render('Archivos/Index');
     })->name('archivos');

@@ -5,119 +5,124 @@ namespace App\Http\Controllers;
 use App\Models\TipoSolicitud;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 
 class TipoSolicitudController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
+        $mensaje = session('msj');
+        if ($mensaje) {
+            Session::forget('msj');
+        }
 
-        return TipoSolicitud::all();
+        $TipoSolicitudes =  TipoSolicitud::where('tipo', '>',  0)->get();
 
-    }
-
-    
-    public function show($id)
-    {
-
-        $validator = validator(['id' => $id], [
-            'id' => 'required|numeric'
+        return Inertia::render('Mantenimiento/Index', [
+            'tipoSolicitudes' => $TipoSolicitudes,
+            'msj' => $mensaje
         ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        try {
-            $TipoSolicitud = TipoSolicitud::findOrFail($id);
-       
-
-            return $TipoSolicitud;
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El TipoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error en la acción realizada'], 500);
-        }
-
     }
 
     public function create(Request $request)
-    {               
+    {
         try {
+            $mensajes = [
+                'nombre.required' => 'El nombre no puede estar en blanco',
+                'tipo.required' => 'El tipo no puede estar en blanco',
+
+            ];
 
             $validator = validator($request->all(), [
-                'nombre'=> 'required',
-            ]);
-    
+                'nombre' => 'required',
+                'tipo' => 'required'
+            ], $mensajes);
+
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
+
+                return redirect()->route('usuarios.index')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
+
             TipoSolicitud::create($request->all());
-           
-          
-            return response()->json(['msj' =>  $request->description], 200);
-        
+
+            session()->put('msj', ["success" => 'Tipo de solicitud creada con exito']);
+
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el TipoSolicitud'.$e->getMessage()], 404);
+            return response()->json(['error' => 'No se pudo registrar el TipoSolicitud' . $e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
+
+        return redirect(route('tipoSolicitud.index'));
     }
 
-    public function update($id,Request $request)
+    public function update(Request $request)
     {
-        
+
         try {
+            $mensajes = [
+                'id.exists' => 'El id es invalido',
+                'id.required' => 'El id no puede estar en blanco',
+
+            ];
+
             $validator = validator($request->all(), [
-                'nombre'=> 'required',
-            ]);
-    
+                'id' => 'required|exists:tipo_solicitudes,id',
+            ], $mensajes);
+
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
+
+                return redirect()->route('usuarios.index')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
 
-            $TipoSolicitud = TipoSolicitud::findOrFail($id);
+
+            $TipoSolicitud = TipoSolicitud::findOrFail($request->id);
             $TipoSolicitud->update($request->all());
-            $TipoSolicitud->save();
 
-           
-
-            return response()->json(['msj' => 'TipoSolicitud actualizado correctamente'], 200);
+            session()->put('msj', ["success" => 'Tipo de solicitud actializada con exito']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El TipoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El TipoSolicitud ' . $request->id . ' no existe no fue encontrado'], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
+        return redirect(route('tipoSolicitud.index'));
     }
 
     public function destroy($id)
     {
-        $validator = validator(['id' => $id], [
-            'id' => 'required|numeric'
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
         try {
-            $TipoSolicitud = TipoSolicitud::findOrFail($id);
-            if ($TipoSolicitud->status) {
-                $TipoSolicitud->status = 0;
-                $TipoSolicitud->save();
-                return response()->json(['msj' => 'TipoSolicitud eliminado correctamente'], 200);
+
+            $mensajes = [
+                'id.exists' => 'El id es invalido',
+                'id.required' => 'El id no puede estar en blanco',
+    
+            ];
+    
+            $validator = validator(['id' => $id], [
+                'id' => 'required|exists:tipo_solicitudes,id',
+            ], $mensajes);
+    
+            if ($validator->fails()) {
+    
+                return redirect()->route('usuarios.index')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
-            return response()->json(['msj' => 'Este TipoSolicitud ya ha sido eliminado'], 200);
+
+            $TipoSolicitud = TipoSolicitud::findOrFail($id);
+            $TipoSolicitud->delete();
+             
+            session()->put('msj', ["success" => 'Tipo de solicitud eliminada con exito']);
+         
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'El TipoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
+        return redirect(route('tipoSolicitud.index'));
     }
+
+   
 }

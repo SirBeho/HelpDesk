@@ -31,6 +31,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
             setdato(solicitudSeleccionada);
             setData(solicitudSeleccionada);
         }
+        
     }, [auth.user.solicitudes]);
 
     useEffect(() => {
@@ -155,77 +156,132 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
                                 {(dato.status_id == 1 && auth.user.id == dato.user.id) &&
 
-                                    <div className="font-bold w-full flex justify-end">
-                                        <button onClick={() => setEdit(true)} className="bg-blue-400 px-2 py-1 rounded-lg font-semibold text-white"> Editar </button>
-                                    </div>
-                                }
-                                <table>
-                                    <thead></thead>
+                                <div className="font-bold w-full flex justify-end">
+                                    <button onClick={() => setEdit(true)} className="bg-blue-400 px-2 py-1 rounded-lg font-semibold text-white"> Editar </button>
+                                </div>
+                            }
+                            <table>
+                                <thead></thead>
 
-                                    <tbody>
-                                        <tr className="w-fit p-6">
-                                            <td className="font-bold w-44 py-2">
-                                                Número solicitud
-                                            </td>
-                                            <td>{dato.numero}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Fecha
-                                            </td>
-                                            <td>
-                                                {format(
-                                                    new Date(dato.created_at),
-                                                    "dd/MM/yyyy hh:mm:ss a"
-                                                )}
-                                            </td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Tramite
-                                            </td>
-                                            <td>{dato.tipo.nombre}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Nombre empresa
-                                            </td>
-                                            <td>{dato.user.empresa}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                RNC
-                                            </td>
-                                            <td>{dato.user.rnc}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Nombre solicitante
-                                            </td>
-                                            <td>{dato.user.name}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Télefono
-                                            </td>
-                                            <td>{dato.user.telefono}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Correo
-                                            </td>
-                                            <td>{dato.user.email}</td>
-                                        </tr>
-                                        <tr className="w-fit">
-                                            <td className="font-bold w-44 py-2">
-                                                Estatus
-                                            </td>
-                                            <td className="flex gap-2">
-                                                {dato.status.nombre}
-                                                {auth.user.rol_id != 2 && (<span onClick={() => setIsOpenModalStatus(true)}
-                                                    className="cursor-pointer text-blue-600">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                <tbody>
+                                    <tr className="w-fit p-6">
+                                        <td className="font-bold w-44 py-2">
+                                            Número solicitud
+                                        </td>
+                                        <td>{dato.numero}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Fecha
+                                        </td>
+                                        <td>
+                                            {format(
+                                                new Date(dato.created_at),
+                                                "dd/MM/yyyy hh:mm:ss a"
+                                            )}
+                                        </td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Tramite
+                                        </td>
+                                        <td>{dato.tipo.nombre}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Nombre empresa
+                                        </td>
+                                        <td>{dato.user.empresa}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            RNC
+                                        </td>
+                                        <td>{dato.user.rnc}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Nombre solicitante
+                                        </td>
+                                        <td>{dato.user.name}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Télefono
+                                        </td>
+                                        <td>{dato.user.telefono}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Correo
+                                        </td>
+                                        <td>{dato.user.email}</td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Estatus
+                                        </td>
+                                        <td className="flex gap-2 py-2">
+                                            {dato.status.nombre}
+                                            {auth.user.id != 2 && (<span onClick={() => setIsOpenModalStatus(true)}
+                                                className="cursor-pointer text-blue-600">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                                </svg>
+                                            </span>)}
+                                        </td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Descripcion
+                                        </td>
+                                        <td>
+                                            <p className="text-justify">{dato.descripcion}</p>
+                                        </td>
+                                    </tr>
+                                    <tr className="w-fit">
+                                        <td className="font-bold w-44 py-2">
+                                            Usuario Asignado
+                                        </td>
+                                        <td>
+                                            <p className="text-justify">{dato.user_asignado?.name || 'Sin Asignar'}</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                            <div className="flex flex-col w-full border h-92 p-4 gap-2 rounded-md">
+                                <span className="font-semibold">Comentarios</span>
+                                <div className="flex flex-col">
+                                    {(msj?.error && Array.isArray(msj?.error)) &&
+                                        msj.error.map((msj, index) => (
+                                            <h1 key={index} className="flex w-full text-red-400">
+                                                {msj}
+                                            </h1>
+                                        ))
+                                    }
+                                </div>
+                                {(auth.user.rol_id != 2) &&
+                                <div className="flex justify-between w-full gap-5">
+                                    <span className="w-20">Tesoria:</span><input value={comentario} onChange={(e) => setComentario(e.target.value)} type="text" className="h-8 w-full rounded-md" />
+                                    <label onClick={() => post(route("comentario.create", { solicitud_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit cursor-pointer"> Agregar</label>
+                                </div>}
+
+                                <div className="flex flex-wrap gap-1">
+                                    {dato.comentarios.filter(
+                                        (comentario) => (comentario.status == 1)
+                                    ).map((comentario) => (
+                                        <div key={comentario.id} className="flex gap-3 w-full group ">
+                                            <div className="flex flex-col justify-between">
+                                                <div className="flex flex-col">
+                                                    <span className="w-20">Tesoria:</span>
+                                                    <span className="hidden text-sm group-hover:block "> {comentario.created_at && format(new Date(comentario.created_at), 'dd/MM/yyyy')}</span>
+                                                </div>
+                                                <span className='hidden  mt-2 group-hover:block cursor-pointer self' onClick={() => post(route("comentario.destroy", { comentario_id: comentario.id }))}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:stroke-red-600">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+
                                                     </svg>
                                                 </span>)}
                                             </td>
