@@ -50,7 +50,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
     const solicitudes_filtradas = solicitudes.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
-
+      console.log(fechaCreacion, soli.created_at)
       if (datos.inicio && fechaCreacion < inicio) {
         return false;
       }

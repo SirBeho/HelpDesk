@@ -6,12 +6,14 @@ import { format } from "date-fns";
 import { createRoot } from 'react-dom/client';
 import ApexCharts from 'apexcharts';
 import { closePath } from 'pdf-lib';
+import moment from 'moment';
+import 'moment-timezone';
 
 
 
 
 
-export default function documentos({ auth, tipo_solicitudes, clientes, estados, solicitud }) {
+export default function documentos({ auth, tipo_solicitudes, clientes, estados, solicitud, indicadores }) {
 
   const solicitudes = solicitud.filter(solicitud => solicitud.tipo_id > 2);
 
@@ -43,6 +45,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
   const tipoChartRef = useRef(null);
   const estatusChartRef = useRef(null);
   const clienteChartRef = useRef(null);
+  const usuarioChartRef = useRef(null);
 
   const solicitudes_tipo = (tipos, totalSolicitudes) => {
 
@@ -343,6 +346,103 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
   }
 
+  const solicitudes_usuarios = (tipos, totalSolicitudes, meses) => {
+
+    const options = {
+      series: tipos,
+      chart: {
+        height: 450,
+        type: 'line',
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          dynamicAnimation: {
+            enabled: true,
+            speed: 350
+          },
+
+          animateGradually: {
+            enabled: true,
+            delay: 200
+          },
+
+        }
+
+
+      },
+      plotOptions: {
+        line: {
+          columnWidth: '75%',
+          distributed: true,
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: (value, context) => {
+          return showPercentages ? (value / totalSolicitudes * 100).toFixed(0) + '%' : value;
+        },
+        style: {
+          fontSize: '12px'
+        }
+      },
+      legend: {
+        show: true,
+      },
+      xaxis: {
+        categories: meses,
+        labels: {
+          style: {
+
+            fontSize: '10px'
+          }
+        },
+
+      },
+      yaxis: {
+        show: true,
+        min: 0,
+        forceNiceScale: true,
+        crosshairs: {
+          show: true,
+          position: 'back',
+          stroke: {
+            color: '#b6b6b6',
+            width: 1,
+            dashArray: 0,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          offsetX: 0,
+        },
+
+      },
+      title: {
+        text: 'Solicitudes por Usuarios',
+        floating: false,
+
+        align: 'center',
+        style: {
+          color: '#444',
+          fontSize: '20px'
+        }
+      }
+    };
+
+    if (!usuarioChartRef.current) {
+      const chart = new ApexCharts(document.getElementById("chart_usuario"), options);
+      chart.render();
+      usuarioChartRef.current = chart;
+    } else {
+      usuarioChartRef.current.updateOptions(options);
+    }
+
+
+  }
+
 
 
   const filterDataByDate = () => {
@@ -448,10 +548,59 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       solicitudes_clientes(clientesSolicitudes, totalSolicitudes);
 
 
+      let fechaActual = new Date();
+      let fechaMin = solicitudes_f.reduce((min, solicitud) => {
+        const fechaCreacion = new Date(solicitud.created_at);
+        fechaCreacion.setHours(fechaCreacion.getHours() + 4);
+
+        return fechaCreacion < min ? fechaCreacion : min;
+      }, new Date());
+
+      let mesMin = fechaMin.getMonth() + 1, anioMin = fechaMin.getFullYear();
+      let mesActual = fechaActual.getMonth() + 1, anioActual = fechaActual.getFullYear();
+
+      const meses = [];
+
+      for (let anio = anioMin; anio <= anioActual; anio++) {
+        for (let mes = (anio === anioMin ? mesMin : 0); mes <= (anio === anioActual ? mesActual : 11); mes++) {
+          meses.push([mes + "/" + anio]);
+        }
+      }
+
+      const UsuariosSolicitudesMes = {};
+      const totalSolicitudes_mes = meses.reduce((obj, mes) => {
+        obj[mes] = 0;
+        return obj;
+      }, {});
+
+      solicitudes_f.forEach((solicitud) => {
+        const fechaCreacion = new Date(solicitud.created_at);
+        fechaCreacion.setHours(fechaCreacion.getHours() + 4);
+
+        const mes = fechaCreacion.getMonth() + 1;
+        const anio = fechaCreacion.getFullYear();
+        const fecha = mes + "/" + anio;
+
+        if (!UsuariosSolicitudesMes[solicitud.user.name]) {
+          UsuariosSolicitudesMes[solicitud.user.name] = {};
+          meses.forEach(mes => UsuariosSolicitudesMes[solicitud.user.name][mes] = 0);
+        }
+        UsuariosSolicitudesMes[solicitud.user.name][fecha]++;
+
+        totalSolicitudes_mes[fecha]++;
+      });
+
+
+      const result = Object.keys(UsuariosSolicitudesMes).map((userName) => {
+        return {
+          name: userName,
+          data: Object.values(UsuariosSolicitudesMes[userName]),
+        };
+      });
+
+      solicitudes_usuarios(result, totalSolicitudes_mes, meses);
 
     }
-
-
 
   }, [solicitudes_f, showPercentages]);
 
@@ -475,15 +624,13 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               {/*Metric Card*/}
               <div className="bg-gradient-to-b from-green-200 to-green-100 border-b-4 border-green-600 rounded-lg shadow-xl p-2">
                 <div className="flex flex-row items-center">
-                  <div className="flex-shrink pr-4">
-                    <div className="rounded-full p-2 bg-green-600">
-                      <i className="fa fa-wallet fa-2x fa-inverse" />
-                    </div>
+                <div className="rounded-full w-14 h-14 p-3 bg-green-600">
+                    <img className='w-full h-full'src="/assets/svg/todo2.svg" alt="icon documento"/>
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Solicitudes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Total Solicitudes</h2>
                     <p className="font-bold text-xl">
-                      $3249{" "}
+                      {indicadores.total_solicitudes}
                       <span className="text-green-500">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -497,15 +644,13 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               {/*Metric Card*/}
               <div className="bg-gradient-to-b from-pink-200 to-pink-100 border-b-4 border-pink-500 rounded-lg shadow-xl p-2">
                 <div className="flex flex-row items-center">
-                  <div className="flex-shrink pr-4">
-                    <div className="rounded-full p-2 bg-pink-600">
-                      <i className="fas fa-users fa-2x fa-inverse" />
-                    </div>
+                <div className="rounded-full w-14 h-14 p-3 bg-pink-600">
+                    <img className='w-full h-full'src="/assets/svg/todo.svg" alt="icon documento"/>
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Total Clientes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Solicitudes pendientes</h2>
                     <p className="font-bold text-3xl">
-                      249{" "}
+                      {indicadores.solicitudes_pendientes}
                       <span className="text-pink-500">
                         <i className="fas fa-exchange-alt" />
                       </span>
@@ -519,15 +664,13 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               {/*Metric Card*/}
               <div className="bg-gradient-to-b from-yellow-200 to-yellow-100 border-b-4 border-yellow-600 rounded-lg shadow-xl p-2">
                 <div className="flex flex-row items-center">
-                  <div className="flex-shrink pr-4">
-                    <div className="rounded-full p-2 bg-yellow-600">
-                      <i className="fas fa-user-plus fa-2x fa-inverse" />
-                    </div>
+                <div className="rounded-full w-14 h-14 p-3 bg-yellow-600">
+                    <img className='w-full h-full'src="/assets/svg/todo3.svg" alt="icon documento"/>
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Nuevos Cliente - ultimo mes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Nuevas Solicitudes - ultimo mes</h2>
                     <p className="font-bold text-3xl">
-                      2{" "}
+                      {indicadores.solicitudes_ultimo_mes}
                       <span className="text-yellow-600">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -541,14 +684,12 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               {/*Metric Card*/}
               <div className="bg-gradient-to-b from-blue-200 to-blue-100 border-b-4 border-blue-500 rounded-lg shadow-xl p-2">
                 <div className="flex flex-row items-center">
-                  <div className="flex-shrink pr-4">
-                    <div className="rounded-full p-2 bg-blue-600">
-                      <i className="fas fa-server fa-2x fa-inverse" />
-                    </div>
+                <div className="rounded-full w-14 h-14 p-3 bg-blue-600">
+                    <img className='w-full h-full'src="/assets/svg/user3.svg" alt="icon documento"/>
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Solicitudes por trabajar</h2>
-                    <p className="font-bold text-3xl">152 days</p>
+                    <h2 className="font-bold uppercase text-gray-600">Total Clientes</h2>
+                    <p className="font-bold text-3xl"> {indicadores.total_clientes}</p>
                   </div>
                 </div>
               </div>
@@ -556,16 +697,14 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
             </div>
             <div className="w-full md:w-1/2 xl:w-1/3 p-4 px-8">
               {/*Metric Card*/}
-              <div className="bg-gradient-to-b from-indigo-200 to-indigo-100 border-b-4 border-indigo-500 rounded-lg shadow-xl p-2">
+              <div className="bg-gradient-to-b from-indigo-200 to-indigo-100 border-b-4 border-indigo-700 rounded-lg shadow-xl p-2">
                 <div className="flex flex-row items-center">
-                  <div className="flex-shrink pr-4">
-                    <div className="rounded-full p-2 bg-indigo-600">
-                      <i className="fas fa-tasks fa-2x fa-inverse" />
-                    </div>
+                <div className="rounded-full w-14 h-14 p-3 bg-indigo-700">
+                    <img className='w-full h-full'src="/assets/svg/user2.svg" alt="icon documento"/>
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">To Do List</h2>
-                    <p className="font-bold text-3xl">7 tasks</p>
+                    <h2 className="font-bold uppercase text-gray-600">Nuevos Clientes - Ultimo Mes</h2>
+                    <p className="font-bold text-3xl"> {indicadores.nuevos_clientes_ultimo_mes}</p>
                   </div>
                 </div>
               </div>
@@ -575,15 +714,16 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               {/*Metric Card*/}
               <div className="bg-gradient-to-b from-red-200 to-red-100 border-b-4 border-red-500 rounded-lg shadow-xl p-2">
                 <div className="flex flex-row items-center">
-                  <div className="flex-shrink pr-4">
-                    <div className="rounded-full p-2 bg-red-600">
-                      <i className="fas fa-inbox fa-2x fa-inverse" />
-                    </div>
+
+                  <div className="rounded-full w-14 h-14 p-3 bg-red-600">
+                    <img className='w-full h-full'src="/assets/svg/average.svg" alt="icon documento"/>
+
+
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Issues</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Promedio Solicitudes por cliente</h2>
                     <p className="font-bold text-3xl">
-                      3{" "}
+                      {indicadores.promedio_solicitudes_por_cliente}
                       <span className="text-red-500">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -728,6 +868,19 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                 Mostrar {showPercentages ? 'Valores Numéricos' : 'Porcentajes'}
               </button>
             </div>
+
+
+            {/* Grafio por usuario */}
+            <div className=' mb-4 w-[49%] p-4 rounded-lg shadow-md bg-white'>
+
+              <div id='chart_usuario' className='w-full border-b-2 border-gray-300 '>
+              </div>
+
+              <button className='mt-1' onClick={() => setShowPercentages(!showPercentages)}>
+                Mostrar {showPercentages ? 'Valores Numéricos' : 'Porcentajes'}
+              </button>
+            </div>
+
 
 
           </div>
