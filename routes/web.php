@@ -8,11 +8,20 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UserController;
-
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\TipoSolicitudController; 
+
+
+use App\Http\Controllers\SolicitudController;
+use App\Models\EstadoSolicitud;
+use App\Models\Notificacion;
+
+use App\Models\File;
+use App\Models\User;
+use App\Models\Solicitud;
+
 use App\Models\TipoSolicitud;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -66,8 +75,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reportes', function () {
         return Inertia::render('Reportes/Index',[
             'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
+            'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
+            'estados' => EstadoSolicitud::where('status', '1')->get(),
         ]);
+
+
     })->name('reportes');
+
+    Route::post('/reportes/generar/soli', [ReporteController::class, 'solicitudes_exel']);
+    Route::post('/reportes/generar/docu', [ReporteController::class, 'documentos_exel']);
 
     Route::get('/reportes1', function () {
         return Inertia::render('Reportes/reporte_solicitudes');

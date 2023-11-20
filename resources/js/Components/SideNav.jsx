@@ -7,7 +7,7 @@ const navItems = [
         icon: "/assets/svg/home.svg",
         title: "INICIO",
         route: route('dashboard'),
-        rol: [1,2,3,4]
+        rol: [1,2,3]
     },
 
     {
@@ -15,7 +15,7 @@ const navItems = [
         icon: "/assets/svg/board.svg",
         title: "Administración de solicitudes",
         route: route('admsolicitudes'),
-        rol: [1,2,3,4]
+        rol: [1,2,3]
       
     },
 
@@ -24,7 +24,7 @@ const navItems = [
         icon: "/assets/svg/doc.svg",
         title: "Panel De Documentos",
         route:  route('panel'),
-        rol: [1,2,3,4]
+        rol: [1,2,3]
     },
 
     {
@@ -49,6 +49,7 @@ const navItems = [
         icon: "/assets/svg/database.svg",
         title: "REPORTES",
         route:  route('reportes'),
+
         rol: [1,3,4]
     },
     {
@@ -57,6 +58,7 @@ const navItems = [
         title: "MANTENIMIENTO",
         route:  route('tipoSolicitud.index'),
         rol: [1]
+
     }
 ];
 

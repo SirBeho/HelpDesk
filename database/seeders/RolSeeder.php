@@ -24,13 +24,10 @@ class RolSeeder extends Seeder
         ]);
 
         Rol::factory()->create([
-            'nombre'=> "Usuario1",
+            'nombre'=> "Usuario",
             'status'=> 1 
         ]);
-        Rol::factory()->create([
-            'nombre'=> "Usuario2",
-            'status'=> 1 
-        ]);
+      
 
         
     }

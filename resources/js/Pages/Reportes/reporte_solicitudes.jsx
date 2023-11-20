@@ -1,65 +1,156 @@
 import { format } from "date-fns";
 
-export default function Reporte({ solicitudes_f, rangoFecha }) {
+export default function Reporte({ solicitudes_f, datos }) {
+
   return (
-    <div className="mx-10 bg-white p-5 rounded shadow-lg">
-      <div className="text-center mb-5">
-        <img src="./assets/colorfullLogo.png" alt="Logo" className="w-28" />
-        <h1 className="text-3xl font-semibold mt-3">
-          Reporte de Solicitudes por rango de Fecha
-        </h1>
-        <div className="flex justify-center mt-2 text-lg text-gray-600">
-          <span>Desde: {rangoFecha?.inicio || "Inicio"}</span>
-          <span className="mx-2">-</span>
-          <span>Hasta: {rangoFecha?.fin || "Actual"}</span>
-        </div>
+    <div className=" mx-10 bg-white ">
+
+      <div className="text-center mb-10 relative w-full">
+        <img src="./assets/colorfullLogo.png" alt="Logo" className="w-1/6 absolute top-0 left-0" />
+
+        <h1 className="text-2xl mt-3 [word-spacing:10px]" >  TESORIA SRL </h1>
+        <h2>C/22A apto N1, Embrujo III, Santiago Rep. Dom.</h2>
+        <h2>RNC : 132706498 &nbsp;&nbsp;Tel.: 809-805-7566</h2>
       </div>
-      <div className="overflow-x-auto">
-        {rangoFecha?.tipo ? (<span className="block mb-3">Tipo de solicitud: {solicitudes_f[0].tipo.nombre}</span>) : null }
-        <table className="min-w-full">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 bg-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
-                # Solicitud
+
+      <table className="min-w-full w-full leading-normal overflow-hidden  text-lg">
+        <tbody className=" block w-full pb-5" >
+
+
+          <tr className="w-full flex " >
+            <td className="flex w-1/2">
+              <h1 className="w-20  font-medium ">Reporte:</h1>
+              SOL00456
+            </td>
+            <td className="flex w-1/2">
+              <h1 className="w-20  font-medium">Usuario:</h1>
+              Angel Polanco
+            </td>
+          </tr>
+
+          <tr className="w-full flex" >
+            <td className="flex w-1/2">
+              <h1 className="w-20  font-medium ">Desde:</h1>
+              {datos?.inicio}
+            </td>
+            <td className="flex w-1/2">
+              <h1 className="w-20  font-medium">Fecha:</h1>
+              06/11/2023
+            </td>
+          </tr>
+
+          <tr className="w-full flex" >
+            <td className="flex w-1/2">
+              <h1 className="w-20  font-medium ">Hasta:</h1>
+              {datos?.fin }
+            </td>
+            <td className="flex w-1/2">
+              <h1 className="w-20  font-medium">Hora:</h1>
+              5:28:45 p.m.
+            </td>
+          </tr>
+
+         
+
+            <tr className="w-full flex" >
+            {datos?.tipo ? (
+              <td className="flex w-1/2">
+                <h1 className="w-20  font-medium ">Tipo:</h1>
+                {solicitudes_f[0].tipo.nombre}
+              </td>
+                ) : null}
+
+
+              {datos?.cliente ? (
+              <td className="flex w-1/2">
+                <h1 className="w-20  font-medium ">Cliente:</h1>
+                {solicitudes_f[0].user.name}
+              </td>
+                ) : null}
+
+
+          {!(datos?.tipo && datos?.cliente) && datos?.estado ? (
+              <td className="flex w-1/2">
+                <h1 className="w-20  font-medium ">Estado:</h1>
+                {solicitudes_f[0].status.nombre}
+              </td>
+              
+                ) : null}
+
+
+            </tr>
+
+            {datos?.tipo && datos?.cliente && datos?.estado ? (
+              <tr>
+              <td className="flex w-1/2">
+                <h1 className="w-20  font-medium ">Estado de solicitud:</h1>
+                {solicitudes_f[0].status.nombre}
+              </td>
+              </tr>
+              
+                ) : null}
+        
+
+
+        </tbody>
+      </table>
+      
+        <div className=" relative w-full h-14  mt-1 bg-gray-300 text-[35px] ">
+          <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de Solicitudes</h1>
+        </div>
+
+        <table className="min-w-full w-full">
+          <thead >
+            <tr className="bg-darkblue   text-left">
+              <th className="pb-3 text-white uppercase tracking-wider">
+                #Solicitud
               </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="pb-3 text-white uppercase tracking-wider">
                 Tipo
               </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="pb-3 text-white uppercase tracking-wider">
                 Cliente
               </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="pb-3 text-white uppercase tracking-wider">
+                RNC
+              </th>
+              <th className="pb-3 text-white uppercase tracking-wider">
                 Fecha
               </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="pb-3 text-white uppercase tracking-wider">
                 Status
+              </th>
+              <th className="pb-3 text-white uppercase tracking-wider">
+                Correo
               </th>
             </tr>
           </thead>
           <tbody>
             {solicitudes_f &&
               solicitudes_f.map((user, i) => (
-                <tr key={i} className={i % 2 === 0 ? "bg-gray-100" : ""}>
-                  <td className="px-6 py-4 whitespace-no-wrap">{user.numero}</td>
-                  <td className="px-6 py-4 whitespace-no-wrap">{user.tipo.nombre}</td>
-                  <td className="px-6 py-4 whitespace-no-wrap">{user.user.name}</td>
-                  <td className="px-6 py-4 whitespace-no-wrap">
+                <tr key={i} className={i % 2 === 0 ? "bg-gray-100" : "bg-white"}>
+                  <td className="pb-4 pt-2 h-fit whitespace-no-wrap">{user.numero}</td>
+                  <td className="pb-4 pt-2 whitespace-no-wrap">{user.tipo.nombre}</td>
+                  <td className="pb-4 pt-2 whitespace-no-wrap">{user.user.name}</td>
+                  <td className="pb-4 pt-2 whitespace-no-wrap">{user.user.rnc}</td>
+                  <td className="pb-4 pt-2 whitespace-no-wrap">
                     {format(new Date(user.created_at), "dd/MM/yyyy hh:mm:ss a")}
                   </td>
-                  <td className="px-6 py-4 whitespace-no-wrap">{user.status.nombre}</td>
+                  <td className=" whitespace-no-wrap">{user.status.nombre}</td>
+                  <td className=" whitespace-no-wrap">{user.user.email}</td>
                 </tr>
               ))
-              }
+            }
 
-           <tr className="bg-gray-200">
-              <td colSpan="6" className="px-6 py-4 font-semibold text-gray-800">
+            <tr className="bg-gray-300 mt-2 text-black ">
+              <td className="pb-4 ">
                 Total de Solicitudes: {solicitudes_f?.length || 0}
               </td>
             </tr>
-              
+
           </tbody>
         </table>
-      </div>
+   
     </div>
   );
 }
