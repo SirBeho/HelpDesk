@@ -20,17 +20,19 @@
 
 @keyframes up-down {
     0% {
-        transform: translateY(-100%) ;
+        transform: translateY(-100%);
     }
+
     100% {
-        transform: translateY(0) ;
+        transform: translateY(0);
     }
 }
 
 @keyframes -up-down {
     0% {
-        transform: translateY(-100%) translateX(-50%) ;
+        transform: translateY(-100%) translateX(-50%);
     }
+
     100% {
         transform: translateY(0) translateX(-50%);
     }
@@ -38,10 +40,11 @@
 
 @keyframes down-up {
     0% {
-        transform: translateY(100%) ;
+        transform: translateY(100%);
     }
+
     100% {
-        transform: translateY(0) ;
+        transform: translateY(0);
     }
 }
 
@@ -49,12 +52,17 @@
     0% {
         transform: translateY(100%) translateX(50%);
     }
+
     100% {
         transform: translateY(0) translateX(50%);
     }
 }
 
 
-.thStyle{
+.thStyle {
     @apply px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider;
+}
+
+.activeTab {
+    @apply text-blue-600 bg-nav dark:text-blue-500
 }

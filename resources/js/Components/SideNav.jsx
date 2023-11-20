@@ -53,7 +53,7 @@ const navItems = [
     },
     {
         id: 8,
-        icon: "/assets/svg/database.svg",
+        icon: "/assets/svg/tools.svg",
         title: "MANTENIMIENTO",
         route:  route('tipoSolicitud.index'),
         rol: [1]

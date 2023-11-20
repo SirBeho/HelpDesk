@@ -2,18 +2,18 @@
 import { DataTable } from '@/Components/DataTable';
 import DeleteUser from '@/Components/DeleteUser';
 import { EditTipoSolicitud } from '@/Components/EditTipoSolicitud';
-import EditUser from '@/Components/EditUser';
+import Empresa from '@/Components/Empresa';
 import Loading from '@/Components/Loading';
 import Modal from '@/Components/Modal';
 import { NewTipoSolicitud } from '@/Components/NewTipoSolicitud';
 import { SuccessAlert } from '@/Components/SuccessAlert';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { useEffect, useState } from 'react';
 
 
 
-export default function Mantenimiento({ auth, tipoSolicitudes, msj }) {
+export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
   const [currentData, setCurrentData] = useState(tipoSolicitudes);
   const [modalDestroy, setModalDestroy] = useState(false)
   const [newTipoSilicitud, setNewTipoSilicitud] = useState(false)
@@ -22,7 +22,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj }) {
   const [succesAlert, setSuccesAlert] = useState(msj?.success);
   const [loading, setLoading] = useState(false)
 
-  const {  post } = useForm({});
+  const { post } = useForm({});
 
   useEffect(() => {
 
@@ -31,35 +31,37 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj }) {
   }, [msj]);
 
   useEffect(() => {
-    const dataList = tipoSolicitudes.map(tipoSolicitud => {
+    if (tipoSolicitudes) {
+      const dataList = tipoSolicitudes.map(tipoSolicitud => {
 
-      delete tipoSolicitud.created_at;
-      delete tipoSolicitud.updated_at;
+        delete tipoSolicitud.created_at;
+        delete tipoSolicitud.updated_at;
 
 
-      if (tipoSolicitud.tipo === 1) {
-        tipoSolicitud['categoria'] = 'Servicios';
+        if (tipoSolicitud.tipo === 1) {
+          tipoSolicitud['categoria'] = 'Servicios';
 
-        return tipoSolicitud;
-      }
-      if (tipoSolicitud.tipo === 2) {
-        tipoSolicitud['categoria'] = 'Certificaciones';
+          return tipoSolicitud;
+        }
+        if (tipoSolicitud.tipo === 2) {
+          tipoSolicitud['categoria'] = 'Certificaciones';
 
-        return tipoSolicitud;
-      }
-      if (tipoSolicitud.tipo === 3) {
-        tipoSolicitud['categoria'] = 'Estados Financieros';
+          return tipoSolicitud;
+        }
+        if (tipoSolicitud.tipo === 3) {
+          tipoSolicitud['categoria'] = 'Estados Financieros';
 
-        return tipoSolicitud;
-      }
-      if (tipoSolicitud.tipo === 4) {
-        tipoSolicitud['categoria'] = 'Reportes Generales';
+          return tipoSolicitud;
+        }
+        if (tipoSolicitud.tipo === 4) {
+          tipoSolicitud['categoria'] = 'Reportes Generales';
 
-        return tipoSolicitud;
-      }
+          return tipoSolicitud;
+        }
 
-    })
-    setCurrentData(dataList);
+      })
+      setCurrentData(dataList);
+    }
   }, [tipoSolicitudes]);
 
   const tbStructure = {
@@ -111,17 +113,16 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj }) {
 
           <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-8">
             <li className="me-2">
-              <a href="#" aria-current="page" className="inline-block p-4 text-blue-600  bg-nav rounded-t-lg  dark:text-blue-500">Solicitudes</a>
-            </li>
-            <li className="me-2">
-              <a href="#" className="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300">Bloques de Factura</a>
+              <Link href={route('tipoSolicitud.index')} aria-current="page" className={`inline-block p-4 rounded-t-lg hover:text-gray-600  hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 ${tipoSolicitudes && 'activeTab'}`}>Solicitudes</Link>
             </li>
 
             <li className="me-2">
-              <a href="#" className="inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300">Empresa</a>
+              <Link href={route('empresa.index')} 
+              className={`inline-block p-4 rounded-t-lg hover:text-gray-600  hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 ${empresa && 'activeTab'}`}>Empresa</Link>
             </li>
-
           </ul>
+
+
           {currentData &&
             <DataTable
               data={currentData}
@@ -133,6 +134,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj }) {
 
             />
           }
+
           {newTipoSilicitud &&
             <NewTipoSolicitud
               show={newTipoSilicitud}
@@ -169,6 +171,15 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj }) {
             />
 
           </Modal>
+          
+          {empresa && 
+            <Empresa
+              empresa={empresa}
+              setLoading={setLoading}
+            />
+
+          }
+
         </div>
 
       </div>

@@ -123,4 +123,6 @@ class TipoSolicitudController extends Controller
         }
         return redirect(route('tipoSolicitud.index'));
     }
+
+   
 }
