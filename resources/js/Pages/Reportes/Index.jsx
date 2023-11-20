@@ -50,7 +50,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
     const solicitudes_filtradas = solicitudes.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
-
+      console.log(fechaCreacion, soli.created_at)
       if (datos.inicio && fechaCreacion < inicio) {
         return false;
       }
@@ -345,10 +345,16 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
                           Cliente
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          RNC
+                        </th>
+                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Fecha
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Status
+                        </th>
+                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          CORREO
                         </th>
                       </tr>
                     </thead>
@@ -367,10 +373,16 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
                               <p className="text-gray-900 whitespace-no-wrap">{user.user.name}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                              <p className="text-gray-900 whitespace-no-wrap">{user.user.rnc}</p>
+                            </td>
+                            <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{format(new Date(user.created_at), "dd/MM/yyyy hh:mm:ss a")}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.status.nombre}</p>
+                            </td>
+                            <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                              <p className="text-gray-900 whitespace-no-wrap">{user.user.email}</p>
                             </td>
                           </tr>
                         ))

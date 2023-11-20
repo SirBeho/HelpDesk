@@ -41,18 +41,25 @@ class HandleInertiaRequests extends Middleware
 
         if ($authUser) {
             if ($authUser->rol_id == 2) {
-                $user = $authUser->load('solicitudes.tipo', 'solicitudes.status', 'solicitudes.user', 'solicitudes.files.user','solicitudes.comentarios');
+                $user = $authUser->load(
+                    'solicitudes.tipo',
+                    'solicitudes.status',
+                    'solicitudes.user',
+                    'solicitudes.files.user',
+                    'solicitudes.comentarios',
+                    'solicitudes.userAsignado'
+                );
             } else {
                 $user = auth()->user();
-                $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user','files.user','comentarios');
-             }
+                $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user', 'files.user', 'comentarios', 'userAsignado');
+            }
         }
-        
+
         return [
             ...parent::share($request),
             'auth' => [
-               'user' => $user,
-               'countNotificaciones' => NotificacionController::countNotification()
+                'user' => $user,
+                'countNotificaciones' => NotificacionController::countNotification()
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

@@ -72,6 +72,10 @@ export default function EditUser({ roles, changeRol, hideModal, update, selected
                     </div>
                 </div>
 
+                
+            </form>
+
+
                 {isCliente &&
 
                     <div className='flex gap-8'>

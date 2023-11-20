@@ -47,16 +47,25 @@ export default function Panel({ auth, msj, clientes }) {
     });
 
     const cliente = (id) => {
-        //console.log(id)
         const clienteseleccionado = clientes.find(
             (cliente) => cliente.id == id
         );
         setOpenCliente(clienteseleccionado)
-        //console.log(clienteseleccionado)
     };
 
+    const getYearList = () => {
+        let date = new Date();
+        let year = date.getFullYear() - 2
 
+        let years = [];
+        for (let i = 0; i < 5; i++) {
 
+            years.push(year + i)
+
+        }
+
+        return years
+    }
 
     const put = (id) => {
         if (select == id) {
@@ -406,18 +415,20 @@ export default function Panel({ auth, msj, clientes }) {
                                 className="h-9  rounded-md outline-none px-2"
                             >
                                 <option value="" disabled></option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
+                                {getYearList().map(year =>
+                                    <option key={year} value={year}>{year}</option>
+
+                                )}
+
                             </select>
                         </label>
                     </div>
 
-                       {Message && (
+                    {Message && (
                         <div className="alert alert-danger">
                             {Message}
                         </div>
-                    )} 
+                    )}
 
                     <button className={`border py-1 w-36 rounded-xl ${data.tipo_id == 1 ? "bg-[#1ec0e6]" : "bg-[#1e85e6]"}  hover:bg-gray-200 text-white self-center justify-center mr-5 mt-8`}>
                         Crear
