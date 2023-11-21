@@ -11,7 +11,7 @@ export const Solicitud = ({data,click,open,adm}) => {
     return (
         
         <li onClick={click} className={`flex w-80 ${status[data.status_id-1]} ${open == data.id ? "border-2 scale-90": "" } duration-300 rounded-md cursor-pointer`}>
-            <div className={`h-full w-2 ${tipo[data.tipo.tipo-1]} rounded-l-lg`}></div>
+            <div className={`max-h-full w-2 ${tipo[data.tipo.tipo-1]} rounded-l-lg`}></div>
 
             <div className="flex flex-col gap-2 p-2 text-textgray w-full">
             {adm ? (

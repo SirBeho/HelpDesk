@@ -9,7 +9,7 @@ import { createRoot } from 'react-dom/client';
 
 export default function documentos({ auth, tipo_solicitudes, clientes, estados }) {
 
-  
+
 
   const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
 
@@ -143,17 +143,17 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
       nombre: 'reporte_solicitudes.xlsx',
       datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
       solicitudes_f: solicitudes_f,
-    },{
+    }, {
       ruta: '/reportes/generar/docu',
       nombre: 'reporte_documentos.xlsx',
       datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
       documentos_f: documentos_f,
     }
-  ]
+    ]
 
     console.log(data[reportes].ruta)
     axios
-      .post(data[reportes].ruta, {data : data[reportes]}, { responseType: 'blob' })
+      .post(data[reportes].ruta, { data: data[reportes] }, { responseType: 'blob' })
       .then((response) => {
         console.log(response)
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -179,44 +179,26 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
         <div className='mx-10 mt-3'>
 
 
+          <div className='flex text-black '>
+            <button onClick={() => setReportes(0)} 
+              className={` rounded-t-2xl cursor-pointer flex items-center gap-2 h-10 p-2 bg-gray-300  ${reportes == 0 ? "bg-white " : ""
+                }  font-semibold text-base `}>
+              <img src="/assets/svg/export2.svg" width={30} height={30} alt="icon documento"/>
+              Solicitudes
+            </button>
 
-          <div className='mb-4 bg-white p-4 rounded-lg shadow-md'>
+            <button
+              onClick={() => setReportes(1)}
+              className={`rounded-t-2xl cursor-pointer flex items-center gap-2 h-10 p-2 bg-gray-300 ${reportes == 1 ? "bg-white " : ""
+                }  font-semibold text-base `}>
+              <img src="/assets/svg/document2.svg" width={30} height={30} alt="icon documento" />
+              Documentos
+            </button>
+          </div>
 
-            <div className='flex gap-2'>
-              <button
-                onClick={() => setReportes(0)}
-
-                className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 0 ? "border-black scale-90" : ""
-                  } rounded-md text-white font-semibold text-base `}
-
-              >
-                <img
-                  src="/assets/svg/export.svg"
-                  width={30}
-                  height={30}
-                  alt="icon documento"
-                />
-                Solicitudes
-              </button>
+          <div className='rounded-tl-none mb-4 bg-white p-4 rounded-lg shadow-md'>
 
 
-              <button
-                onClick={() => setReportes(1)}
-
-                className={` cursor-pointer flex items-center gap-3 border-2 h-10 p-2 bg-blue-400 ${reportes == 1 ? "border-black scale-90" : ""
-                  } rounded-md text-white font-semibold text-base `}
-
-              >
-                <img
-                  src="/assets/svg/document2.svg"
-                  width={40}
-                  height={40}
-                  alt="icon documento"
-                />
-                Documentos
-              </button>
-
-            </div>
 
             <div className='flex gap-8 my-3'>
 
@@ -255,55 +237,55 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
 
             </div>
 
-           
-              {reportes == 0 && (
-                <div className='flex gap-8'>
-                  <label className="flex  flex-col "  >
-                    <span className='font-semibold'> Tipo Solicitudes:</span>
 
-                    <select
-                      required
-                      value={datos.tipo}
-                      onChange={(e) => setDatos({ ...datos, tipo: parseInt(e.target.value) })}
-                      name="tipo_id"
-                      id="tipo_id"
-                      className="p-0 px-2 w-fit rounded-md h-8"
-                    >
-                      <option value={0} select>Todas</option>
-                      {tipo_solicitudes.map((solicitud) => (
-                        <option key={solicitud.id} value={solicitud.id}>
-                          {solicitud.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+            {reportes == 0 && (
+              <div className='flex gap-8'>
+                <label className="flex  flex-col "  >
+                  <span className='font-semibold'> Tipo Solicitudes:</span>
 
-                  <label className="flex  flex-col"  >
+                  <select
+                    required
+                    value={datos.tipo}
+                    onChange={(e) => setDatos({ ...datos, tipo: parseInt(e.target.value) })}
+                    name="tipo_id"
+                    id="tipo_id"
+                    className="p-0 px-2 w-fit rounded-md h-8"
+                  >
+                    <option value={0} select>Todas</option>
+                    {tipo_solicitudes.map((solicitud) => (
+                      <option key={solicitud.id} value={solicitud.id}>
+                        {solicitud.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-                    <span className='font-semibold'>Estados:</span>
+                <label className="flex  flex-col"  >
 
-                    <select
-                      required
-                      value={datos.estado}
-                      onChange={(e) => setDatos({ ...datos, estado: parseInt(e.target.value)  })}
-                      name="estado"
-                      id="estado"
-                      className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
-                    >
-                      <option value={''} select>Todos</option>
-                      {estados.map((estado) => (
-                        <option key={estado.id} value={estado.id}>
-                          {estado.nombre}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                  <span className='font-semibold'>Estados:</span>
+
+                  <select
+                    required
+                    value={datos.estado}
+                    onChange={(e) => setDatos({ ...datos, estado: parseInt(e.target.value) })}
+                    name="estado"
+                    id="estado"
+                    className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
+                  >
+                    <option value={''} select>Todos</option>
+                    {estados.map((estado) => (
+                      <option key={estado.id} value={estado.id}>
+                        {estado.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
 
-                </div>
+              </div>
 
-              )}
-         
+            )}
+
 
 
 

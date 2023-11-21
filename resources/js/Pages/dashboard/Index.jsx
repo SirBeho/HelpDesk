@@ -382,10 +382,10 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          console.log(totalSolicitudes);
+
           const totalSoli = totalSolicitudes[context.dataPointIndex];
           const percentage = totalSoli !== 0 ? (value / totalSoli * 100).toFixed(0) : 0; // Calculate the percentage or return 0 if totalSoli is 0
-          console.log(percentage, totalSoli);
+
           return showPercentages ? percentage + '%' : value;
         },
         style: {
@@ -501,9 +501,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
   };
 
   useEffect(() => {
-   
+
     filterDataByDate()
-    
+
   }, [datos])
 
   useEffect(() => {
@@ -513,7 +513,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
       const tipoSolicitudes = {};
       let totalSolicitudes = 0;
-
+      console.log(solicitudes_f)
       solicitudes_f.forEach((solicitud) => {
         totalSolicitudes++;
         if (tipoSolicitudes[solicitud.tipo.nombre]) {
@@ -628,7 +628,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   </div>
                   <div className="flex-1 text-right md:text-center">
                     <h2 className="font-bold uppercase text-gray-600">Total Solicitudes</h2>
-                    <p className="font-bold text-xl">
+                    <p className="font-bold text-2xl">
                       {indicadores.total_solicitudes}
                       <span className="text-green-500">
                         <i className="fas fa-caret-up" />
@@ -648,7 +648,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   </div>
                   <div className="flex-1 text-right md:text-center">
                     <h2 className="font-bold uppercase text-gray-600">Solicitudes pendientes</h2>
-                    <p className="font-bold text-3xl">
+                    <p className="font-bold text-2xl">
                       {indicadores.solicitudes_pendientes}
                       <span className="text-pink-500">
                         <i className="fas fa-exchange-alt" />
@@ -668,7 +668,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   </div>
                   <div className="flex-1 text-right md:text-center">
                     <h2 className="font-bold uppercase text-gray-600">Nuevas Solicitudes - ultimo mes</h2>
-                    <p className="font-bold text-3xl">
+                    <p className="font-bold text-2xl">
                       {indicadores.solicitudes_ultimo_mes}
                       <span className="text-yellow-600">
                         <i className="fas fa-caret-up" />
@@ -688,7 +688,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   </div>
                   <div className="flex-1 text-right md:text-center">
                     <h2 className="font-bold uppercase text-gray-600">Total Clientes</h2>
-                    <p className="font-bold text-3xl"> {indicadores.total_clientes}</p>
+                    <p className="font-bold text-2xl"> {indicadores.total_clientes}</p>
                   </div>
                 </div>
               </div>
@@ -703,7 +703,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   </div>
                   <div className="flex-1 text-right md:text-center">
                     <h2 className="font-bold uppercase text-gray-600">Nuevos Clientes - Ultimo Mes</h2>
-                    <p className="font-bold text-3xl"> {indicadores.nuevos_clientes_ultimo_mes}</p>
+                    <p className="font-bold text-2xl"> {indicadores.nuevos_clientes_ultimo_mes}</p>
                   </div>
                 </div>
               </div>
@@ -721,7 +721,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   </div>
                   <div className="flex-1 text-right md:text-center">
                     <h2 className="font-bold uppercase text-gray-600">Promedio Solicitudes por cliente</h2>
-                    <p className="font-bold text-3xl">
+                    <p className="font-bold text-2xl">
                       {indicadores.promedio_solicitudes_por_cliente}
                       <span className="text-red-500">
                         <i className="fas fa-caret-up" />
@@ -735,7 +735,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
           </div>
 
           {/* filtros */}
-          <div className={` ${filtro ? "h-60" : "h-12 overflow-hidden"} transition-all duration-500 mb-4 bg-white p-4 rounded-lg shadow-md`}>
+          <div className={` ${filtro ? "h-60" : "h-12 "}  overflow-hidden transition-all duration-500 mb-4 bg-white p-4 rounded-lg shadow-md`}>
 
             <button className='border-b-2 w-full text-left text-lg font-medium ' onClick={() => setFiltro(!filtro)}>Filtros</button>
 
@@ -743,13 +743,13 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
               <label className=" flex flex-col " >
                 <span className='font-semibold'>Fecha de inicio</span>
-                <input max={datos.fin} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.inicio} onChange={(e) => {setDatos({ ...datos, inicio: e.target.value }), setUltimoClickeado(null)}} />
+                <input max={datos.fin} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.inicio} onChange={(e) => { setDatos({ ...datos, inicio: e.target.value }), setUltimoClickeado(null) }} />
               </label>
 
               <label className="flex flex-col " >
                 <span className='font-semibold'>Fecha de fin</span>
 
-                <input min={datos.inicio} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.fin} onChange={(e) => {setDatos({ ...datos, fin: e.target.value }), setUltimoClickeado(null)}} />
+                <input min={datos.inicio} className='p-0 px-2 rounded-md w-52 h-8' type="date" value={datos.fin} onChange={(e) => { setDatos({ ...datos, fin: e.target.value }), setUltimoClickeado(null) }} />
               </label>
 
               <label className="flex  flex-col"  >
@@ -759,7 +759,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                 <select
                   required
                   value={datos.cliente}
-                  onChange={(e) => {setDatos({ ...datos, cliente: e.target.value }), setUltimoClickeado(null)}}
+                  onChange={(e) => { setDatos({ ...datos, cliente: e.target.value }), setUltimoClickeado(null) }}
                   name="cliente"
                   id="cliente"
                   className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
@@ -783,7 +783,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                 <select
                   required
                   value={datos.tipo}
-                  onChange={(e) => {setDatos({ ...datos, tipo: parseInt(e.target.value) }), setUltimoClickeado(null)}}
+                  onChange={(e) => { setDatos({ ...datos, tipo: parseInt(e.target.value) }), setUltimoClickeado(null) }}
                   name="tipo_id"
                   id="tipo_id"
                   className="p-0 px-2 w-fit rounded-md h-8"
@@ -804,7 +804,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                 <select
                   required
                   value={datos.estado}
-                  onChange={(e) => {setDatos({ ...datos, estado: parseInt(e.target.value) }), setUltimoClickeado(null)}}
+                  onChange={(e) => { setDatos({ ...datos, estado: parseInt(e.target.value) }), setUltimoClickeado(null) }}
                   name="estado"
                   id="estado"
                   className="p-0 px-2 pe-6 w-fit min-w-[13rem] rounded-md  h-8"
@@ -860,11 +860,11 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                     tipo: 0,
                     cliente: 0,
                     estado: 0,
-                
+
                     fecha: new Date().toLocaleDateString(),
                     hora: new Date().toLocaleTimeString('en-US', { hour12: true }),
                     usuario: auth.user.name,
-                
+
                   });
                   setUltimoClickeado(null);
                 }}
@@ -885,12 +885,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               <div id='chart_tipo' className=' w-full border-b-2 border-gray-300 '>
               </div>
               <div className='flex'>
-
-
                 <button className='mt-1 whitespace-nowrap' onClick={() => setShowPercentages(!showPercentages)}>
                   Mostrar {showPercentages ? 'Valores Numéricos' : 'Porcentajes'}
                 </button>
-
               </div>
 
             </div>

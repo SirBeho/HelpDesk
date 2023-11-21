@@ -12,17 +12,6 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\TipoSolicitudController; 
-
-
-use App\Http\Controllers\SolicitudController;
-use App\Models\EstadoSolicitud;
-use App\Models\Notificacion;
-
-use App\Models\File;
-use App\Models\User;
-use App\Models\Solicitud;
-
-use App\Models\TipoSolicitud;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -60,9 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/configuracion/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
     Route::post('/configuracion/empresa/{id}', [EmpresaController::class, 'update'])->name('empresa.update');
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/home', function () {
+        return Inertia::render('Home');
+    })->name('home');
 
     Route::get('/archivos', function () {
         return Inertia::render('Archivos/Index');

@@ -36,6 +36,7 @@
         "jspdf-autotable": "^3.7.0",
         "moment-timezone": "^0.5.43",
         "pdf-lib": "^1.17.1",
-        "react-to-pdf": "^1.0.1"
+        "react-to-pdf": "^1.0.1",
+        "react-transition-group": "^4.4.5"
     }
 }

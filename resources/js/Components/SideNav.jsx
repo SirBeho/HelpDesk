@@ -6,13 +6,13 @@ const navItems = [
         id: 1,
         icon: "/assets/svg/home.svg",
         title: "INICIO",
-        route: route('dashboard'),
+        route: route('home'),
         rol: [1,2,3]
     },
 
     {
         id: 2,
-        icon: "/assets/svg/board.svg",
+        icon: "/assets/svg/soli.svg",
         title: "Administración de solicitudes",
         route: route('admsolicitudes'),
         rol: [1,2,3]
@@ -46,7 +46,7 @@ const navItems = [
 
     {
         id: 7,
-        icon: "/assets/svg/database.svg",
+        icon: "/assets/svg/database2.svg",
         title: "REPORTES",
         route:  route('reportes'),
 
@@ -54,6 +54,14 @@ const navItems = [
     },
     {
         id: 8,
+        icon: "/assets/svg/board2.svg",
+        title: "DASHBOARD",
+        route:  route('dashboard'),
+        rol: [1]
+
+    },
+    {
+        id: 9,
         icon: "/assets/svg/tools.svg",
         title: "MANTENIMIENTO",
         route:  route('tipoSolicitud.index'),
@@ -70,8 +78,8 @@ export default function SideNav({user}) {
 
                 {navItems.map(item => (
                   item.rol.includes(user.rol_id) ?(
-                    <li key={item.id} >
-                        <Link href={item.route} className='w-28 h-24 flex flex-col items-center justify-center text-gray-200 hover:bg-nav cursor-pointer text-xs gap-2'>
+                    <li key={item.id} className='h-[12.5%]'>
+                        <Link href={item.route} className='w-28 h-full flex flex-col items-center justify-center text-gray-200 hover:bg-nav cursor-pointer text-xs gap-2'>
                             <img src={item.icon} width={40} height={40} alt='prueba' />
 
                             <span className='fit text-center'>
