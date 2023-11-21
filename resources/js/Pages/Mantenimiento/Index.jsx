@@ -109,19 +109,17 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
 
 
       <div className="container mx-auto px-4 sm:px-8">
-        <div className="py-8">
-
-          <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-8">
+       <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500   mt-8 ">
+             <li className="me-2">
+              <Link href={route('empresa.index')}                       className={`inline-block p-4 rounded-t-lg      ${empresa ? 'activeTab': 'NoactiveTab'}`}>Empresa</Link>
+            </li>
             <li className="me-2">
-              <Link href={route('tipoSolicitud.index')} aria-current="page" className={`inline-block p-4 rounded-t-lg hover:text-gray-600  hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 ${tipoSolicitudes && 'activeTab'}`}>Solicitudes</Link>
+              <Link href={route('tipoSolicitud.index')} aria-current="page" className={` inline-block p-4 rounded-t-lg    ${tipoSolicitudes ? 'activeTab' : 'NoactiveTab'}`}>Solicitudes</Link>
             </li>
 
-            <li className="me-2">
-              <Link href={route('empresa.index')} 
-              className={`inline-block p-4 rounded-t-lg hover:text-gray-600  hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 ${empresa && 'activeTab'}`}>Empresa</Link>
-            </li>
+            
           </ul>
-
+        <div className="mb-8 bg-gray-300 rounded-xl rounded-tl-none  p-2">
 
           {currentData &&
             <DataTable

@@ -151,7 +151,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
     }
     ]
 
-    console.log(data[reportes].ruta)
+   
     axios
       .post(data[reportes].ruta, { data: data[reportes] }, { responseType: 'blob' })
       .then((response) => {

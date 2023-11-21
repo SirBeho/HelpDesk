@@ -64,5 +64,9 @@
 }
 
 .activeTab {
-    @apply text-blue-600 bg-nav dark:text-blue-500
+    @apply text-black bg-gray-300 border-b border-gray-300
+}
+
+.NoactiveTab {
+    @apply hover:text-gray-600  hover:bg-gray-50 border-white border border-b-0
 }

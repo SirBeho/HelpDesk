@@ -26,7 +26,7 @@ class EstadoSolicitudSeeder extends Seeder
             'status'=> 1 
         ]);
         EstadoSolicitud::factory()->create([
-            'nombre'=> "Completada",
+            'nombre'=> "Detenida",
             'status'=> 1 
         ]);
         EstadoSolicitud::factory()->create([
@@ -34,9 +34,10 @@ class EstadoSolicitudSeeder extends Seeder
             'status'=> 1 
         ]);
         EstadoSolicitud::factory()->create([
-            'nombre'=> "Detenida",
+            'nombre'=> "Completada",
             'status'=> 1 
         ]);
+       
         
     }
 }

@@ -17,7 +17,6 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
   const solicitudes = solicitud.filter(solicitud => solicitud.tipo_id > 2);
 
-
   const documentos = [];
   solicitudes.forEach((solicitud) => {
     if (solicitud.files && solicitud.files.length > 0) {
@@ -547,6 +546,8 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       solicitudes_clientes(clientesSolicitudes, totalSolicitudes);
 
 
+
+
       let fechaActual = new Date();
       let fechaMin = solicitudes_f.reduce((min, solicitud) => {
         const fechaCreacion = new Date(solicitud.created_at);
@@ -579,14 +580,22 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
         const mes = fechaCreacion.getMonth() + 1;
         const anio = fechaCreacion.getFullYear();
         const fecha = mes + "/" + anio;
+        console.log(solicitud)
 
-        if (!UsuariosSolicitudesMes[solicitud.user.name]) {
-          UsuariosSolicitudesMes[solicitud.user.name] = {};
-          meses.forEach(mes => UsuariosSolicitudesMes[solicitud.user.name][mes] = 0);
+       
+        if(solicitud.user_asignado && solicitud.status_id > 4){
+
+          if (!UsuariosSolicitudesMes[solicitud.user_asignado.name]) {
+            UsuariosSolicitudesMes[solicitud.user_asignado.name] = {};
+            meses.forEach(mes => UsuariosSolicitudesMes[solicitud.user_asignado.name][mes] = 0);
+          }
+
+          UsuariosSolicitudesMes[solicitud.user_asignado.name][fecha]++;
+          totalSolicitudes_mes[fecha]++;
+
         }
-        UsuariosSolicitudesMes[solicitud.user.name][fecha]++;
-
-        totalSolicitudes_mes[fecha]++;
+        console.log(UsuariosSolicitudesMes)
+        
       });
 
 

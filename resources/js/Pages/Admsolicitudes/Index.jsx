@@ -50,9 +50,6 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         }
     }, [solicitud_id]);
 
-    const tipo = ["bg-blue-200", "bg-yellow-200", "bg-cyan-200", "bg-blue-400"];
-    const status = ["bg-lime-100", "bg-orange-100", "bg-orange-100", "bg-green-100", "bg-red-100", "bg-red-100"]
-
     const abrir = (solicitudId) => {
         //console.log("abriendo")
         if (open == solicitudId) {
