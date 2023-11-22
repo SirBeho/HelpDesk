@@ -13,12 +13,13 @@ class EmpresaSeeder extends Seeder
      */
     public function run(): void
     {
+      
        Empresa::factory()->create([
-        'RNC'=> '123456789',
-        'empresa'=> 'Nombre Empresa',
-        'direccion'=> 'c/ 10 este #23 Santa cruz',
-        'telefono'=> '987-655-443322',
-        'telefono2'=> '987-655-443322'
-       ]);
+        'RNC'=> '132706498',
+        'empresa'=> 'TESORIA SRL',
+        'direccion'=> 'C/22A apto N1, Embrujo III, Santiago Rep. Dom.',
+        'telefono'=> '809-805-7566',
+        'telefono2'=> null
+    ]);
     }
 }

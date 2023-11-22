@@ -24,7 +24,7 @@ export default function Empresa({ empresa, setLoading }) {
 
     return (
 
-        <form onSubmit={submit} className="flex flex-col gap-4 text-textgray px-10">
+        <form onSubmit={submit} className="flex flex-col gap-4 text-textgray px-10 pb-3">
 
             <div className='flex gap-8'>
 

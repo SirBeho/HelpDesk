@@ -29,15 +29,15 @@ class ReporteController extends Controller
         ]);
     }
     public function dashboard()
-    {
+    { 
         //total solicitures,solicitues pendientes, solicitudes en el ultimo mes,total clientes, nuevos clientes ultimo mes,promedio solicitudes por cliente
         $indicadores = [
-            'total_solicitudes' => Solicitud::where('status_id', '!=', '4')->count(),
-            'solicitudes_pendientes' => Solicitud::where('status_id', '1')->count(),
+            'total_solicitudes' => Solicitud::where('status_id', '!=', '5')->where('tipo_id', '>', '2')->count(),
+            'solicitudes_pendientes' => Solicitud::where('status_id','<', '4')->where('tipo_id', '>', '2')->count(),
             'solicitudes_ultimo_mes' => Solicitud::where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
             'total_clientes' => User::where('rol_id', '2')->count(),
             'nuevos_clientes_ultimo_mes' => User::where('rol_id', '2')->where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
-            'promedio_solicitudes_por_cliente' => number_format((Solicitud::count() / User::where('rol_id', '2')->count()), 2, '.', ''),         
+            'promedio_solicitudes_por_cliente' => number_format((Solicitud::where('status_id', '!=', '5')->where('tipo_id', '>', '2')->count() / User::where('rol_id', '2')->count()), 2, '.', ''),         
             
         ];
        
@@ -45,7 +45,7 @@ class ReporteController extends Controller
             'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
             'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
             'estados' => EstadoSolicitud::where('status', '1')->get(),
-            'solicitud' => Solicitud::all()->load('tipo', 'status', 'user','files.user','comentarios'),
+            'solicitud' => Solicitud::all()->load('tipo', 'status', 'user','files.user','comentarios', 'userAsignado'),
             'indicadores' => $indicadores,
         ]);
 

@@ -13,6 +13,9 @@ export default {
 
     theme: {
         extend: {
+            fontFamily: {
+                'ubuntu': ['Ubuntu', 'sans-serif'],
+              },
             colors: {
                 customGray: "#f7f7f7",
                 offwhite: "#ffffff",
