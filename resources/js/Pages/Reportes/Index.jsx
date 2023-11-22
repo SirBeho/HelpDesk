@@ -7,7 +7,7 @@ import Reporte_soli from "./reporte_solicitudes"
 import Reporte_doc from "./reporte_documentos"
 import { createRoot } from 'react-dom/client';
 
-export default function documentos({ auth, tipo_solicitudes, clientes, estados }) {
+export default function documentos({ auth, tipo_solicitudes, clientes, estados , empresa }) {
 
 
 
@@ -50,7 +50,6 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
     const solicitudes_filtradas = solicitudes.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
-      console.log(fechaCreacion, soli.created_at)
       if (datos.inicio && fechaCreacion < inicio) {
         return false;
       }
@@ -106,14 +105,14 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados }
     const container = document.createElement('div');
     const root = createRoot(container);
 
-    const data = { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Innicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Finn" }
+    const data = { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" }
 
     document.body.appendChild(container);
     if (reporte == 0) {
-      root.render(<Reporte_soli solicitudes_f={solicitudes_f} datos={data} />);
+      root.render(<Reporte_soli solicitudes_f={solicitudes_f} datos={data}  empresa={empresa}/>);
 
     } else if (reporte == 1) {
-      root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} />);
+      root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} empresa={empresa}/>);
     }
 
     const contentWidth = container.offsetWidth;

@@ -1,16 +1,16 @@
 import { format } from "date-fns";
 
-export default function Reporte({ solicitudes_f, datos }) {
-
+export default function Reporte({ solicitudes_f, datos,empresa }) {
+  console.log(empresa)
   return (
     <div className=" mx-10 bg-white ">
 
+     {/* header */}
       <div className="text-center mb-10 relative w-full">
         <img src="./assets/colorfullLogo.png" alt="Logo" className="w-1/6 absolute top-0 left-0" />
-
-        <h1 className="text-2xl mt-3 [word-spacing:10px]" >  TESORIA SRL </h1>
-        <h2>C/22A apto N1, Embrujo III, Santiago Rep. Dom.</h2>
-        <h2>RNC : 132706498 &nbsp;&nbsp;Tel.: 809-805-7566</h2>
+        <h1 className="text-2xl mt-3 [word-spacing:10px]" > {empresa?.empresa}  </h1>
+        <h2>{empresa?.direccion} </h2>
+        <h2>RNC : {empresa?.RNC} &nbsp;&nbsp;Tel.: {empresa?.telefono} {empresa?.telefono2 != '' && ` | ${empresa?.telefono2}`}</h2>
       </div>
 
       <table className="min-w-full w-full leading-normal overflow-hidden  text-lg">
@@ -24,7 +24,7 @@ export default function Reporte({ solicitudes_f, datos }) {
             </td>
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium">Usuario:</h1>
-              Angel Polanco
+              {datos?.usuario}
             </td>
           </tr>
 
@@ -34,8 +34,8 @@ export default function Reporte({ solicitudes_f, datos }) {
               {datos?.inicio}
             </td>
             <td className="flex w-1/2">
-              <h1 className="w-20  font-medium">Fecha:</h1>
-              06/11/2023
+              <h1 className="w-20  font-medium">Fecha : </h1>
+              {datos?.fecha}
             </td>
           </tr>
 
@@ -46,7 +46,7 @@ export default function Reporte({ solicitudes_f, datos }) {
             </td>
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium">Hora:</h1>
-              5:28:45 p.m.
+              {datos?.hora}
             </td>
           </tr>
 
