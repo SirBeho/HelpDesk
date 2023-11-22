@@ -25,9 +25,9 @@ export default function Dashboard({ auth }) {
             <Head title="Home" />
 
             <div className='grid grid-cols-2 h-[calc(100vh-64px)] overflow-hidden bg-customGray'>
-                <div>
+                <div className='-mt-16'>
 
-                <img className=' w-auto  h-full object-cover   ' src={letra} alt="" />
+                    <img className=' w-auto  h-full object-cover   ' src={letra} alt="" />
 
                 </div>
                 {/* <div className="px-32  text-blue-900 me-10">
