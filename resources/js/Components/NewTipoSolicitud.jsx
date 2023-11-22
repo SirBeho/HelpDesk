@@ -43,10 +43,10 @@ export function NewTipoSolicitud({ submit, hideModal, show, msj, setLoading }) {
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-3/5">
                         <label htmlFor="name" className="text-xs">
-                            Nombre de la Solicitud
+                            Tipo de la solicitud
                         </label>
                         <input type="text" name="name" id="name" required className="h-9 rounded-md w-full outline-none"
-                            placeholder='Diseño Web'
+                            placeholder='Nombre del tipo'
                             onChange={(e) => setData('nombre', e.target.value)}
                         />
                     </div>

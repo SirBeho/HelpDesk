@@ -12,6 +12,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\TipoSolicitudController;
+use App\Models\Empresa;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -64,12 +65,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/reportes/generar/soli', [ReporteController::class, 'solicitudes_exel']);
         Route::post('/reportes/generar/docu', [ReporteController::class, 'documentos_exel']);
 
-
         Route::get('/reportes1', function () {
-            return Inertia::render('Reportes/reporte_solicitudes');
+            return Inertia::render('Reportes/reporte_solicitudes',[
+                'empresa' => Empresa::first(),
+            ]);
         });
         Route::get('/reportes2', function () {
-            return Inertia::render('Reportes/reporte_documentos');
+            return Inertia::render('Reportes/reporte_documentos',[
+                'empresa' => Empresa::first(),
+            ]);
         });
 
         Route::post('register', [RegisteredUserController::class, 'store'])->name('register');

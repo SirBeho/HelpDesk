@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use App\Models\EstadoSolicitud;
 use App\Models\Solicitud;
 use App\Models\TipoSolicitud;
@@ -26,6 +27,7 @@ class ReporteController extends Controller
             'tipo_solicitudes' => TipoSolicitud::where('status', '1')->get(),
             'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
             'estados' => EstadoSolicitud::where('status', '1')->get(),
+            'empresa' => Empresa::first(),
         ]);
     }
     public function dashboard()

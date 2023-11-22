@@ -71,7 +71,7 @@ const navItems = [
 ];
 
 export default function SideNav({user}) {
-    console.log(user)
+
     return (
         <nav className='flex min-h-full bg-darkgray lef-0 w-28 top-[60px] fixed'>
 

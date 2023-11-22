@@ -1,17 +1,17 @@
 import { format } from "date-fns";
 
-export default function Reporte({ documentos_f, datos }) {
+export default function Reporte({ documentos_f, datos,empresa }) {
 
 
-console.log(datos)
+
   function formato_0(id, longitud) {
     const idString = id.toString();
     const cerosFaltantes = longitud - idString.length;
-    
+
     if (cerosFaltantes <= 0) {
       return idString;
     }
-  
+
     const ceros = '0'.repeat(cerosFaltantes);
     return ceros + idString;
   }
@@ -19,12 +19,12 @@ console.log(datos)
 
   return (
     <div className="mx-10 bg-white p-5 rounded shadow-lg">
-        <div className="text-center mb-10 relative w-full">
+      {/* header */}
+      <div className="text-center mb-10 relative w-full">
         <img src="./assets/colorfullLogo.png" alt="Logo" className="w-1/6 absolute top-0 left-0" />
-
-        <h1 className="text-2xl mt-3 [word-spacing:10px]" >  TESORIA SRL </h1>
-        <h2>C/22A apto N1, Embrujo III, Santiago Rep. Dom.</h2>
-        <h2>RNC : 132706498 &nbsp;&nbsp;Tel.: 809-805-7566</h2>
+        <h1 className="text-2xl mt-3 [word-spacing:10px]" > {empresa?.empresa}  </h1>
+        <h2>{empresa?.direccion} </h2>
+        <h2>RNC : {empresa?.RNC} &nbsp;&nbsp;Tel.: {empresa?.telefono} {empresa?.telefono2 != '' && ` | ${empresa?.telefono2}`}</h2>
       </div>
 
       <table className="min-w-full w-full leading-normal overflow-hidden  text-lg">
@@ -38,7 +38,7 @@ console.log(datos)
             </td>
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium">Usuario:</h1>
-              Angel Polanco
+              {datos?.usuario}
             </td>
           </tr>
 
@@ -48,8 +48,8 @@ console.log(datos)
               {datos?.inicio || "Inicio"}
             </td>
             <td className="flex w-1/2">
-              <h1 className="w-20  font-medium">Fecha:</h1>
-              06/11/2023
+              <h1 className="w-20  font-medium">Fecha :</h1>
+              {datos?.fecha}
             </td>
           </tr>
 
@@ -60,10 +60,10 @@ console.log(datos)
             </td>
             <td className="flex w-1/2">
               <h1 className="w-20  font-medium">Hora:</h1>
-              5:28:45 p.m.
+              {datos?.hora}
             </td>
           </tr>
-          
+
           {datos?.cliente ? (
 
             <tr className="w-full flex" >
@@ -79,12 +79,12 @@ console.log(datos)
         </tbody>
       </table>
 
-     
-       
+
+
       <div className=" relative w-full h-14  mt-1 bg-gray-300 text-[35px] ">
-          <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de Documentos</h1>
-        </div>
- 
+        <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de Documentos</h1>
+      </div>
+
 
 
       <div className="overflow-x-auto">
@@ -103,7 +103,7 @@ console.log(datos)
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
                 Tipo Documento
               </th>
-              
+
 
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
                 Fecha
@@ -114,12 +114,12 @@ console.log(datos)
             {documentos_f &&
               documentos_f.map((documento, i) => (
                 <tr key={i} className={i % 2 === 0 ? "bg-gray-100" : ""}>
-                  <td className="px-6 py-4 whitespace-no-wrap">{formato_0(documento.id,4)}</td>
+                  <td className="px-6 py-4 whitespace-no-wrap">{formato_0(documento.id, 4)}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.user.name}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.nombre}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.extencion}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">
-                  {documento.created_at && format(new Date(documento.created_at), "dd/MM/yyyy hh:mm:ss a")}
+                    {documento.created_at && format(new Date(documento.created_at), "dd/MM/yyyy hh:mm:ss a")}
                   </td>
                 </tr>
               ))

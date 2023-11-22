@@ -81,7 +81,7 @@ export default function Empresa({ empresa, setLoading }) {
                         Teléfono
                     </label>
                     <input type="tel" name="telefono2" id="telefono2" className="h-9 rounded-md full outline-none px-2"
-                        value={data.telefono}
+                        value={data.telefono2}
                         onChange={(e) => setData('telefono2', e.target.value)}
                     />
                 </div>
