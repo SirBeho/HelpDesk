@@ -111,7 +111,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
       <div className="container mx-auto px-4 sm:px-8">
        <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500   mt-8 ">
              <li className="me-2">
-              <Link href={route('empresa.index')}                       className={`inline-block p-4 rounded-t-lg      ${empresa ? 'activeTab': 'NoactiveTab'}`}>Empresa</Link>
+              <Link href={route('empresa.index')}className={`inline-block p-4 rounded-t-lg ${empresa ? 'activeTab': 'NoactiveTab'}`}>Empresa</Link>
             </li>
             <li className="me-2">
               <Link href={route('tipoSolicitud.index')} aria-current="page" className={` inline-block p-4 rounded-t-lg    ${tipoSolicitudes ? 'activeTab' : 'NoactiveTab'}`}>Solicitudes</Link>
