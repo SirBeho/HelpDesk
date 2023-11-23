@@ -60,11 +60,10 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
     post(route('upload'), {
       onSuccess: (e) => {
 
-        //console.log(e.props.msj)
+       
       },
       onError: (e) => {
-        // console.log(e)
-        //console.log("erroresss")
+      
       }
     });
 

@@ -1,7 +1,8 @@
 import React from 'react'
 
 export default function EditUser({ roles, changeRol, hideModal, update, selectedUser, setData, isCliente, msj, data }) {
-
+console.log(data)
+console.log(selectedUser)
     return (
         <>
             <form onSubmit={update} className="flex flex-col gap-4 text-textgray">
@@ -83,14 +84,14 @@ export default function EditUser({ roles, changeRol, hideModal, update, selected
                         <label htmlFor="name" className="text-xs">
                             Empresa
                         </label>
-                        <input type="text" name="name" id="name" className="h-9 rounded-md outline-none px-2" value={data.empresa || selectedUser.empresa} onChange={(e) => setData('empresa', e.target.value)} />
+                        <input type="text" name="name" id="name" className="h-9 rounded-md outline-none px-2" value={data.empresa || selectedUser.empresa || ''} onChange={(e) => setData('empresa', e.target.value)} />
                     </div>
 
                     <div className="flex flex-col w-2/4">
                         <label htmlFor="rnc" className="text-xs">
                             RNC
                         </label>
-                        <input type="text" name="rnc" id="rnc" className="h-9 rounded-md outline-none px-2" value={data.rnc || selectedUser.rnc} onChange={(e) => setData('rnc', e.target.value)} />
+                        <input type="text" name="rnc" id="rnc" className="h-9 rounded-md outline-none px-2" value={data.rnc || selectedUser.rnc || ''} onChange={(e) => setData('rnc', e.target.value)} />
                     </div>
                 </div>
             }

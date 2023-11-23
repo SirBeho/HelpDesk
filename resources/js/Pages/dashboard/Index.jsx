@@ -512,7 +512,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
       const tipoSolicitudes = {};
       let totalSolicitudes = 0;
-      console.log(solicitudes_f)
+     
       solicitudes_f.forEach((solicitud) => {
         totalSolicitudes++;
         if (tipoSolicitudes[solicitud.tipo.nombre]) {
@@ -580,8 +580,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
         const mes = fechaCreacion.getMonth() + 1;
         const anio = fechaCreacion.getFullYear();
         const fecha = mes + "/" + anio;
-        console.log(solicitud)
-
+       
        
         if(solicitud.user_asignado && solicitud.status_id > 4){
 
@@ -594,7 +593,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
           totalSolicitudes_mes[fecha]++;
 
         }
-        console.log(UsuariosSolicitudesMes)
+       
         
       });
 

@@ -12,7 +12,7 @@ import Loading from '@/Components/Loading';
 
 
 export default function Usuarios({ auth, users, roles, msj }) {
-console.log(typeof msj)
+
   const [sortingData, setSortingData] = useState(users);
   const [searchValue, setSearchValue] = useState('');
   const [selectedUser, setSelectedUser] = useState({});
@@ -307,6 +307,7 @@ console.log(typeof msj)
                         </td>
 
                         <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                          {auth.user.id != user.id && (
                           <div className='flex gap-4'>
                             <span className='cursor-pointer' onClick={() => { editUser(user.id) }}>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:stroke-blue-600">
@@ -320,7 +321,10 @@ console.log(typeof msj)
                               </svg>
                             </span>
                           </div>
+                          )}
                         </td>
+
+
                       </tr>
                     ))
 

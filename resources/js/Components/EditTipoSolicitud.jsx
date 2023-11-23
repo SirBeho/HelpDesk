@@ -8,7 +8,7 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
 
     useEffect(() => {
         setMensaje(msj)
-        console.log(msj)
+       
     }, [msj])
     
     const categorySolicitud = [

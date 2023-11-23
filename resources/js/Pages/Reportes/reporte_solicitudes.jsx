@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
 export default function Reporte({ solicitudes_f, datos,empresa }) {
-  console.log(empresa)
+
   return (
     <div className=" mx-10 bg-white ">
 

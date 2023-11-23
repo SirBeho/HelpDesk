@@ -7,7 +7,7 @@ import Reporte_soli from "./reporte_solicitudes"
 import Reporte_doc from "./reporte_documentos"
 import { createRoot } from 'react-dom/client';
 
-export default function documentos({ auth, tipo_solicitudes, clientes, estados , empresa }) {
+export default function documentos({ auth, tipo_solicitudes, clientes, estados, empresa }) {
 
 
 
@@ -37,7 +37,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados ,
   });
 
   useEffect(() => {
-    console.log(datos)
+
     filterDataByDate()
   }, [datos])
 
@@ -92,8 +92,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados ,
       setSolicitudes_f(solicitudes_filtradas);
     } else {
       setDocumentos_f(documentos_filtrados);
-      console.log(documentos_filtrados)
-    }
+    };
 
   };
 
@@ -109,15 +108,15 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados ,
 
     document.body.appendChild(container);
     if (reporte == 0) {
-      root.render(<Reporte_soli solicitudes_f={solicitudes_f} datos={data}  empresa={empresa}/>);
+      root.render(<Reporte_soli solicitudes_f={solicitudes_f} datos={data} empresa={empresa} />);
 
     } else if (reporte == 1) {
-      root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} empresa={empresa}/>);
+      root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} empresa={empresa} />);
     }
 
     const contentWidth = container.offsetWidth;
     const a4Width = 590; // Ancho de una página A4 en puntos
-    console.log(contentWidth, a4Width)
+
     const scale = a4Width / contentWidth;
 
     pdf.html(container, {
@@ -150,11 +149,11 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados ,
     }
     ]
 
-   
+
     axios
       .post(data[reportes].ruta, { data: data[reportes] }, { responseType: 'blob' })
       .then((response) => {
-        console.log(response)
+       
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
@@ -179,10 +178,10 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados ,
 
 
           <div className='flex text-black '>
-            <button onClick={() => setReportes(0)} 
+            <button onClick={() => setReportes(0)}
               className={` rounded-t-2xl cursor-pointer flex items-center gap-2 h-10 p-2 bg-gray-300  ${reportes == 0 ? "bg-white " : ""
                 }  font-semibold text-base `}>
-              <img src="/assets/svg/export2.svg" width={30} height={30} alt="icon documento"/>
+              <img src="/assets/svg/export2.svg" width={30} height={30} alt="icon documento" />
               Solicitudes
             </button>
 
