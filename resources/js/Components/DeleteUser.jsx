@@ -18,7 +18,7 @@ export default function DeleteUser({ hideModal, destroy, selectedUser }) {
 
                 <button className="border py-1 w-36 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end mr-5 mt-5" 
                 onClick={destroy} >
-                    Delete
+                    Eliminar
                 </button>
             </div>
 
