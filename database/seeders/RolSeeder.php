@@ -27,8 +27,6 @@ class RolSeeder extends Seeder
             'nombre'=> "Usuario",
             'status'=> 1 
         ]);
-      
-
-        
+ 
     }
 }
