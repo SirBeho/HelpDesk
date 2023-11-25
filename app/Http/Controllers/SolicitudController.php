@@ -169,7 +169,7 @@ class SolicitudController extends Controller
     public function update(Request $request)
     {
         try {
-
+            
             $mensajes = [
                 'tipo_id' => 'El tipo de solicitud no existe.',
                 'created_at' => 'La fecha de creacion no es valida.',
@@ -189,14 +189,19 @@ class SolicitudController extends Controller
 
             ], $mensajes);
 
+           
+
             if ($validator->fails()) {
 
                 return redirect()->route('admsolicitudes')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
 
+           
+           
+
             $Solicitud = Solicitud::findOrFail($request->id);
             $status_ant = EstadoSolicitud::find($Solicitud->status_id);
-            $status_act = EstadoSolicitud::find($request->status_id);
+            $status_act = EstadoSolicitud::find($request->status_id) ?? $status_ant;
 
             $request->merge([
                 'solicitud_id' => $request->id,
@@ -204,6 +209,7 @@ class SolicitudController extends Controller
                 'message' => "El estado de la solicitud No. $request->numero Ha cambiado de $status_ant->nombre a $status_act->nombre"
             ]);
 
+            
             $Solicitud->update($request->all());
 
             if (Auth::user()->rol_id == 3) {
