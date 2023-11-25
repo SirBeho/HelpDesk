@@ -27,6 +27,8 @@ export default function Login({ status, canResetPassword }) {
         post(route('login'));
     };
 
+    console.log(errors)
+
     return (
         <GuestLayout>
             <Head title="Log in" />
@@ -56,7 +58,7 @@ export default function Login({ status, canResetPassword }) {
                         </div>
 
                         <div>
-                            <label htmlFor="pass" className="text-sm text-darkblue font-medium">contraseña</label>
+                            <label htmlFor="pass" className="text-sm text-darkblue font-medium">Contraseña</label>
                             <input type="password" id="password" name="password"
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}

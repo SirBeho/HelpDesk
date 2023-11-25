@@ -8,12 +8,12 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
 
     useEffect(() => {
         setMensaje(msj)
-        console.log(msj)
+       
     }, [msj])
     
     const categorySolicitud = [
         { id: 1, category: 'Servicios' },
-        { id: 2, category: 'Certificacioens' },
+        { id: 2, category: 'Certificaciones' },
         { id: 3, category: 'Estados Financieros' },
         { id: 4, category: 'Reportes Generales' }
     ]

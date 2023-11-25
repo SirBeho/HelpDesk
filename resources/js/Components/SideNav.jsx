@@ -50,14 +50,14 @@ const navItems = [
         title: "REPORTES",
         route:  route('reportes'),
 
-        rol: [1,3,4]
+        rol: [1,3]
     },
     {
         id: 8,
         icon: "/assets/svg/board2.svg",
         title: "DASHBOARD",
         route:  route('dashboard'),
-        rol: [1]
+        rol: [1,3]
 
     },
     {

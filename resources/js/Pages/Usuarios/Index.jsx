@@ -12,7 +12,7 @@ import Loading from '@/Components/Loading';
 
 
 export default function Usuarios({ auth, users, roles, msj }) {
-console.log(typeof msj)
+
   const [sortingData, setSortingData] = useState(users);
   const [searchValue, setSearchValue] = useState('');
   const [selectedUser, setSelectedUser] = useState({});
@@ -279,6 +279,10 @@ console.log(typeof msj)
                     </th>
                     <th
                       className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Correo
+                    </th>
+                    <th
+                      className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Status
                     </th>
                     <th
@@ -298,6 +302,9 @@ console.log(typeof msj)
                         <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">{user.rol.nombre}</p>
                         </td>
+                        <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
+                        </td>
 
                         <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                           {user.status == 0 ?
@@ -307,6 +314,7 @@ console.log(typeof msj)
                         </td>
 
                         <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                          {auth.user.id != user.id && (
                           <div className='flex gap-4'>
                             <span className='cursor-pointer' onClick={() => { editUser(user.id) }}>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hover:stroke-blue-600">
@@ -320,7 +328,10 @@ console.log(typeof msj)
                               </svg>
                             </span>
                           </div>
+                          )}
                         </td>
+
+
                       </tr>
                     ))
 

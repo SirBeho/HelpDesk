@@ -29,6 +29,7 @@ use Inertia\Inertia;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
+//funciones generales
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::match(['get', 'post'], '/admsolicitudes', [SolicitudController::class, 'administracion'])->name('admsolicitudes');
@@ -45,39 +46,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('AccessDenied');
     })->name('AccessDenied');
 
-    //funciones administrativas
-    Route::middleware('checkrole')->group(function () {
-
-        Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
-        Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
-        Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
-
-        Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
-        Route::post('/configuracion/create', [TipoSolicitudController::class, 'create'])->name('tipoSolicitud.create');
-        Route::post('/configuracion/{id}', [TipoSolicitudController::class, 'update'])->name('tipoSolicitud.update');
-        Route::post('/configuracion/delete/{id}', [TipoSolicitudController::class, 'destroy'])->name('tipoSolicitud.delete');
-
-        Route::get('/configuracion/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
-        Route::post('/configuracion/empresa/{id}', [EmpresaController::class, 'update'])->name('empresa.update');
-
+    //funciones de empleados
+    Route::middleware(['checkrole:3'])->group(function () {
+        
         Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes');
-        Route::get('/dashboard', [ReporteController::class, 'dashboard'])->name('dashboard');
         Route::post('/reportes/generar/soli', [ReporteController::class, 'solicitudes_exel']);
         Route::post('/reportes/generar/docu', [ReporteController::class, 'documentos_exel']);
+        Route::get('/dashboard', [ReporteController::class, 'dashboard'])->name('dashboard');
 
-        Route::get('/reportes1', function () {
-            return Inertia::render('Reportes/reporte_solicitudes',[
-                'empresa' => Empresa::first(),
-            ]);
+        //funciones administrativas
+        Route::middleware(['checkrole:1'])->group(function () {
+            Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+            Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
+            Route::post('/usuario/{id}', [UserController::class, 'destroy'])->name('usuario.delete');
+
+            Route::get('/configuracion', [TipoSolicitudController::class, 'index'])->name('tipoSolicitud.index');
+            Route::post('/configuracion/create', [TipoSolicitudController::class, 'create'])->name('tipoSolicitud.create');
+            Route::post('/configuracion/{id}', [TipoSolicitudController::class, 'update'])->name('tipoSolicitud.update');
+            Route::post('/configuracion/delete/{id}', [TipoSolicitudController::class, 'destroy'])->name('tipoSolicitud.delete');
+
+            Route::get('/configuracion/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
+            Route::post('/configuracion/empresa/{id}', [EmpresaController::class, 'update'])->name('empresa.update');
+
+            Route::get('/reportes1', function () {
+                return Inertia::render('Reportes/reporte_solicitudes', [
+                    'empresa' => Empresa::first(),
+                ]);
+            });
+            Route::get('/reportes2', function () {
+                return Inertia::render('Reportes/reporte_documentos', [
+                    'empresa' => Empresa::first(),
+                ]);
+            });
+
+            Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
         });
-        Route::get('/reportes2', function () {
-            return Inertia::render('Reportes/reporte_documentos',[
-                'empresa' => Empresa::first(),
-            ]);
-        });
-
-        Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
-
     });
 
     Route::post('upload', [FileController::class, 'upload'])->name('upload');

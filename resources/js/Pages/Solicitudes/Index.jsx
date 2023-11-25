@@ -11,7 +11,7 @@ export default function Solicitudes({ auth, datos, msj }) {
     useEffect(() => {
 
         setShow(msj?.success != undefined);
-        //console.log(msj)
+        
     }, [msj]);
 
     const [esTipo, setEsTipo] = useState(0);
@@ -76,13 +76,13 @@ export default function Solicitudes({ auth, datos, msj }) {
 
                 </div>
             </Modal>
-
+            <div className=" pb-1  ">
             <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] bg-[#f2f2f2] m-6 rounded-md flex flex-col gap-10 py-4">
                 <ul className="flex gap-10 p-6 w-fit mx-auto">
                     <li
                         onClick={() => filtrarPorTipo(1)}
 
-                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-500 ${esTipo == 1 ? "border-black" : ""
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 transition-all duration-500 bg-blue-500 ${esTipo == 1 ? "scale-75 border-black" : ""
                             } rounded-md text-white font-semibold text-lg `}
 
                     >
@@ -98,7 +98,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(2)}
 
-                        className={` cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-yellow-500 ${esTipo == 2 ? "border-black" : ""
+                        className={` cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-[#EAB308] transition-all duration-500 ${esTipo == 2 ? "scale-75 border-black" : ""
                             } rounded-md text-white font-semibold text-lg `}
 
                     >
@@ -114,7 +114,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(3)}
 
-                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-cyan-500 ${esTipo == 3 ? "border-black" : ""
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-cyan-500 transition-all duration-500 ${esTipo == 3 ? "scale-75 border-black" : ""
                             } rounded-md text-white font-semibold text-lg filter`}
 
                     >
@@ -130,7 +130,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <li
                         onClick={() => filtrarPorTipo(4)}
 
-                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-800 ${esTipo == 4 ? "border-black" : ""
+                        className={`cursor-pointer flex items-center gap-3 p-3 w-52 border-2 bg-blue-800 transition-all duration-500 ${esTipo == 4 ? "scale-75 border-black" : ""
                             } rounded-md text-white font-semibold text-lg`}
 
                     >
@@ -189,6 +189,8 @@ export default function Solicitudes({ auth, datos, msj }) {
                     </button>
                 </form>
             </div>
+                            </div>
+
         </AuthenticatedLayout>
     );
 }

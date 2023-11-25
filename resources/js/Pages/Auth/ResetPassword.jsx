@@ -20,6 +20,8 @@ export default function ResetPassword({ token, email }) {
         };
     }, []);
 
+    console.log(errors)
+
     const submit = (e) => {
         e.preventDefault();
 
