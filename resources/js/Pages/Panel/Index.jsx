@@ -5,6 +5,7 @@ import Modal from "@/Components/Modal";
 import { DeleteAlert } from '@/Components/DeleteAlert';
 import Loading from '@/Components/Loading';
 import { format, set } from "date-fns";
+
 export default function Panel({ auth, msj, clientes }) {
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(0);
@@ -35,7 +36,7 @@ export default function Panel({ auth, msj, clientes }) {
     }, { tipo1: {}, tipo2: {} });
 
 
-//actual
+
     const [Message, setMessage] = useState(null);
     const [show, setShow] = useState(false);
     const [showmsj, setShowmsj] = useState(msj != null);
@@ -47,8 +48,8 @@ export default function Panel({ auth, msj, clientes }) {
         tipo_id: 0,
         descripcion: "",
         created_at: "",
-        year: showEdit.year || new Date().getFullYear().toString(),
-        month: showEdit?.month,
+        year: new Date().getFullYear().toString(),
+        month: new Date().getMonth().toString(),
         status: 1,
     });
 
@@ -101,12 +102,13 @@ export default function Panel({ auth, msj, clientes }) {
     };
 
     useEffect(() => {
-            console.log(msj)
+        console.log(msj)
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
-        } else if (msj && msj.error) {
-            setMessage(typeof msj.error === "string" ? msj.error : null);
-        } else if (msj && !msj.error) {
+        } else if (msj && msj.error && typeof msj.error === "string") {
+            setMessage(msj.error);
+            if(!show) alert(msj.error)
+         } else if (msj && !msj.error) {
             setMessage(msj.success);
             setShowmsj(true);
             setData("month", "")
@@ -114,19 +116,22 @@ export default function Panel({ auth, msj, clientes }) {
     }, [msj]);
 
 
-    const submit = (e) => {
+    function submit(e) {
         e.preventDefault();
-        post(route("solicitud.create"));
-    };
+        setLoading(true);
+        post(route('solicitud.create', showAlert), {
+            onSuccess: () => {
+
+                setLoading(false);
+            }
+        });
+
+    }
 
     const monthNames = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
-
-    useEffect(() => {
-       console.log(data) 
-    }, [data]);
 
 
     useEffect(() => {
@@ -149,12 +154,12 @@ export default function Panel({ auth, msj, clientes }) {
     };
 
     function destroy() {
-        
+
         setLoading(true);
         post(route('solicitud.destroy', showAlert), {
             onSuccess: () => {
-                 setShowAlert(0)
-                 setLoading(false);
+                setShowAlert(0)
+                setLoading(false);
             }
         });
 
@@ -162,8 +167,8 @@ export default function Panel({ auth, msj, clientes }) {
 
     function edit(e) {
         e.preventDefault();
-      
-       setLoading(true);
+
+        setLoading(true);
         post(route('solicitud.update', { id: showEdit.id }), {
             onSuccess: () => {
                 setShowEdit(0)
@@ -175,14 +180,17 @@ export default function Panel({ auth, msj, clientes }) {
 
 
     function setDefaultEditData(solicitud_) {
-      
-        // setData('month', format(new Date(solicitud_.created_at), "MM"));
-        // setData('year', format(new Date(solicitud_.created_at), "yyyy"));
-        setData('tipo_id', solicitud_.tipo_id);
-       
+
+        setData({
+            ...data,
+            'month': format(new Date(solicitud_.created_at), "MM"),
+            'year': format(new Date(solicitud_.created_at), "yyyy"),
+            'tipo_id': solicitud_.tipo_id
+        })
 
         setShowEdit(solicitud_);
-    }
+    };
+
 
 
     return (
@@ -247,17 +255,10 @@ export default function Panel({ auth, msj, clientes }) {
                                     <div>{opencliente.rnc}</div>
                                 </div>
                             </div>
-
-
-
-
                             <tr className="w-fit">
-
                             </tr>
 
-
                             <tr className="w-fit">
-
                             </tr>
 
                         </div>) : (null)}
@@ -267,18 +268,17 @@ export default function Panel({ auth, msj, clientes }) {
                     <div className="w-[calc(100%-3rem)] h-[calc(100%-3rem)] flex gap-4  m-6 rounded-md  mb-2">
 
                         <div className="h-full w-full bg-[#f2f2f2]">
+                          
                             <h3 className="w-full bg-[#1ec0e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de costos/gastos
-                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 1) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 1); reset()}} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                                     Crear Bloque +
-
-
                                 </button>) : (
 
                                     <h1 className='h-9 px-2 gap-2  items-center '></h1>
                                 )}
 
                             </h3>
-
+                                    
                             <div className="flex flex-col h-5/6 overflow-hidden ">
                                 {Object.keys(datos_f.tipo1).sort((a, b) => {
                                     return new Date(b) - new Date(a);
@@ -298,7 +298,7 @@ export default function Panel({ auth, msj, clientes }) {
                                                         <div className='flex items-center'>
                                                             {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
-                                                            {auth.user.rol_id == 2 && (
+                                                            {auth.user.rol_id == 1 && (
                                                                 <div className="p-2 h-10" onClick={() => { setDefaultEditData(solicitud) }}>
                                                                     <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                         <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
@@ -306,7 +306,7 @@ export default function Panel({ auth, msj, clientes }) {
 
                                                                 </div>)}
 
-                                                            {(auth.user.rol_id == 2 && solicitud.files.length === 0) && (
+                                                            {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && solicitud.files.length === 0)) && (
                                                                 <div className="p-2 h-10" onClick={() => setShowAlert(solicitud)}>
 
                                                                     <svg className="w-7 h-7 text-blue-400 hover:text-red-600">
@@ -357,7 +357,7 @@ export default function Panel({ auth, msj, clientes }) {
 
                         <div className="h-full w-full bg-[#f2f2f2]">
                             <h3 className="w-full bg-[#1e85e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Ventas
-                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) ;reset()}} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                                     Crear Bloque +
 
                                 </button>) : (
@@ -391,7 +391,7 @@ export default function Panel({ auth, msj, clientes }) {
                                                             <div className='flex items-center'>
                                                                 {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
-                                                                {auth.user.rol_id == 2 && (
+                                                                {auth.user.rol_id == 1 && (
                                                                     <div className="p-2 h-10" onClick={() => { setDefaultEditData(solicitud) }}>
                                                                         <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                             <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
@@ -399,7 +399,7 @@ export default function Panel({ auth, msj, clientes }) {
 
                                                                     </div>)}
 
-                                                                {(auth.user.rol_id == 2 && solicitud.files.length === 0) && (
+                                                                {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && solicitud.files.length === 0)) && (
                                                                     <div className="p-2 h-10" onClick={() => setShowAlert(solicitud)}>
 
                                                                         <svg className="w-7 h-7 text-blue-400 hover:text-red-600">
@@ -545,7 +545,7 @@ export default function Panel({ auth, msj, clientes }) {
                                 required
                                 name="month"
                                 id="month"
-                                defaultValue={data.month}
+                                value={data.month}
                                 onChange={(e) => setData("month", e.target.value)}
                                 className="h-9 rounded-md outline-none px-2"
 
@@ -573,7 +573,7 @@ export default function Panel({ auth, msj, clientes }) {
                                 required
                                 name="year"
                                 id="year"
-                                defaultValue={data.year}
+                                value={data.year}
                                 onChange={(e) => setData("year", e.target.value)}
                                 className="h-9  rounded-md outline-none px-2"
                             >
