@@ -49,7 +49,7 @@ export default function Panel({ auth, msj, clientes }) {
         descripcion: "",
         created_at: "",
         year: new Date().getFullYear().toString(),
-        month: new Date().getMonth().toString(),
+        month: (new Date().getMonth()+1).toString(),
         status: 1,
     });
 
@@ -109,6 +109,7 @@ export default function Panel({ auth, msj, clientes }) {
             setMessage(msj.error);
             if(!show) alert(msj.error)
          } else if (msj && !msj.error) {
+            setShowEdit(0)
             setMessage(msj.success);
             setShowmsj(true);
             setData("month", "")
@@ -118,6 +119,9 @@ export default function Panel({ auth, msj, clientes }) {
 
     function submit(e) {
         e.preventDefault();
+
+        console.log(data)
+
         setLoading(true);
         post(route('solicitud.create', showAlert), {
             onSuccess: () => {
@@ -171,7 +175,7 @@ export default function Panel({ auth, msj, clientes }) {
         setLoading(true);
         post(route('solicitud.update', { id: showEdit.id }), {
             onSuccess: () => {
-                setShowEdit(0)
+               
                 setLoading(false);
             }
         });
@@ -270,7 +274,7 @@ export default function Panel({ auth, msj, clientes }) {
                         <div className="h-full w-full bg-[#f2f2f2]">
                           
                             <h3 className="w-full bg-[#1ec0e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de costos/gastos
-                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 1); reset()}} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true);reset(), setData("tipo_id", 1); }} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                                     Crear Bloque +
                                 </button>) : (
 
@@ -357,7 +361,7 @@ export default function Panel({ auth, msj, clientes }) {
 
                         <div className="h-full w-full bg-[#f2f2f2]">
                             <h3 className="w-full bg-[#1e85e6] p-2 font-bold text-white rounded-t-md text-xl flex justify-between">Facturas de Ventas
-                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); setData("tipo_id", 2) ;reset()}} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
+                                {(auth.user.rol_id == 2) ? (<button htmlFor="file" onClick={() => { setShow(true); reset();setData("tipo_id", 2);}} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-base text-white cursor-pointer'>
                                     Crear Bloque +
 
                                 </button>) : (
@@ -391,7 +395,7 @@ export default function Panel({ auth, msj, clientes }) {
                                                             <div className='flex items-center'>
                                                                 {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
-                                                                {auth.user.rol_id == 1 && (
+                                                                {auth.user.rol_id == 2 && (
                                                                     <div className="p-2 h-10" onClick={() => { setDefaultEditData(solicitud) }}>
                                                                         <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                             <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
@@ -514,7 +518,7 @@ export default function Panel({ auth, msj, clientes }) {
                     </div>
 
                     {Message && (
-                        <div className="alert alert-danger">
+                        <div className="text-red-500">
                             {Message}
                         </div>
                     )}
@@ -588,7 +592,7 @@ export default function Panel({ auth, msj, clientes }) {
                     </div>
 
                     {Message && (
-                        <div className="alert alert-danger">
+                        <div className="text-red-500">
                             {Message}
                         </div>
                     )}

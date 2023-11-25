@@ -71,7 +71,8 @@ class SolicitudController extends Controller
     }
 
     public function create(Request $request)
-    {
+    {   
+
         try {
             $request->merge([
                 'user_id' => Auth::user()->id,
@@ -193,12 +194,14 @@ class SolicitudController extends Controller
 
             if ($validator->fails()) {
 
-                return redirect()->route('admsolicitudes')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
+                session()->put('msj', ['error' => array_values($validator->errors()->messages())]);
+
+                return back();
+
+
             }
 
            
-           
-
             $Solicitud = Solicitud::findOrFail($request->id);
             $status_ant = EstadoSolicitud::find($Solicitud->status_id);
             $status_act = EstadoSolicitud::find($request->status_id) ?? $status_ant;
@@ -236,16 +239,40 @@ class SolicitudController extends Controller
                 );
             }
 
+            if (isset($request->created_at)) {
+                return redirect('panel')->with('msj', ['success' => 'Bloque actualizado correctamente']);
+            }
+           
             return redirect()->route('admsolicitudes')
                 ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
                 ->with('solicitud_id', $request->id);
         } catch (ModelNotFoundException $e) {
 
             return redirect()->route('admsolicitudes')->with('msj', ['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
-        } catch (Exception $e) {
+        } catch (QueryException $e) {
+
+            $errormsj = $e->getMessage();
+
+            if (strpos($errormsj, 'Duplicate entry') !== false) {
+                preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
+                $duplicateValue = $matches[1] ?? '';
+                $duplicateKey = $matches[2] ?? '';
+                if ($duplicateKey == 'solicitudes_tipo_id_user_id_created_at_unique') {
+                    $fecha = Carbon::parse(substr($duplicateValue, 4))->locale('es');
+                    session()->put('msj', ["errord" => "Ya existe un bloque para " . $duplicateValue]);
+                } else {
+
+                    session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
+                }
+            } else {
+                session()->put('msj', ["error" => 'No se pudo registrar el Solicitud']);
+            }
+        }  catch (Exception $e) {
 
             return redirect()->route('admsolicitudes')->with('msj', ['error' => 'Error en la acción realizada'], 500);
         }
+
+        return back();
     }
 
     public function destroy($id)
