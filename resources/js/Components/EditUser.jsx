@@ -3,7 +3,7 @@ import React from 'react'
 export default function EditUser({ roles, changeRol, hideModal, update, selectedUser, setData, isCliente, msj, data }) {
 
     return (
-     <>
+    
         
             <form onSubmit={update} className="flex flex-col gap-4 text-textgray">
 
