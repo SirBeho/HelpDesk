@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 export const Solicitud = ({data,click,open,adm}) => {
     
     const formattedDate = format(new Date(data.created_at),'dd/MM/yyyy hh:mm:ss a')
-    const tipo = ["bg-blue-500","bg-yellow-500","bg-cyan-500","bg-blue-800"];
+    const tipo = ["bg-blue-500","bg-[#EAB308]","bg-cyan-500","bg-blue-800"];
     const status = ["bg-lime-100","bg-orange-100","bg-orange-100","bg-red-100","bg-red-100","bg-green-100"]
 
     return (

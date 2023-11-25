@@ -1,8 +1,7 @@
 import React from 'react'
 
 export default function EditUser({ roles, changeRol, hideModal, update, selectedUser, setData, isCliente, msj, data }) {
-console.log(data)
-console.log(selectedUser)
+ 
     return (
         <>
             <form onSubmit={update} className="flex flex-col gap-4 text-textgray">
@@ -73,40 +72,37 @@ console.log(selectedUser)
                     </div>
                 </div>
 
+                {isCliente &&
 
-            </form>
+                    <div className='flex gap-8'>
+                        <div className="flex flex-col w-2/4">
+                            <label htmlFor="name" className="text-xs">
+                                Empresa
+                            </label>
+                            <input type="text" name="name" id="name" className="h-9 rounded-md outline-none px-2" value={data.empresa || selectedUser.empresa} onChange={(e) => setData('empresa', e.target.value)} />
+                        </div>
 
-
-            {isCliente &&
-
-                <div className='flex gap-8'>
-                    <div className="flex flex-col w-2/4">
-                        <label htmlFor="name" className="text-xs">
-                            Empresa
-                        </label>
-                        <input type="text" name="name" id="name" className="h-9 rounded-md outline-none px-2" value={data.empresa || selectedUser.empresa || ''} onChange={(e) => setData('empresa', e.target.value)} />
+                        <div className="flex flex-col w-2/4">
+                            <label htmlFor="rnc" className="text-xs">
+                                RNC
+                            </label>
+                            <input type="text" name="rnc" id="rnc" className="h-9 rounded-md outline-none px-2" value={data.rnc || selectedUser.rnc} onChange={(e) => setData('rnc', e.target.value)} />
+                        </div>
                     </div>
+                }
+                {msj?.error && <span className='text-red-500 text-xs italic'>{msj?.error[0]}</span>}
+                <div className='flex justify-end'>
+                    <button type='button' className="border py-1 w-36 rounded-xl bg-red-500 hover:bg-red-400 text-offwhite q mr-5 mt-5"
+                        onClick={hideModal}
+                    >
+                        Cancelar
+                    </button>
 
-                    <div className="flex flex-col w-2/4">
-                        <label htmlFor="rnc" className="text-xs">
-                            RNC
-                        </label>
-                        <input type="text" name="rnc" id="rnc" className="h-9 rounded-md outline-none px-2" value={data.rnc || selectedUser.rnc || ''} onChange={(e) => setData('rnc', e.target.value)} />
-                    </div>
+                    <button type='submit' className="border py-1 w-36 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end mr-5 mt-5">
+                        Registrar
+                    </button>
                 </div>
-            }
-            {msj?.error && <span className='text-red-500 text-xs italic'>{msj?.error[0]}</span>}
-            <div className='flex justify-end'>
-                <button type='button' className="border py-1 w-36 rounded-xl bg-red-500 hover:bg-red-400 text-offwhite q mr-5 mt-5"
-                    onClick={hideModal}
-                >
-                    Cancelar
-                </button>
-
-                <button type='submit' className="border py-1 w-36 rounded-xl bg-blue-500 hover:bg-blue-600 text-offwhite self-end justify-end mr-5 mt-5">
-                    Registrar
-                </button>
-            </div>
+            </form>
         </>
-            )
+    )
 }
