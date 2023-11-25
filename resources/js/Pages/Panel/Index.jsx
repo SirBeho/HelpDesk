@@ -35,7 +35,7 @@ export default function Panel({ auth, msj, clientes }) {
     }, { tipo1: {}, tipo2: {} });
 
 
-
+//actual
     const [Message, setMessage] = useState(null);
     const [show, setShow] = useState(false);
     const [showmsj, setShowmsj] = useState(msj != null);
