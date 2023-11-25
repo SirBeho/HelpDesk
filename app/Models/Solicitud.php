@@ -67,6 +67,17 @@ class Solicitud extends Model
         return $this->hasMany(Comentario::class,'solicitud_id')->orderBy('created_at', 'desc');;
     }
 
+    public function notificaciones(): HasMany
+    {
+        return $this->hasMany(Notificacion::class,'solicitud_id');
+    }
+
+
+
+    
+
+  
+
 
 }
 

@@ -32,10 +32,10 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 //funciones generales
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    // Accesos
     Route::match(['get', 'post'], '/admsolicitudes', [SolicitudController::class, 'administracion'])->name('admsolicitudes');
     Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes');
     Route::get('/panel', [SolicitudController::class, 'panel'])->name('panel');
-
     Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones');
     Route::post('/notificaciones/{id}/{n_id}', [NotificacionController::class, 'update'])->name('notificaciones.update');
 
@@ -45,8 +45,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/AccessDenied', function () {
         return Inertia::render('AccessDenied');
     })->name('AccessDenied');
+    
+    //Funciones Basicas
+    Route::post('upload', [FileController::class, 'upload'])->name('upload');
+    Route::post('/download', [FileController::class, 'download'])->name('download');
+    Route::post('/solicitudes2', [SolicitudController::class, 'create'])->name('solicitud.create');
+    Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');
+    Route::post('/panel/destroy/{id}', [SolicitudController::class, 'destroy'])->name('solicitud.destroy');
 
-    //funciones de empleados
+
+    Route::post('/coment', [ComentarioController::class, 'create'])->name('comentario.create');
+    Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
+
+    //Funciones de empleados
     Route::middleware(['checkrole:3'])->group(function () {
         
         Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes');
@@ -54,7 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/reportes/generar/docu', [ReporteController::class, 'documentos_exel']);
         Route::get('/dashboard', [ReporteController::class, 'dashboard'])->name('dashboard');
 
-        //funciones administrativas
+        //Funciones administrativas
         Route::middleware(['checkrole:1'])->group(function () {
             Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
             Route::post('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
@@ -83,13 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    Route::post('upload', [FileController::class, 'upload'])->name('upload');
-    Route::post('/download', [FileController::class, 'download'])->name('download');
-    Route::post('/solicitudes2', [SolicitudController::class, 'create'])->name('solicitud.create');
-    Route::post('/solicitudes', [SolicitudController::class, 'update'])->name('solicitud.update');
-
-    Route::post('/coment', [ComentarioController::class, 'create'])->name('comentario.create');
-    Route::post('/coment4', [ComentarioController::class, 'destroy'])->name('comentario.destroy');
+   
 });
 
 Route::get('/form', function () {
