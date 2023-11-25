@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import React, { useEffect, useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
+import axios from 'axios';
 export default function Panel({ auth, msj, clientes }) {
 
     const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id < 3);
@@ -38,13 +39,15 @@ export default function Panel({ auth, msj, clientes }) {
     const [openyear, setOpenyear] = useState(0);
     const [openmonth, setOpenmonth] = useState(0);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post } = useForm({
         tipo_id: 0,
         descripcion: "",
         created_at: "",
         year: new Date().getFullYear().toString(),
         month: "",
     });
+
+
 
     const cliente = (id) => {
         const clienteseleccionado = clientes.find(
@@ -94,12 +97,15 @@ export default function Panel({ auth, msj, clientes }) {
             });
     };
 
-    useEffect(() => {
+   
 
+    useEffect(() => {
+       
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
-        } else if (msj && msj.error) {
-            setMessage(typeof msj.error === "string" ? msj.error : null);
+        } else if (msj && msj.error && typeof msj.error === "string") {
+            setMessage(msj.error);
+            if(!show) alert(msj.error)
         } else if (msj && !msj.error) {
             setMessage(msj.success);
             setShowmsj(true);
@@ -250,7 +256,13 @@ export default function Panel({ auth, msj, clientes }) {
                                         <div key={solicitud.id}>
                                             <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
                                                 <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
+                                                <div className='flex'>
                                                 {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 py-1 rounded-lg font-semibold text-white"> + </label></div>)}
+                                                <div onClick={()=> post(route("solicitud.destroy",{id:solicitud.id}))} className="p-2 h-10 bg-red-500">Delete</div>
+                                              
+
+                                                </div>
+                                            
                                             </div>
                                             <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
                                                 {solicitud.files ? (

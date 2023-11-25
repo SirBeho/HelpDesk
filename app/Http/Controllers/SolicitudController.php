@@ -78,20 +78,24 @@ class SolicitudController extends Controller
                 'status_id' => 1,
             ]);
 
-
-
             $validator = validator($request->all(), [
                 'tipo_id' => 'exists:tipo_solicitudes,id',
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
                 'status_id' => 'exists:estado_solicitudes,id',
                 'descripcion' => 'required',
+            ], [
+                'tipo_id.exists' => 'El tipo de solicitud seleccionado no es válido.',
+                'user_id.exists' => 'El usuario seleccionado no es válido.',
+                'descripcion.required' => 'La descripción es obligatoria.',
             ]);
 
 
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
+                session()->put('msj', ['error' => array_values($validator->errors()->messages())]);
+
+                return back();
             }
 
             $Solicitud = Solicitud::create($request->all());
@@ -111,11 +115,25 @@ class SolicitudController extends Controller
             }
 
 
-            $log = new LogSolicitudController();
+            if($request->created_at){
+               
+                $request->merge([
+                    'descripcion' => "Se ha creado el bloque de " . ($request->tipo_id == 1 ? "Compras" : "Ventas") . " " . $request->descripcion,
+                ]);
+                
+            }else{
+                $soli = Solicitud::find($request->solicitud_id);
+                $request->merge([
+                    'descripcion' => "Se ha creado la solicitud Numero: ".$soli->numero,
+                ]);
+            }
 
-            $respuesta = $log->create($request);
 
-            session()->put('msj', ["success" => $respuesta->original['msj'], "id" => $Solicitud->id]);
+            // $log = new LogSolicitudController();
+
+            // $respuesta = $log->create($request);
+
+            session()->put('msj', ["success" => $request->descripcion, "id" => $Solicitud->id]);
 
             //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
@@ -195,8 +213,12 @@ class SolicitudController extends Controller
             $Solicitud->save();
 
             if ($request->status_ant != $request->status_id) {
-                $log = new LogSolicitudController();
-                $respuesta = $log->create($request);
+                // $log = new LogSolicitudController();
+                // $respuesta = $log->create($request);
+
+                $request->merge([
+                    'descripcion' => "Se ha actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
+                ]);
 
                 Notificacion::create(
                     [
@@ -223,25 +245,44 @@ class SolicitudController extends Controller
     public function destroy($id)
     {
         $validator = validator(['id' => $id], [
-            'id' => 'required|numeric'
+            'id' => 'required|numeric|exists:solicitudes,id'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+       if ($validator->fails()) {
+                return redirect()->route('admsolicitudes')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
+            }
 
         try {
-            $Solicitud = Solicitud::findOrFail($id);
-            if ($Solicitud->status) {
-                $Solicitud->status = 0;
-                $Solicitud->save();
-                return response()->json(['msj' => 'Solicitud eliminado correctamente'], 200);
+            $Solicitud = Solicitud::findOrFail($id)->load('files','notificaciones');
+
+            
+            if(auth()->user()->rol_id == 2){
+               
+                if(count($Solicitud->files) == 0){
+                    
+                    $Solicitud->notificaciones->each->delete();
+                    $Solicitud->delete();   
+
+                    session()->put('msj', ["success" => 'Bloque eliminado correctamente']);
+                   
+                }else{
+                    session()->put('msj', ["error" => 'No se puede eliminar la solicitud porque tiene archivos adjuntos']);
+                   
+                }
+            } elseif(auth()->user()->rol_id == 1){
+
+                $Solicitud->files->each->delete();
+                $Solicitud->notificaciones->each->delete();
+                $Solicitud->delete();
+                //eliminar todos los archivos relacionados a la solicitud   
+        
             }
-            return response()->json(['msj' => 'Este Solicitud ya ha sido eliminado'], 200);
+
+            return back();    
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'El Solicitud ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error en la acción realizada'], 500);
+            return response()->json(['error' => 'Error en la acción realizada'.$e], 500);
         }
     }
 }
