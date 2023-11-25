@@ -9,7 +9,7 @@ export default function Solicitudes({ auth, datos, msj }) {
     const [solicitudes, setSolicitudes] = useState(datos);
     const [show, setShow] = useState(msj != null);
     useEffect(() => {
-
+        console.log(msj)
         setShow(msj?.success != undefined);
         
     }, [msj]);
@@ -182,7 +182,10 @@ export default function Solicitudes({ auth, datos, msj }) {
                             className="w-full resize-none h-44 p-3 outline-none mt-2"
                         ></textarea>
                     </div>
-                    {msj?.error ?? ( <div>{msj?.error}</div>)}
+                            <div className="text-red-500">
+                    {msj?.error ?? ( <div >{msj?.error}</div>)}
+
+                            </div>
                    
                     <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-end justify-end mr-5 mt-5">
                         Enviar solicitud
