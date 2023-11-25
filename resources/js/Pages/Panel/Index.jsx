@@ -4,7 +4,7 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 import { DeleteAlert } from '@/Components/DeleteAlert';
 import Loading from '@/Components/Loading';
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 export default function Panel({ auth, msj, clientes }) {
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(0);
@@ -47,8 +47,9 @@ export default function Panel({ auth, msj, clientes }) {
         tipo_id: 0,
         descripcion: "",
         created_at: "",
-        year: new Date().getFullYear().toString(),
-        month: "",
+        year: showEdit.year || new Date().getFullYear().toString(),
+        month: showEdit?.month,
+        status: 1,
     });
 
     const cliente = (id) => {
@@ -100,7 +101,7 @@ export default function Panel({ auth, msj, clientes }) {
     };
 
     useEffect(() => {
-
+            console.log(msj)
         if (msj && msj.errord) {
             setMessage("Ya existe un bloque para este mes del " + data.year);
         } else if (msj && msj.error) {
@@ -123,6 +124,10 @@ export default function Panel({ auth, msj, clientes }) {
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
+    useEffect(() => {
+       console.log(data) 
+    }, [data]);
+
 
     useEffect(() => {
         setData({
@@ -144,20 +149,21 @@ export default function Panel({ auth, msj, clientes }) {
     };
 
     function destroy() {
-
+        
         setLoading(true);
-        post(route('tipoSolicitud.update', showAlert), {
+        post(route('solicitud.destroy', showAlert), {
             onSuccess: () => {
-                setShowAlert(0)
-                setLoading(false);
+                 setShowAlert(0)
+                 setLoading(false);
             }
         });
 
     }
 
-    function edit() {
-
-        setLoading(true);
+    function edit(e) {
+        e.preventDefault();
+      
+       setLoading(true);
         post(route('solicitud.update', { id: showEdit.id }), {
             onSuccess: () => {
                 setShowEdit(0)
@@ -167,11 +173,15 @@ export default function Panel({ auth, msj, clientes }) {
 
     }
 
-    function setDefaultEditData(solicitud) {
 
-        setData('year', format(new Date(solicitud.created_at), "yyyy"));
-        setData('month', format(new Date(solicitud.created_at), "MM"));
-        setShowEdit(solicitud);
+    function setDefaultEditData(solicitud_) {
+      
+        // setData('month', format(new Date(solicitud_.created_at), "MM"));
+        // setData('year', format(new Date(solicitud_.created_at), "yyyy"));
+        setData('tipo_id', solicitud_.tipo_id);
+       
+
+        setShowEdit(solicitud_);
     }
 
 
@@ -583,7 +593,7 @@ export default function Panel({ auth, msj, clientes }) {
                         </div>
                     )}
 
-                    <button className={`border py-1 w-36 rounded-xl ${data.tipo_id == 1 ? "bg-[#1ec0e6]" : "bg-[#1e85e6]"}  hover:bg-gray-300 text-white hover:text-gray-800 self-center justify-center mr-5 mt-8`}>
+                    <button type='submit' className={`border py-1 w-36 rounded-xl ${data.tipo_id == 1 ? "bg-[#1ec0e6]" : "bg-[#1e85e6]"}  hover:bg-gray-300 text-white hover:text-gray-800 self-center justify-center mr-5 mt-8`}>
                         Guardar
                     </button>
                 </form>
@@ -614,7 +624,7 @@ export default function Panel({ auth, msj, clientes }) {
                 show={showAlert != 0}
                 title={showAlert?.descripcion}
                 hideModal={() => setShowAlert(0)}
-                destroy={() => destroy}
+                destroy={() => destroy()}
             />
             <Modal show={loading}>
                 <Loading />
