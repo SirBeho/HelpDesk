@@ -9,15 +9,9 @@ use App\Models\TipoSolicitud;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
-use PhpOffice\PhpSpreadsheet\Style\Style;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
-
 class ReporteController extends Controller
 {
 
@@ -165,11 +159,11 @@ class ReporteController extends Controller
         $sheet->setCellValue('C7' , $datos['inicio']);
         $sheet->setCellValue('C8' , $datos['fin']);
 
-        $sheet->setCellValue('F6' , $datos['usuario']);
-        $sheet->setCellValue('F7' , $datos['fecha']);
-        $sheet->setCellValue('F8' , $datos['hora']);
+        $sheet->setCellValue('H6' , $datos['usuario']);
+        $sheet->setCellValue('H7' , $datos['fecha']);
+        $sheet->setCellValue('H8' , $datos['hora']);
 
-        $posiciones = [['B9','C9'],['E9','F9'],['B10','C10'],['E10','F10']];
+        $posiciones = [['B9','C9'],['G9','H9'],['B10','C10'],['G10','H10']];
 
 
 
@@ -193,9 +187,11 @@ class ReporteController extends Controller
             $sheet->setCellValue('B' . $fila, $registro['id']);
             $sheet->setCellValue('C' . $fila, $registro['nombre']);
             $sheet->setCellValue('D' . $fila, $registro['extencion']);
-            $sheet->setCellValue('E' . $fila, $registro['user']['name']);
+            $sheet->setCellValue('E' . $fila, $registro['solicitud']['numero']);
+            $sheet->setCellValue('F' . $fila, $registro['solicitud']['tipo']['nombre']);
+            $sheet->setCellValue('G' . $fila, $registro['user']['name']);
             $fechaHoraObjeto = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $registro['created_at']) ;
-            $sheet->setCellValue('F' . $fila, $fechaHoraObjeto ? $fechaHoraObjeto->format('d-m-Y h:i:s A') : $registro['created_at'] );
+            $sheet->setCellValue('H' . $fila, $fechaHoraObjeto ? $fechaHoraObjeto->format('d-m-Y h:i:s A') : $registro['created_at'] );
             $sheet->insertNewRowBefore($fila+1);
             $fila++;
         }

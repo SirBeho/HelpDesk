@@ -95,16 +95,20 @@ export default function Reporte({ documentos_f, datos,empresa }) {
                 ID Documento
               </th>
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
-                Usuario
-              </th>
-              <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
                 Nombre
               </th>
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
                 Tipo Documento
               </th>
-
-
+              <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
+                # Solicitud
+              </th>
+              <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
+                Tipo Solicitud
+              </th>
+              <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
+                Nombre
+              </th>
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
                 Fecha
               </th>
@@ -115,16 +119,18 @@ export default function Reporte({ documentos_f, datos,empresa }) {
               documentos_f.map((documento, i) => (
                 <tr key={i} className={i % 2 === 0 ? "bg-gray-100" : ""}>
                   <td className="px-6 py-4 whitespace-no-wrap">{formato_0(documento.id, 4)}</td>
-                  <td className="px-6 py-4 whitespace-no-wrap">{documento.user.name}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.nombre}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.extencion}</td>
+                  <td className="px-6 py-4 whitespace-no-wrap">{documento.solicitud.numero}</td>
+                  <td className="px-6 py-4 whitespace-no-wrap">{documento.solicitud.tipo.nombre}</td>
+                  <td className="px-6 py-4 whitespace-no-wrap">{documento.user.name}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">
                     {documento.created_at && format(new Date(documento.created_at), "dd/MM/yyyy hh:mm:ss a")}
                   </td>
                 </tr>
               ))
             }
-
+            
             <tr className="bg-darkblue text-white">
               <td colSpan="6" className="py-2 font-semibold">
                 Total de documentos: {documentos_f?.length || 0}
