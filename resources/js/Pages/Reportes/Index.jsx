@@ -17,9 +17,16 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
   const documentos = [];
   solicitudes.forEach((solicitud) => {
     if (solicitud.files && solicitud.files.length > 0) {
-      documentos.push(...solicitud.files);
+      solicitud.files.forEach((documento) => {
+        const soli = solicitud;
+        delete soli.files;
+        documento.solicitud = soli;
+        documentos.push(documento);
+      });
     }
   });
+
+  
   const [documentos_f, setDocumentos_f] = useState(documentos);
   const [solicitudes_f, setSolicitudes_f] = useState(solicitudes);
   const [reportes, setReportes] = useState(0);
@@ -94,6 +101,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       setDocumentos_f(documentos_filtrados);
     };
 
+ 
   };
 
 
@@ -407,6 +415,12 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                           Tipo Documento
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                           # solicitud            
+                              </th>
+                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          Tipo Solicitud
+                        </th>
+                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Usuario
                         </th>
 
@@ -417,22 +431,28 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                     </thead>
                     <tbody>
                       {documentos_f && (
-                        documentos_f.map((user, i) => (
+                        documentos_f.map((documento, i) => (
                           <tr key={i}>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-base font-medium">
-                              {user.id}
+                              {documento.id}
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{user.nombre}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.nombre}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{user.extencion}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.extencion}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{user.user.name}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.solicitud.numero}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{user.created_at && format(new Date(user.created_at), "dd/MM/yyyy hh:mm:ss a")}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.solicitud.tipo.nombre}</p>
+                            </td>
+                            <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.user.name}</p>
+                            </td>
+                            <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.created_at && format(new Date(documento.created_at), "dd/MM/yyyy hh:mm:ss a")}</p>
                             </td>
 
                           </tr>
