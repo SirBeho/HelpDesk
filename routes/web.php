@@ -18,6 +18,7 @@ Route::post('logout')->name('logout')->uses('Auth\LoginController@logout');
 
 // Dashboard
 Route::get('/')->name('dashboard')->uses('DashboardController')->middleware('auth');
+Route::get('/asignacion')->name('asignacion')->uses('AsignacionController@index');;
 
 // Users
 Route::get('users')->name('users')->uses('UsersController@index')->middleware('remember', 'auth');

@@ -1,0 +1,85 @@
+PROCEDIMIENTO evaluarUsuario(tarea: Tarea, usuarios: Lista[Usuario]) -> Usuario
+    // Inicialización de variables
+    usuarioOptimo = usuarios[0] // Asignar primer usuario como predeterminado
+    valorMaximo = calcularValorAceptacion(tarea, usuarioOptimo) // Calcular valor inicial
+    
+    // Recorrer la lista de usuarios para evaluar y seleccionar al óptimo
+    PARA CADA usuario EN usuarios
+        valorActual = calcularValorAceptacion(tarea, usuario) // Calcular valor actual
+        SI valorActual > valorMaximo ENTONCES
+            usuarioOptimo = usuario // Actualizar usuario óptimo
+            valorMaximo = valorActual // Actualizar valor máximo
+        FIN SI
+    FIN PARA
+    
+    RETORNAR usuarioOptimo // Devolver usuario óptimo para la tarea
+FIN PROCEDIMIENTO
+
+FUNCION calcularValorAceptacion(tarea: Tarea, usuario: Usuario) -> Entero
+    valor = 0
+    
+    // Comparar características de la tarea con el perfil del usuario
+    PARA CADA caracteristica EN tarea.caracteristicas
+        SI caracteristica EN usuario.perfil.caracteristicas ENTONCES
+            valor += tarea.ponderacion[caracteristica] * usuario.perfil.nivelDominio[caracteristica]
+        FIN SI
+    FIN PARA
+    
+    // Considerar otros parámetros como carga de trabajo actual
+    valor -= usuario.cantidadTareasAsignadas * FACTOR_DE_DESCUENTO
+    
+    RETORNAR valor // Devolver el valor de aceptación para la tarea por este usuario
+FIN FUNCION
+
+
+Para crear un sistema de asignación automática de tareas a usuarios en un help desk, es fundamental considerar una variedad de parámetros tanto de los usuarios como de las tareas para lograr asignaciones eficientes. Aquí te menciono algunos parámetros que podrías considerar:
+
+### Parámetros de Usuarios:
+
+1. **Habilidades y Conocimientos:**
+   - Experiencia en áreas específicas, certificaciones, habilidades técnicas.
+
+2. **Disponibilidad y Carga de Trabajo:**
+   - Carga actual de trabajo, horario laboral, disponibilidad para aceptar nuevas tareas.
+
+3. **Historial de Tareas Anteriores:**
+   - Rendimiento en tareas anteriores, velocidad de resolución, calificaciones de calidad.
+
+4. **Roles y Responsabilidades:**
+   - Roles específicos dentro del equipo, áreas de especialización, niveles de autorización.
+
+5. **Nivel de Prioridad o Urgencia:**
+   - Capacidades para manejar situaciones de alta urgencia o prioridades cambiantes.
+
+6. **Feedback y Evaluaciones:**
+   - Retroalimentación de compañeros o supervisores sobre el desempeño en tareas anteriores.
+
+### Parámetros de Tareas:
+
+1. **Tipo de Tarea:**
+   - Categorización de tareas (por ejemplo, técnicas, administrativas, consultas).
+
+2. **Nivel de Complejidad:**
+   - Dificultad de la tarea, requisitos específicos de habilidades para su ejecución.
+
+3. **Urgencia o SLA (Service Level Agreement):**
+   - Tiempo límite para la resolución, nivel de urgencia asociado con la tarea.
+
+4. **Requisitos Específicos:**
+   - Equipos o herramientas necesarios, conocimientos específicos requeridos.
+
+5. **Historial de la Tarea:**
+   - Datos de tareas previas similares, tiempo promedio de resolución, patrones de asignación.
+
+6. **Prioridades del Cliente:**
+   - Requisitos o prioridades específicas del cliente asociadas con la tarea.
+
+### Enfoque en la Implementación Automática:
+
+- **Algoritmos de Asignación:**
+  - Utilización de algoritmos de asignación inteligente (como algoritmos de aprendizaje automático) para asignar automáticamente tareas basadas en la ponderación y análisis de estos parámetros.
+
+- **Reglas y Lógica de Negocio:**
+  - Establecimiento de reglas claras y lógica de negocio para la asignación automática, considerando los parámetros mencionados y su importancia relativa en la toma de decisiones.
+
+Al ponderar y evaluar estos parámetros tanto de los usuarios como de las tareas, podrás desarrollar un sistema que realice asignaciones más efectivas y eficientes dentro de un entorno de help desk.

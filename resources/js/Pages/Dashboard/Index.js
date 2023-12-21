@@ -36,8 +36,7 @@ const Dashboard = () => {
   );
 };
 
-// Persistent layout
-// Docs: https://inertiajs.com/pages#persistent-layouts
+
 Dashboard.layout = page => <Layout title="Dashboard" children={page} />;
 
 export default Dashboard;
