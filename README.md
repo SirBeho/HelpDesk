@@ -2,7 +2,7 @@
 
 Desarrollo de una aplicación web para el acceso y gestión
 de usuarios internos y clientes, con funcionalidades de autenticación, gestión de
-documentos, paneles de notificaciones, administración de solicitudes y reportes,
+documentos, paneles de notificaciones, administración de taskes y reportes,
 entre otros.
 
 

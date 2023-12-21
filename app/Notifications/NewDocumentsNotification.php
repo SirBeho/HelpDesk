@@ -12,15 +12,15 @@ class NewDocumentsNotification extends Notification
 
     protected $emailRecipient;
 
-    public $numero_solicitud;
+    public $numero_task;
     public $nombre_documento;
     /**
      * Create a new notification instance.
      */
-    public function __construct($emailRecipient, $numero_solicitud)
+    public function __construct($emailRecipient, $numero_task)
     {
         $this->emailRecipient = $emailRecipient;
-        $this->numero_solicitud = $numero_solicitud;
+        $this->numero_task = $numero_task;
  
     }
 
@@ -39,7 +39,7 @@ class NewDocumentsNotification extends Notification
      */
     public function toMail(object $notifiable)
     {
-        return (new DocumentCreateMail($this->numero_solicitud, $this->nombre_documento))
+        return (new DocumentCreateMail($this->numero_task, $this->nombre_documento))
             ->view('emails-templates.user-created')
             ->to($this->emailRecipient);
     }

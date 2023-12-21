@@ -18,7 +18,7 @@ class File extends Model
         'extencion', 
         'confidencial', 
         'user_id', 
-        'solicitud_id', 
+        'task_id', 
     ];
 
 

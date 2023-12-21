@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EstadoSolicitud;
+use App\Models\Estadotask;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
-class EstadoSolicitudController extends Controller
+class EstadotaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class EstadoSolicitudController extends Controller
     public function index()
     {
 
-        return EstadoSolicitud::all();
+        return Estadotask::all();
 
     }
 
@@ -35,12 +35,12 @@ class EstadoSolicitudController extends Controller
         }
 
         try {
-            $EstadoSolicitud = EstadoSolicitud::findOrFail($id);
+            $Estadotask = Estadotask::findOrFail($id);
        
 
-            return $EstadoSolicitud;
+            return $Estadotask;
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El EstadoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El Estadotask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
@@ -58,13 +58,13 @@ class EstadoSolicitudController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-            EstadoSolicitud::create($request->all());
+            Estadotask::create($request->all());
            
           
             return response()->json(['msj' =>  $request->description], 200);
         
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el EstadoSolicitud'.$e->getMessage()], 404);
+            return response()->json(['error' => 'No se pudo registrar el Estadotask'.$e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
@@ -82,13 +82,13 @@ class EstadoSolicitudController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $EstadoSolicitud = EstadoSolicitud::findOrFail($id);
-            $EstadoSolicitud->update($request->all());
-            $EstadoSolicitud->save();
+            $Estadotask = Estadotask::findOrFail($id);
+            $Estadotask->update($request->all());
+            $Estadotask->save();
             
-            return response()->json(['msj' => 'EstadoSolicitud actualizado correctamente'], 200);
+            return response()->json(['msj' => 'Estadotask actualizado correctamente'], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El EstadoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El Estadotask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
@@ -105,15 +105,15 @@ class EstadoSolicitudController extends Controller
         }
 
         try {
-            $EstadoSolicitud = EstadoSolicitud::findOrFail($id);
-            if ($EstadoSolicitud->status) {
-                $EstadoSolicitud->status = 0;
-                $EstadoSolicitud->save();
-                return response()->json(['msj' => 'EstadoSolicitud eliminado correctamente'], 200);
+            $Estadotask = Estadotask::findOrFail($id);
+            if ($Estadotask->status) {
+                $Estadotask->status = 0;
+                $Estadotask->save();
+                return response()->json(['msj' => 'Estadotask eliminado correctamente'], 200);
             }
-            return response()->json(['msj' => 'Este EstadoSolicitud ya ha sido eliminado'], 200);
+            return response()->json(['msj' => 'Este Estadotask ya ha sido eliminado'], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El EstadoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El Estadotask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }

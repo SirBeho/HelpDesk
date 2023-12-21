@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Notificacion;
-use App\Models\Solicitud;
+use App\Models\task;
 use App\Models\User;
 use App\Notifications\NewDocumentsNotification;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -26,14 +26,14 @@ class FileController extends Controller
             'file.*.mimes' => 'El archivo debe ser una imagen o un archivo PDF, Word o Exel.',
             'file.*.max' => 'El archivo no debe ser mayor de 2MB.',
             'file.*.uploaded' => 'El archivo no es valido.',
-            'solicitud_id.exists' => 'La solicitud no existe.',
+            'task_id.exists' => 'La task no existe.',
             // 'nombre.*.unique_name' => 'El nombre esta duplicado.',
         ];
 
         $validator = validator($request->all(), [
             'file.*' => 'required|file|mimes:xlsx,jpeg,jpg,png,docx,pdf|max:2048',
             'nombre.*' => 'required|unique_name',
-            'solicitud_id' => 'required|exists:solicitudes,id',
+            'task_id' => 'required|exists:taskes,id',
         ], $mensajes);
 
         if ($validator->fails()) {
@@ -60,11 +60,11 @@ class FileController extends Controller
 
             session()->put('msj', ['error' => $formattedErrors]);
 
-            if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
+            if (task::findOrFail($request->task_id)->tipo_id < 3) {
                 return redirect('panel');
             }
 
-            return redirect('admsolicitudes');
+            return redirect('admtaskes');
         }
 
 
@@ -72,7 +72,7 @@ class FileController extends Controller
         $mensajesErrores = null;
 
         try {
-            $solicitud_numero = Solicitud::findOrFail($request->solicitud_id)->numero;
+            $task_numero = task::findOrFail($request->task_id)->numero;
 
             foreach ($request->file('file') as $index => $file) {
 
@@ -82,13 +82,13 @@ class FileController extends Controller
                         $extension = $file->getClientOriginalExtension();
                         $encryptedData = Crypt::encrypt(file_get_contents($file->getPathname()));
 
-                        $referencia = time() . "_" . $index . $solicitud_numero;
+                        $referencia = time() . "_" . $index . $task_numero;
                         $name = $referencia . "." . $extension;
 
                         $data = [
                             'nombre' => $request->nombre[$index],
                             'confidencial' => $request->confidencial[$index],
-                            'solicitud_id' => $request->solicitud_id,
+                            'task_id' => $request->task_id,
                             'referencia' => $referencia,
                             'extencion' => $extension,
                             'user_id' => Auth::user()->id,
@@ -130,7 +130,7 @@ class FileController extends Controller
 
 
             if ($mensajesExitosos) :
-                $user_id = Solicitud::find($request->solicitud_id)->user_id;
+                $user_id = task::find($request->task_id)->user_id;
                 $user = User::find($user_id);
 
                 if (auth()->user()->rol_id == 2) :
@@ -139,12 +139,12 @@ class FileController extends Controller
 
                     Notificacion::create(
                         [
-                            'solicitud_id' => $request->solicitud_id,
+                            'task_id' => $request->task_id,
                             'emisor_id' => Auth::user()->id,
-                            'message' => "Has recibido un nuevo documentos en la solicitud: $solicitud_numero"
+                            'message' => "Has recibido un nuevo documentos en la task: $task_numero"
                         ]
                     );
-                    $user->notify(new NewDocumentsNotification($recipientEmail, $solicitud_numero));
+                    $user->notify(new NewDocumentsNotification($recipientEmail, $task_numero));
 
                 else :
 
@@ -152,13 +152,13 @@ class FileController extends Controller
 
                     Notificacion::create(
                         [
-                            'solicitud_id' => $request->solicitud_id,
+                            'task_id' => $request->task_id,
                             'emisor_id' => Auth::user()->id,
                             'receptor_id' => $user_id,
-                            'message' =>  "Has recibido un nuevos documentos en la solicitud: $solicitud_numero"
+                            'message' =>  "Has recibido un nuevos documentos en la task: $task_numero"
                         ]
                     );
-                    $user->notify(new NewDocumentsNotification($recipientEmail, $solicitud_numero));
+                    $user->notify(new NewDocumentsNotification($recipientEmail, $task_numero));
                 endif;
 
 
@@ -169,11 +169,11 @@ class FileController extends Controller
             session()->put('msj', ['error' => 'Error en la acción realizada ']);
         }
 
-        if (Solicitud::findOrFail($request->solicitud_id)->tipo_id < 3) {
+        if (task::findOrFail($request->task_id)->tipo_id < 3) {
             return redirect('panel');
         }
 
-        return redirect('admsolicitudes');
+        return redirect('admtaskes');
     }
 
     public function download(Request $request)

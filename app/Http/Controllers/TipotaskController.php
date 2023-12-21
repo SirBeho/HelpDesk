@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TipoSolicitud;
+use App\Models\Tipotask;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
-class TipoSolicitudController extends Controller
+class TipotaskController extends Controller
 {
 
     public function index()
@@ -20,10 +20,10 @@ class TipoSolicitudController extends Controller
             Session::forget('msj');
         }
 
-        $TipoSolicitudes =  TipoSolicitud::where('tipo', '>',  0)->get();
+        $Tipotaskes =  Tipotask::where('tipo', '>',  0)->get();
 
         return Inertia::render('Mantenimiento/Index', [
-            'tipoSolicitudes' => $TipoSolicitudes,
+            'tipotaskes' => $Tipotaskes,
             'msj' => $mensaje
         ]);
     }
@@ -47,17 +47,17 @@ class TipoSolicitudController extends Controller
                 return redirect()->route('usuarios.index')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
 
-            TipoSolicitud::create($request->all());
+            Tipotask::create($request->all());
 
-            session()->put('msj', ["success" => 'Tipo de solicitud creada con exito']);
+            session()->put('msj', ["success" => 'Tipo de task creada con exito']);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el TipoSolicitud' . $e->getMessage()], 404);
+            return response()->json(['error' => 'No se pudo registrar el Tipotask' . $e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
 
-        return redirect(route('tipoSolicitud.index'));
+        return redirect(route('tipotask.index'));
     }
 
     public function update(Request $request)
@@ -71,7 +71,7 @@ class TipoSolicitudController extends Controller
             ];
 
             $validator = validator($request->all(), [
-                'id' => 'required|exists:tipo_solicitudes,id',
+                'id' => 'required|exists:tipo_taskes,id',
             ], $mensajes);
 
             if ($validator->fails()) {
@@ -80,16 +80,16 @@ class TipoSolicitudController extends Controller
             }
 
 
-            $TipoSolicitud = TipoSolicitud::findOrFail($request->id);
-            $TipoSolicitud->update($request->all());
+            $Tipotask = Tipotask::findOrFail($request->id);
+            $Tipotask->update($request->all());
 
-            session()->put('msj', ["success" => 'Tipo de solicitud actializada con exito']);
+            session()->put('msj', ["success" => 'Tipo de task actializada con exito']);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El TipoSolicitud ' . $request->id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El Tipotask ' . $request->id . ' no existe no fue encontrado'], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
-        return redirect(route('tipoSolicitud.index'));
+        return redirect(route('tipotask.index'));
     }
 
     public function destroy($id)
@@ -103,7 +103,7 @@ class TipoSolicitudController extends Controller
             ];
     
             $validator = validator(['id' => $id], [
-                'id' => 'required|exists:tipo_solicitudes,id',
+                'id' => 'required|exists:tipo_taskes,id',
             ], $mensajes);
     
             if ($validator->fails()) {
@@ -111,17 +111,17 @@ class TipoSolicitudController extends Controller
                 return redirect()->route('usuarios.index')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
 
-            $TipoSolicitud = TipoSolicitud::findOrFail($id);
-            $TipoSolicitud->delete();
+            $Tipotask = Tipotask::findOrFail($id);
+            $Tipotask->delete();
              
-            session()->put('msj', ["success" => 'Tipo de solicitud eliminada con exito']);
+            session()->put('msj', ["success" => 'Tipo de task eliminada con exito']);
          
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El TipoSolicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El Tipotask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
-        return redirect(route('tipoSolicitud.index'));
+        return redirect(route('tipotask.index'));
     }
 
    

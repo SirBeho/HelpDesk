@@ -80,9 +80,9 @@ COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `u539676568_Q26dW`.`estado_solicitudes`
+-- Table `u539676568_Q26dW`.`estado_taskes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`estado_solicitudes` (
+CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`estado_taskes` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(255) NOT NULL,
   `status` VARCHAR(255) NOT NULL DEFAULT '1',
@@ -96,9 +96,9 @@ COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `u539676568_Q26dW`.`tipo_solicitudes`
+-- Table `u539676568_Q26dW`.`tipo_taskes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`tipo_solicitudes` (
+CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`tipo_taskes` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(255) NOT NULL,
   `tipo` INT(11) NOT NULL,
@@ -113,9 +113,9 @@ COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `u539676568_Q26dW`.`solicitudes`
+-- Table `u539676568_Q26dW`.`taskes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`solicitudes` (
+CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`taskes` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `numero` INT(11) NOT NULL,
   `tipo_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -126,17 +126,17 @@ CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`solicitudes` (
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `solicitudes_numero_unique` (`numero` ASC) VISIBLE,
-  UNIQUE INDEX `solicitudes_tipo_id_user_id_created_at_unique` (`tipo_id` ASC, `user_id` ASC, `created_at` ASC) VISIBLE,
-  INDEX `solicitudes_user_id_foreign` (`user_id` ASC) VISIBLE,
-  INDEX `solicitudes_status_id_foreign` (`status_id` ASC) VISIBLE,
-  CONSTRAINT `solicitudes_status_id_foreign`
+  UNIQUE INDEX `taskes_numero_unique` (`numero` ASC) VISIBLE,
+  UNIQUE INDEX `taskes_tipo_id_user_id_created_at_unique` (`tipo_id` ASC, `user_id` ASC, `created_at` ASC) VISIBLE,
+  INDEX `taskes_user_id_foreign` (`user_id` ASC) VISIBLE,
+  INDEX `taskes_status_id_foreign` (`status_id` ASC) VISIBLE,
+  CONSTRAINT `taskes_status_id_foreign`
     FOREIGN KEY (`status_id`)
-    REFERENCES `u539676568_Q26dW`.`estado_solicitudes` (`id`),
-  CONSTRAINT `solicitudes_tipo_id_foreign`
+    REFERENCES `u539676568_Q26dW`.`estado_taskes` (`id`),
+  CONSTRAINT `taskes_tipo_id_foreign`
     FOREIGN KEY (`tipo_id`)
-    REFERENCES `u539676568_Q26dW`.`tipo_solicitudes` (`id`),
-  CONSTRAINT `solicitudes_user_id_foreign`
+    REFERENCES `u539676568_Q26dW`.`tipo_taskes` (`id`),
+  CONSTRAINT `taskes_user_id_foreign`
     FOREIGN KEY (`user_id`)
     REFERENCES `u539676568_Q26dW`.`users` (`id`))
 ENGINE = InnoDB
@@ -150,16 +150,16 @@ COLLATE = utf8mb4_unicode_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`comentarios` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `solicitud_id` BIGINT(20) UNSIGNED NOT NULL,
+  `task_id` BIGINT(20) UNSIGNED NOT NULL,
   `comentario` VARCHAR(255) NOT NULL,
   `status` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `comentarios_solicitud_id_foreign` (`solicitud_id` ASC) VISIBLE,
-  CONSTRAINT `comentarios_solicitud_id_foreign`
-    FOREIGN KEY (`solicitud_id`)
-    REFERENCES `u539676568_Q26dW`.`solicitudes` (`id`))
+  INDEX `comentarios_task_id_foreign` (`task_id` ASC) VISIBLE,
+  CONSTRAINT `comentarios_task_id_foreign`
+    FOREIGN KEY (`task_id`)
+    REFERENCES `u539676568_Q26dW`.`taskes` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 11
 DEFAULT CHARACTER SET = utf8mb4
@@ -194,17 +194,17 @@ CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`files` (
   `extencion` VARCHAR(255) NOT NULL,
   `confidencial` TINYINT(1) NOT NULL DEFAULT 0,
   `user_id` BIGINT(20) UNSIGNED NOT NULL,
-  `solicitud_id` BIGINT(20) UNSIGNED NOT NULL,
+  `task_id` BIGINT(20) UNSIGNED NOT NULL,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `files_nombre_user_id_unique` (`nombre` ASC, `user_id` ASC) VISIBLE,
   UNIQUE INDEX `files_referencia_unique` (`referencia` ASC) VISIBLE,
   INDEX `files_user_id_foreign` (`user_id` ASC) VISIBLE,
-  INDEX `files_solicitud_id_foreign` (`solicitud_id` ASC) VISIBLE,
-  CONSTRAINT `files_solicitud_id_foreign`
-    FOREIGN KEY (`solicitud_id`)
-    REFERENCES `u539676568_Q26dW`.`solicitudes` (`id`),
+  INDEX `files_task_id_foreign` (`task_id` ASC) VISIBLE,
+  CONSTRAINT `files_task_id_foreign`
+    FOREIGN KEY (`task_id`)
+    REFERENCES `u539676568_Q26dW`.`taskes` (`id`),
   CONSTRAINT `files_user_id_foreign`
     FOREIGN KEY (`user_id`)
     REFERENCES `u539676568_Q26dW`.`users` (`id`))
@@ -215,22 +215,22 @@ COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `u539676568_Q26dW`.`log_solicitudes`
+-- Table `u539676568_Q26dW`.`log_taskes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`log_solicitudes` (
+CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`log_taskes` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `solicitud_id` BIGINT(20) UNSIGNED NOT NULL,
+  `task_id` BIGINT(20) UNSIGNED NOT NULL,
   `user_id` BIGINT(20) UNSIGNED NOT NULL,
   `descripcion` VARCHAR(255) NOT NULL,
   `status` VARCHAR(255) NOT NULL DEFAULT '1',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   PRIMARY KEY (`id`),
-  INDEX `log_solicitudes_user_id_foreign` (`user_id` ASC) VISIBLE,
-  INDEX `log_solicitudes_solicitud_id_foreign` (`solicitud_id` ASC) VISIBLE,
-  CONSTRAINT `log_solicitudes_solicitud_id_foreign`
-    FOREIGN KEY (`solicitud_id`)
-    REFERENCES `u539676568_Q26dW`.`solicitudes` (`id`),
-  CONSTRAINT `log_solicitudes_user_id_foreign`
+  INDEX `log_taskes_user_id_foreign` (`user_id` ASC) VISIBLE,
+  INDEX `log_taskes_task_id_foreign` (`task_id` ASC) VISIBLE,
+  CONSTRAINT `log_taskes_task_id_foreign`
+    FOREIGN KEY (`task_id`)
+    REFERENCES `u539676568_Q26dW`.`taskes` (`id`),
+  CONSTRAINT `log_taskes_user_id_foreign`
     FOREIGN KEY (`user_id`)
     REFERENCES `u539676568_Q26dW`.`users` (`id`))
 ENGINE = InnoDB
@@ -258,7 +258,7 @@ COLLATE = utf8mb4_unicode_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`notificaciones` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `solicitud_id` BIGINT(20) UNSIGNED NOT NULL,
+  `task_id` BIGINT(20) UNSIGNED NOT NULL,
   `emisor_id` BIGINT(20) UNSIGNED NOT NULL,
   `receptor_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
   `message` VARCHAR(255) NOT NULL,
@@ -268,16 +268,16 @@ CREATE TABLE IF NOT EXISTS `u539676568_Q26dW`.`notificaciones` (
   PRIMARY KEY (`id`),
   INDEX `notificaciones_emisor_id_foreign` (`emisor_id` ASC) VISIBLE,
   INDEX `notificaciones_receptor_id_foreign` (`receptor_id` ASC) VISIBLE,
-  INDEX `notificaciones_solicitud_id_foreign` (`solicitud_id` ASC) VISIBLE,
+  INDEX `notificaciones_task_id_foreign` (`task_id` ASC) VISIBLE,
   CONSTRAINT `notificaciones_emisor_id_foreign`
     FOREIGN KEY (`emisor_id`)
     REFERENCES `u539676568_Q26dW`.`users` (`id`),
   CONSTRAINT `notificaciones_receptor_id_foreign`
     FOREIGN KEY (`receptor_id`)
     REFERENCES `u539676568_Q26dW`.`users` (`id`),
-  CONSTRAINT `notificaciones_solicitud_id_foreign`
-    FOREIGN KEY (`solicitud_id`)
-    REFERENCES `u539676568_Q26dW`.`solicitudes` (`id`))
+  CONSTRAINT `notificaciones_task_id_foreign`
+    FOREIGN KEY (`task_id`)
+    REFERENCES `u539676568_Q26dW`.`taskes` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8mb4

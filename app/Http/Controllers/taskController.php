@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EstadoSolicitud;
+use App\Models\Estadotask;
 use App\Models\Notificacion;
-use App\Models\Solicitud;
-use App\Models\TipoSolicitud;
+use App\Models\task;
+use App\Models\Tipotask;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
-class SolicitudController extends Controller
+class taskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,8 +29,8 @@ class SolicitudController extends Controller
         if ($mensaje) {
             Session::forget('msj');
         }
-        return Inertia::render('Solicitudes/Index', [
-            'datos' => TipoSolicitud::where('status', '1')->get(),
+        return Inertia::render('taskes/Index', [
+            'datos' => Tipotask::where('status', '1')->get(),
             'msj' => $mensaje,
         ]);
     }
@@ -38,23 +38,23 @@ class SolicitudController extends Controller
     public function administracion(Request $request)
     {
         $mensaje = session('msj');
-        $solicitud_id = session('solicitud_id');
+        $task_id = session('task_id');
 
-        $solicitud_id && session()->forget('solicitud_id');
+        $task_id && session()->forget('task_id');
 
-        if (!$solicitud_id) {
-            $solicitud_id =  $request->id;
+        if (!$task_id) {
+            $task_id =  $request->id;
         }
 
         if ($mensaje) {
             session()->forget('msj');
         }
 
-        return Inertia::render('Admsolicitudes/Index', [
-            'tipoSolicitudes' => TipoSolicitud::where('status', '1')->get(),
-            'statusList' => EstadoSolicitud::select('id', 'nombre')->where('status', 1)->get(),
+        return Inertia::render('Admtaskes/Index', [
+            'tipotaskes' => Tipotask::where('status', '1')->get(),
+            'statusList' => Estadotask::select('id', 'nombre')->where('status', 1)->get(),
             'msj' => $mensaje,
-            'solicitud_id' => $solicitud_id,
+            'task_id' => $task_id,
         ]);
     }
 
@@ -80,13 +80,13 @@ class SolicitudController extends Controller
             ]);
 
             $validator = validator($request->all(), [
-                'tipo_id' => 'exists:tipo_solicitudes,id',
+                'tipo_id' => 'exists:tipo_taskes,id',
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
-                'status_id' => 'exists:estado_solicitudes,id',
+                'status_id' => 'exists:estado_taskes,id',
                 'descripcion' => 'required',
             ], [
-                'tipo_id.exists' => 'El tipo de solicitud seleccionado no es válido.',
+                'tipo_id.exists' => 'El tipo de task seleccionado no es válido.',
                 'user_id.exists' => 'El usuario seleccionado no es válido.',
                 'descripcion.required' => 'La descripción es obligatoria.',
             ]);
@@ -99,18 +99,18 @@ class SolicitudController extends Controller
                 return back();
             }
 
-            $Solicitud = Solicitud::create($request->all());
+            $task = task::create($request->all());
 
             $request->merge([
-                'solicitud_id' =>  $Solicitud->id,
+                'task_id' =>  $task->id,
             ]);
 
             if ($request->tipo_id > 2) {
                 Notificacion::create(
                     [
-                        'solicitud_id' =>  $Solicitud->id,
+                        'task_id' =>  $task->id,
                         'emisor_id' => Auth::user()->id,
-                        'message' => "Has recibido una nueva solicitud"
+                        'message' => "Has recibido una nueva task"
                     ]
                 );
             }
@@ -123,22 +123,22 @@ class SolicitudController extends Controller
                 ]);
                 
             }else{
-                $soli = Solicitud::find($request->solicitud_id);
+                $soli = task::find($request->task_id);
                 $request->merge([
-                    'descripcion' => "Se ha creado la solicitud Numero: ".$soli->numero,
+                    'descripcion' => "Se ha creado la task Numero: ".$soli->numero,
                 ]);
             }
 
 
-            // $log = new LogSolicitudController();
+            // $log = new LogtaskController();
 
             // $respuesta = $log->create($request);
 
-            session()->put('msj', ["success" => $request->descripcion, "id" => $Solicitud->id]);
+            session()->put('msj', ["success" => $request->descripcion, "id" => $task->id]);
 
-            //  return response()->json(['msj' => 'Solicitud creada correctamente','log' => $respuesta->original['msj']], 200);
+            //  return response()->json(['msj' => 'task creada correctamente','log' => $respuesta->original['msj']], 200);
         } catch (ModelNotFoundException $e) {
-            session()->put('msj', ["error" => 'No se pudo registrar la Solicitud']);
+            session()->put('msj', ["error" => 'No se pudo registrar la task']);
         } catch (QueryException $e) {
 
             $errormsj = $e->getMessage();
@@ -147,7 +147,7 @@ class SolicitudController extends Controller
                 preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
                 $duplicateValue = $matches[1] ?? '';
                 $duplicateKey = $matches[2] ?? '';
-                if ($duplicateKey == 'solicitudes_tipo_id_user_id_created_at_unique') {
+                if ($duplicateKey == 'taskes_tipo_id_user_id_created_at_unique') {
                     $fecha = Carbon::parse(substr($duplicateValue, 4))->locale('es');
                     session()->put('msj', ["errord" => "Ya existe un bloque para " . $duplicateValue]);
                 } else {
@@ -155,7 +155,7 @@ class SolicitudController extends Controller
                     session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
             } else {
-                session()->put('msj', ["error" => 'No se pudo registrar el Solicitud']);
+                session()->put('msj', ["error" => 'No se pudo registrar el task']);
             }
         } catch (Exception $e) {
             session()->put('msj', ["error" => 'Error en la accion realizada']);
@@ -164,7 +164,7 @@ class SolicitudController extends Controller
         if (isset($request->created_at)) {
             return redirect('panel');
         }
-        return redirect('solicitudes');
+        return redirect('taskes');
     }
 
     public function update(Request $request)
@@ -172,7 +172,7 @@ class SolicitudController extends Controller
         try {
             
             $mensajes = [
-                'tipo_id' => 'El tipo de solicitud no existe.',
+                'tipo_id' => 'El tipo de task no existe.',
                 'created_at' => 'La fecha de creacion no es valida.',
                 'user_id' => 'El usuario no existe.',
                 'status_id' => 'El estado seleccionado no existe.',
@@ -181,11 +181,11 @@ class SolicitudController extends Controller
 
             $validator = validator($request->all(), [
 
-                'id' => 'required|exists:solicitudes,id',
-                'tipo_id' => 'exists:tipo_solicitudes,id',
+                'id' => 'required|exists:taskes,id',
+                'tipo_id' => 'exists:tipo_taskes,id',
                 'created_at' => 'date',
                 'user_id' => 'exists:users,id',
-                'status_id' => 'exists:estado_solicitudes,id',
+                'status_id' => 'exists:estado_taskes,id',
                 'descripcion' => 'required',
 
             ], $mensajes);
@@ -202,36 +202,36 @@ class SolicitudController extends Controller
             }
 
            
-            $Solicitud = Solicitud::findOrFail($request->id);
-            $status_ant = EstadoSolicitud::find($Solicitud->status_id);
-            $status_act = EstadoSolicitud::find($request->status_id) ?? $status_ant;
+            $task = task::findOrFail($request->id);
+            $status_ant = Estadotask::find($task->status_id);
+            $status_act = Estadotask::find($request->status_id) ?? $status_ant;
 
             $request->merge([
-                'solicitud_id' => $request->id,
-                'status_ant' => $Solicitud->status_id,
-                'message' => "El estado de la solicitud No. $request->numero Ha cambiado de $status_ant->nombre a $status_act->nombre"
+                'task_id' => $request->id,
+                'status_ant' => $task->status_id,
+                'message' => "El estado de la task No. $request->numero Ha cambiado de $status_ant->nombre a $status_act->nombre"
             ]);
 
             
-            $Solicitud->update($request->all());
+            $task->update($request->all());
 
             if (Auth::user()->rol_id == 3) {
-                $Solicitud->usuarioAsignado_id = Auth::user()->id;
+                $task->usuarioAsignado_id = Auth::user()->id;
             }
             
-            $Solicitud->save();
+            $task->save();
 
             if ($request->status_ant != $request->status_id) {
-                // $log = new LogSolicitudController();
+                // $log = new LogtaskController();
                 // $respuesta = $log->create($request);
 
                 $request->merge([
-                    'descripcion' => "Se ha actualizado la solicitud ".$request->status_ant ."->". $request->status_id,
+                    'descripcion' => "Se ha actualizado la task ".$request->status_ant ."->". $request->status_id,
                 ]);
 
                 Notificacion::create(
                     [
-                        'solicitud_id' => $request->id,
+                        'task_id' => $request->id,
                         'emisor_id' => Auth::user()->id,
                         'receptor_id' => $request->user_id,
                         'message' => $request->message
@@ -243,12 +243,12 @@ class SolicitudController extends Controller
                 return redirect('panel')->with('msj', ['success' => 'Bloque actualizado correctamente']);
             }
            
-            return redirect()->route('admsolicitudes')
-                ->with('msj', ['success' => 'Solicitud actualizada correctamente'])
-                ->with('solicitud_id', $request->id);
+            return redirect()->route('admtaskes')
+                ->with('msj', ['success' => 'task actualizada correctamente'])
+                ->with('task_id', $request->id);
         } catch (ModelNotFoundException $e) {
 
-            return redirect()->route('admsolicitudes')->with('msj', ['error' => 'El Solicitud ' . $request->id . ' no existe no fue encontrado'], 404);
+            return redirect()->route('admtaskes')->with('msj', ['error' => 'El task ' . $request->id . ' no existe no fue encontrado'], 404);
         } catch (QueryException $e) {
 
             $errormsj = $e->getMessage();
@@ -257,7 +257,7 @@ class SolicitudController extends Controller
                 preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
                 $duplicateValue = $matches[1] ?? '';
                 $duplicateKey = $matches[2] ?? '';
-                if ($duplicateKey == 'solicitudes_tipo_id_user_id_created_at_unique') {
+                if ($duplicateKey == 'taskes_tipo_id_user_id_created_at_unique') {
                     $fecha = Carbon::parse(substr($duplicateValue, 4))->locale('es');
                     session()->put('msj', ["errord" => "Ya existe un bloque para " . $duplicateValue]);
                 } else {
@@ -265,11 +265,11 @@ class SolicitudController extends Controller
                     session()->put('msj', ["error" => "No se puede realizar la acción, el valor '$duplicateValue' está duplicado"], 422);
                 }
             } else {
-                session()->put('msj', ["error" => 'No se pudo registrar el Solicitud']);
+                session()->put('msj', ["error" => 'No se pudo registrar el task']);
             }
         }  catch (Exception $e) {
 
-            return redirect()->route('admsolicitudes')->with('msj', ['error' => 'Error en la acción realizada'], 500);
+            return redirect()->route('admtaskes')->with('msj', ['error' => 'Error en la acción realizada'], 500);
         }
 
         return back();
@@ -278,42 +278,42 @@ class SolicitudController extends Controller
     public function destroy($id)
     {
         $validator = validator(['id' => $id], [
-            'id' => 'required|numeric|exists:solicitudes,id'
+            'id' => 'required|numeric|exists:taskes,id'
         ]);
 
        if ($validator->fails()) {
-                return redirect()->route('admsolicitudes')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
+                return redirect()->route('admtaskes')->with('msj', ['error' => array_values($validator->errors()->messages())], 404);
             }
 
         try {
-            $Solicitud = Solicitud::findOrFail($id)->load('files','notificaciones');
+            $task = task::findOrFail($id)->load('files','notificaciones');
 
             
             if(auth()->user()->rol_id == 2){
                
-                if(count($Solicitud->files) == 0){
+                if(count($task->files) == 0){
                     
-                    $Solicitud->notificaciones->each->delete();
-                    $Solicitud->delete();   
+                    $task->notificaciones->each->delete();
+                    $task->delete();   
 
                     session()->put('msj', ["success" => 'Bloque eliminado correctamente']);
                    
                 }else{
-                    session()->put('msj', ["error" => 'No se puede eliminar la solicitud porque tiene archivos adjuntos']);
+                    session()->put('msj', ["error" => 'No se puede eliminar la task porque tiene archivos adjuntos']);
                    
                 }
             } elseif(auth()->user()->rol_id == 1){
 
-                $Solicitud->files->each->delete();
-                $Solicitud->notificaciones->each->delete();
-                $Solicitud->delete();
-                //eliminar todos los archivos relacionados a la solicitud   
+                $task->files->each->delete();
+                $task->notificaciones->each->delete();
+                $task->delete();
+                //eliminar todos los archivos relacionados a la task   
         
             }
 
             return back();    
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Solicitud ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El task ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'.$e], 500);
         }

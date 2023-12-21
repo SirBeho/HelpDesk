@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-export default function Reporte({ solicitudes_f, datos,empresa }) {
+export default function Reporte({ taskes_f, datos,empresa }) {
 
   return (
     <div className=" mx-10 bg-white ">
@@ -56,7 +56,7 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
             {datos?.tipo ? (
               <td className="flex w-1/2">
                 <h1 className="w-20  font-medium ">Tipo:</h1>
-                {solicitudes_f[0].tipo.nombre}
+                {taskes_f[0].tipo.nombre}
               </td>
                 ) : null}
 
@@ -64,7 +64,7 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
               {datos?.cliente ? (
               <td className="flex w-1/2">
                 <h1 className="w-20  font-medium ">Cliente:</h1>
-                {solicitudes_f[0].user.name}
+                {taskes_f[0].user.name}
               </td>
                 ) : null}
 
@@ -72,7 +72,7 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
           {!(datos?.tipo && datos?.cliente) && datos?.estado ? (
               <td className="flex w-1/2">
                 <h1 className="w-20  font-medium ">Estado:</h1>
-                {solicitudes_f[0].status.nombre}
+                {taskes_f[0].status.nombre}
               </td>
               
                 ) : null}
@@ -83,8 +83,8 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
             {datos?.tipo && datos?.cliente && datos?.estado ? (
               <tr>
               <td className="flex w-1/2">
-                <h1 className="w-20  font-medium ">Estado de solicitud:</h1>
-                {solicitudes_f[0].status.nombre}
+                <h1 className="w-20  font-medium ">Estado de task:</h1>
+                {taskes_f[0].status.nombre}
               </td>
               </tr>
               
@@ -96,14 +96,14 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
       </table>
       
         <div className=" relative w-full h-14  mt-1 bg-gray-300 text-[35px] ">
-          <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de Solicitudes</h1>
+          <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de taskes</h1>
         </div>
 
         <table className="min-w-full w-full">
           <thead >
             <tr className="bg-darkblue   text-left">
               <th className="pb-3 text-white uppercase tracking-wider">
-                #Solicitud
+                #task
               </th>
               <th className="pb-3 text-white uppercase tracking-wider">
                 Tipo
@@ -126,8 +126,8 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
             </tr>
           </thead>
           <tbody>
-            {solicitudes_f &&
-              solicitudes_f.map((user, i) => (
+            {taskes_f &&
+              taskes_f.map((user, i) => (
                 <tr key={i} className={i % 2 === 0 ? "bg-gray-100" : "bg-white"}>
                   <td className="pb-4 pt-2 h-fit whitespace-no-wrap">{user.numero}</td>
                   <td className="pb-4 pt-2 whitespace-no-wrap">{user.tipo.nombre}</td>
@@ -144,7 +144,7 @@ export default function Reporte({ solicitudes_f, datos,empresa }) {
 
             <tr className="bg-gray-300 mt-2 text-black ">
               <td className="pb-4 ">
-                Total de Solicitudes: {solicitudes_f?.length || 0}
+                Total de taskes: {taskes_f?.length || 0}
               </td>
             </tr>
 

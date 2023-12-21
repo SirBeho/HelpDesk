@@ -3,24 +3,24 @@ import { useState, useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import jsPDF from 'jspdf';
 import { format } from "date-fns";
-import Reporte_soli from "./reporte_solicitudes"
+import Reporte_soli from "./reporte_taskes"
 import Reporte_doc from "./reporte_documentos"
 import { createRoot } from 'react-dom/client';
 
-export default function documentos({ auth, tipo_solicitudes, clientes, estados, empresa }) {
+export default function documentos({ auth, tipo_taskes, clientes, estados, empresa }) {
 
 
 
-  const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
+  const taskes = auth.user.taskes.filter(task => task.tipo_id > 2);
 
 
   const documentos = [];
-  solicitudes.forEach((solicitud) => {
-    if (solicitud.files && solicitud.files.length > 0) {
-      solicitud.files.forEach((documento) => {
-        const soli = solicitud;
+  taskes.forEach((task) => {
+    if (task.files && task.files.length > 0) {
+      task.files.forEach((documento) => {
+        const soli = task;
         delete soli.files;
-        documento.solicitud = soli;
+        documento.task = soli;
         documentos.push(documento);
       });
     }
@@ -28,7 +28,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
   
   const [documentos_f, setDocumentos_f] = useState(documentos);
-  const [solicitudes_f, setSolicitudes_f] = useState(solicitudes);
+  const [taskes_f, settaskes_f] = useState(taskes);
   const [reportes, setReportes] = useState(0);
   const [datos, setDatos] = useState({
     inicio: 0,
@@ -54,7 +54,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
     const fin = new Date(datos.fin + ' 23:59:59');
 
 
-    const solicitudes_filtradas = solicitudes.filter((soli) => {
+    const taskes_filtradas = taskes.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
       if (datos.inicio && fechaCreacion < inicio) {
@@ -96,7 +96,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
     });
 
     if (reportes == 0) {
-      setSolicitudes_f(solicitudes_filtradas);
+      settaskes_f(taskes_filtradas);
     } else {
       setDocumentos_f(documentos_filtrados);
     };
@@ -116,7 +116,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
     document.body.appendChild(container);
     if (reporte == 0) {
-      root.render(<Reporte_soli solicitudes_f={solicitudes_f} datos={data} empresa={empresa} />);
+      root.render(<Reporte_soli taskes_f={taskes_f} datos={data} empresa={empresa} />);
 
     } else if (reporte == 1) {
       root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} empresa={empresa} />);
@@ -146,9 +146,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
     const data = [{
       ruta: '/reportes/generar/soli',
-      nombre: 'reporte_solicitudes.xlsx',
+      nombre: 'reporte_taskes.xlsx',
       datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
-      solicitudes_f: solicitudes_f,
+      taskes_f: taskes_f,
     }, {
       ruta: '/reportes/generar/docu',
       nombre: 'reporte_documentos.xlsx',
@@ -190,7 +190,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
               className={` rounded-t-2xl cursor-pointer flex items-center gap-2 h-10 p-2 bg-gray-300  ${reportes == 0 ? "bg-white " : ""
                 }  font-semibold text-base `}>
               <img src="/assets/svg/export2.svg" width={30} height={30} alt="icon documento" />
-              Solicitudes
+              taskes
             </button>
 
             <button
@@ -247,7 +247,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
             {reportes == 0 && (
               <div className='flex gap-8'>
                 <label className="flex  flex-col "  >
-                  <span className='font-semibold'> Tipo Solicitudes:</span>
+                  <span className='font-semibold'> Tipo taskes:</span>
 
                   <select
                     required
@@ -258,9 +258,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                     className="p-0 px-2 w-fit rounded-md h-8"
                   >
                     <option value={0} select>Todas</option>
-                    {tipo_solicitudes.map((solicitud) => (
-                      <option key={solicitud.id} value={solicitud.id}>
-                        {solicitud.nombre}
+                    {tipo_taskes.map((task) => (
+                      <option key={task.id} value={task.id}>
+                        {task.nombre}
                       </option>
                     ))}
                   </select>
@@ -324,7 +324,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
                       <tr>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          # Solicitud
+                          # task
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Tipo
@@ -347,8 +347,8 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                       </tr>
                     </thead>
                     <tbody>
-                      {solicitudes_f && (
-                        solicitudes_f.map((user, i) => (
+                      {taskes_f && (
+                        taskes_f.map((user, i) => (
                           <tr key={i}>
 
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
@@ -415,10 +415,10 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                           Tipo Documento
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                           # solicitud            
+                           # task            
                               </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Tipo Solicitud
+                          Tipo task
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Usuario
@@ -443,10 +443,10 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                               <p className="text-gray-900 whitespace-no-wrap">{documento.extencion}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{documento.solicitud.numero}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.task.numero}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{documento.solicitud.tipo.nombre}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.task.tipo.nombre}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{documento.user.name}</p>

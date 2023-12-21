@@ -3,7 +3,7 @@ import Modal from './Modal';
 import { useForm } from "@inertiajs/react";
 
 
-export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, setLoading }) {
+export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading }) {
     const [mensaje, setMensaje] = useState(msj);
 
     useEffect(() => {
@@ -11,7 +11,7 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
        
     }, [msj])
     
-    const categorySolicitud = [
+    const categorytask = [
         { id: 1, category: 'Servicios' },
         { id: 2, category: 'Certificaciones' },
         { id: 3, category: 'Estados Financieros' },
@@ -19,10 +19,10 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
     ]
 
     const { data, setData, post, reset } = useForm({
-        id: tipoSolicitudData?.id,
-        nombre: tipoSolicitudData?.nombre,
-        tipo: tipoSolicitudData?.tipo,
-        status: tipoSolicitudData?.status
+        id: tipotaskData?.id,
+        nombre: tipotaskData?.nombre,
+        tipo: tipotaskData?.tipo,
+        status: tipotaskData?.status
     });
 
     function submit(e) {
@@ -30,7 +30,7 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
         hideModal()
         setLoading(true);
 
-        post(route('tipoSolicitud.update', tipoSolicitudData.id), {
+        post(route('tipotask.update', tipotaskData.id), {
             onSuccess: () => {
                 reset()
                 setLoading(false);
@@ -43,14 +43,14 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
     return (
 
         <Modal show={show} maxWidth='md'>
-            <h1 className='w-100% py-4 text-lg text-center font-bold'>Editar Tipo de Solicitud</h1>'
+            <h1 className='w-100% py-4 text-lg text-center font-bold'>Editar Tipo de task</h1>'
 
             <form className="flex flex-col gap-4 text-textgray">
 
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-full">
                         <label htmlFor="name" className="text-xs">
-                            Nombre de la Solicitud
+                            Nombre de la task
                         </label>
                         <input type="text" name="name" id="name" required className="h-9 rounded-md w-full outline-none"
                             value={data.nombre}
@@ -64,7 +64,7 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
 
                     <div className="flex flex-col w-3/5">
                         <label htmlFor="tipo" className="text-xs">
-                            Categoria de la solicitud
+                            Categoria de la task
                         </label>
 
                         <select name="tipo" id="tipo" className="w-full py-1 px-2 bg-white rounded-md outline-none"
@@ -76,7 +76,7 @@ export function EditTipoSolicitud({ hideModal, show, msj, tipoSolicitudData, set
                             <option value="">
                                 Selecionar Categoria
                             </option>
-                            {categorySolicitud.map(category => (
+                            {categorytask.map(category => (
                                 <option key={category.id} value={category.id}>
                                     {category.category}
                                 </option>

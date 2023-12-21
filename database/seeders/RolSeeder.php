@@ -3,30 +3,34 @@
 namespace Database\Seeders;
 
 use App\Models\Rol;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RolSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * @return void
      */
-    public function run(): void
+    public function run()
     {
         Rol::factory()->create([
-            'nombre'=> "Admin",
-            'status'=> 1 
-        ]);
-        
-        Rol::factory()->create([
-            'nombre'=> "Cliente",
-            'status'=> 1 
+            'rol_name' => 'admin',
         ]);
 
         Rol::factory()->create([
-            'nombre'=> "Usuario",
-            'status'=> 1 
+            'rol_name' => 'manager',
         ]);
- 
+
+        Rol::factory()->create([
+            'rol_name' => 'supervisor',
+        ]);
+        Rol::factory()->create([
+            'rol_name' => 'User',
+        ]);
+
+      
+        
+
     }
 }

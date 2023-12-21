@@ -28,33 +28,33 @@ class ComentarioController extends Controller
                 try {
            
             $mensajes = [
-                'solicitud_id' => 'El tipo de solicitud no existe.',
+                'task_id' => 'El tipo de task no existe.',
                 'comentario' => 'El comentario no puede estar en blanco.',
             ];
 
             $validator = validator($request->all(), [
-                'solicitud_id' => 'required|exists:solicitudes,id',
+                'task_id' => 'required|exists:taskes,id',
                 'comentario' => 'required'
             ],$mensajes);
            
             if ($validator->fails()) {
-                return redirect()->route('admsolicitudes')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
+                return redirect()->route('admtaskes')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
             }
 
            Comentario::create([
-                "solicitud_id" => $request->solicitud_id,
+                "task_id" => $request->task_id,
                 "comentario" => $request->comentario
            ]);
 
         
-            session()->put('msj', ["success" => "El comentario ha sido añadido a la solicitud"]);
+            session()->put('msj', ["success" => "El comentario ha sido añadido a la task"]);
         
         } catch (Exception $e) {
             session()->put('msj', ["error" => 'Error en la accion realizada' ]);
            
         }
         
-        return redirect('admsolicitudes');
+        return redirect('admtaskes');
     }
 
 
@@ -89,7 +89,7 @@ class ComentarioController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('admsolicitudes')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
+            return redirect()->route('admtaskes')->with('msj', ['error'=> array_values( $validator->errors()->messages())], 404);
         }
 
         try {
@@ -98,7 +98,7 @@ class ComentarioController extends Controller
                 $Comentario->status = 0;
                 $Comentario->save();
                 session()->put('msj', ["success" => 'Comentario eliminado correctamente']);
-                return redirect('admsolicitudes');
+                return redirect('admtaskes');
             }
             session()->put('msj', ["success" => 'Este Comentario ya ha sido eliminado']);
         } catch (ModelNotFoundException $e) {
@@ -109,7 +109,7 @@ class ComentarioController extends Controller
             
         }
 
-    return redirect('admsolicitudes');
+    return redirect('admtaskes');
 
     }
 }

@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Solicitud extends Model
+class task extends Model
 {
     use HasFactory;
-    protected $table = "solicitudes";
+    protected $table = "taskes";
 
     protected $fillable = [
        
@@ -28,10 +28,10 @@ class Solicitud extends Model
     {
         parent::boot();
 
-        static::creating(function ($solicitud) {
+        static::creating(function ($task) {
 
-            $ultimoRegistro = Solicitud::max('numero');
-            $solicitud->numero = $ultimoRegistro ? ($ultimoRegistro + 1) : 10000;
+            $ultimoRegistro = task::max('numero');
+            $task->numero = $ultimoRegistro ? ($ultimoRegistro + 1) : 10000;
         });
     }
 
@@ -49,27 +49,27 @@ class Solicitud extends Model
 
     public function tipo(): BelongsTo
     {
-        return $this->BelongsTo(TipoSolicitud::class,'tipo_id');
+        return $this->BelongsTo(Tipotask::class,'tipo_id');
     }
 
     public function status(): BelongsTo
     {
-        return $this->BelongsTo(EstadoSolicitud::class,'status_id');
+        return $this->BelongsTo(Estadotask::class,'status_id');
     }
 
     public function files(): HasMany
     {
-        return $this->hasMany(File::class,'solicitud_id');
+        return $this->hasMany(File::class,'task_id');
     }
 
     public function comentarios(): HasMany
     {
-        return $this->hasMany(Comentario::class,'solicitud_id')->orderBy('created_at', 'desc');;
+        return $this->hasMany(Comentario::class,'task_id')->orderBy('created_at', 'desc');;
     }
 
     public function notificaciones(): HasMany
     {
-        return $this->hasMany(Notificacion::class,'solicitud_id');
+        return $this->hasMany(Notificacion::class,'task_id');
     }
 
 

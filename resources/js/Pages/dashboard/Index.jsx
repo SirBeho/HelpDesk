@@ -13,17 +13,17 @@ import 'moment-timezone';
 
 
 
-export default function documentos({ auth, tipo_solicitudes, clientes, estados, solicitud, indicadores }) {
+export default function documentos({ auth, tipo_taskes, clientes, estados, task, indicadores }) {
 
-  const solicitudes = solicitud.filter(solicitud => solicitud.tipo_id > 2);
+  const taskes = task.filter(task => task.tipo_id > 2);
 
   const documentos = [];
-  solicitudes.forEach((solicitud) => {
-    if (solicitud.files && solicitud.files.length > 0) {
-      documentos.push(...solicitud.files);
+  taskes.forEach((task) => {
+    if (task.files && task.files.length > 0) {
+      documentos.push(...task.files);
     }
   });
-  const [solicitudes_f, setSolicitudes_f] = useState(solicitudes);
+  const [taskes_f, settaskes_f] = useState(taskes);
   const [datos, setDatos] = useState({
     inicio: 0,
     fin: 0,
@@ -46,11 +46,11 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
   const clienteChartRef = useRef(null);
   const usuarioChartRef = useRef(null);
 
-  const solicitudes_tipo = (tipos, totalSolicitudes) => {
+  const taskes_tipo = (tipos, totaltaskes) => {
 
     const options = {
       series: [{
-        name: 'Solicitudes',
+        name: 'taskes',
         data: Object.values(tipos),
       }],
       chart: {
@@ -85,7 +85,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          return showPercentages ? (value / totalSolicitudes * 100).toFixed(0) + '%' : value;
+          return showPercentages ? (value / totaltaskes * 100).toFixed(0) + '%' : value;
         },
         style: {
           fontSize: '12px'
@@ -124,7 +124,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
       },
       title: {
-        text: 'Solicitudes por tipo',
+        text: 'taskes por tipo',
         floating: false,
 
         align: 'center',
@@ -145,7 +145,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
   }
 
-  const solicitudes_estatus = (tipos, totalSolicitudes) => {
+  const taskes_estatus = (tipos, totaltaskes) => {
 
     const options = {
       series: Object.values(tipos),
@@ -184,7 +184,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          return showPercentages ? value.toFixed(1) + "%" : Math.round(totalSolicitudes * value / 100).toString();
+          return showPercentages ? value.toFixed(1) + "%" : Math.round(totaltaskes * value / 100).toString();
         },
         style: {
           fontSize: '12px'
@@ -212,7 +212,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       labels: Object.keys(tipos),
 
       title: {
-        text: 'Solicitudes por estado',
+        text: 'taskes por estado',
         floating: false,
 
         align: 'center',
@@ -245,11 +245,11 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
   }
 
 
-  const solicitudes_clientes = (tipos, totalSolicitudes) => {
+  const taskes_clientes = (tipos, totaltaskes) => {
 
     const options = {
       series: [{
-        name: 'Solicitudes',
+        name: 'taskes',
         data: Object.values(tipos),
       }],
       chart: {
@@ -284,7 +284,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          return showPercentages ? (value / totalSolicitudes * 100).toFixed(0) + '%' : value;
+          return showPercentages ? (value / totaltaskes * 100).toFixed(0) + '%' : value;
         },
         style: {
           fontSize: '12px'
@@ -323,7 +323,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
       },
       title: {
-        text: 'Solicitudes por Clientes',
+        text: 'taskes por Clientes',
         floating: false,
 
         align: 'center',
@@ -345,7 +345,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
   }
 
-  const solicitudes_usuarios = (tipos, totalSolicitudes, meses) => {
+  const taskes_usuarios = (tipos, totaltaskes, meses) => {
 
     const options = {
       series: tipos,
@@ -382,7 +382,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
         enabled: true,
         formatter: (value, context) => {
 
-          const totalSoli = totalSolicitudes[context.dataPointIndex];
+          const totalSoli = totaltaskes[context.dataPointIndex];
           const percentage = totalSoli !== 0 ? (value / totalSoli * 100).toFixed(0) : 0; // Calculate the percentage or return 0 if totalSoli is 0
 
           return showPercentages ? percentage + '%' : value;
@@ -424,7 +424,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
       },
       title: {
-        text: 'Solicitudes por Usuarios',
+        text: 'taskes por Usuarios',
         floating: false,
 
         align: 'center',
@@ -452,7 +452,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
     const fin = new Date(datos.fin + ' 23:59:59');
 
 
-    const solicitudes_filtradas = solicitudes.filter((soli) => {
+    const taskes_filtradas = taskes.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
 
@@ -495,7 +495,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
     });
 
 
-    setSolicitudes_f(solicitudes_filtradas);
+    settaskes_f(taskes_filtradas);
 
   };
 
@@ -510,47 +510,47 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
     if (renderizado) {
 
-      const tipoSolicitudes = {};
-      let totalSolicitudes = 0;
+      const tipotaskes = {};
+      let totaltaskes = 0;
      
-      solicitudes_f.forEach((solicitud) => {
-        totalSolicitudes++;
-        if (tipoSolicitudes[solicitud.tipo.nombre]) {
-          tipoSolicitudes[solicitud.tipo.nombre]++;
+      taskes_f.forEach((task) => {
+        totaltaskes++;
+        if (tipotaskes[task.tipo.nombre]) {
+          tipotaskes[task.tipo.nombre]++;
         } else {
-          tipoSolicitudes[solicitud.tipo.nombre] = 1;
+          tipotaskes[task.tipo.nombre] = 1;
         }
       });
-      solicitudes_tipo(tipoSolicitudes, totalSolicitudes);
+      taskes_tipo(tipotaskes, totaltaskes);
 
 
-      const estadosSolicitudes = {};
-      solicitudes_f.forEach((solicitud) => {
-        if (estadosSolicitudes[solicitud.status.nombre]) {
-          estadosSolicitudes[solicitud.status.nombre]++;
+      const estadostaskes = {};
+      taskes_f.forEach((task) => {
+        if (estadostaskes[task.status.nombre]) {
+          estadostaskes[task.status.nombre]++;
         } else {
-          estadosSolicitudes[solicitud.status.nombre] = 1;
+          estadostaskes[task.status.nombre] = 1;
         }
       });
-      solicitudes_estatus(estadosSolicitudes, totalSolicitudes);
+      taskes_estatus(estadostaskes, totaltaskes);
 
 
-      const clientesSolicitudes = {};
-      solicitudes_f.forEach((solicitud) => {
-        if (clientesSolicitudes[solicitud.user.name]) {
-          clientesSolicitudes[solicitud.user.name]++;
+      const clientestaskes = {};
+      taskes_f.forEach((task) => {
+        if (clientestaskes[task.user.name]) {
+          clientestaskes[task.user.name]++;
         } else {
-          clientesSolicitudes[solicitud.user.name] = 1;
+          clientestaskes[task.user.name] = 1;
         }
       });
-      solicitudes_clientes(clientesSolicitudes, totalSolicitudes);
+      taskes_clientes(clientestaskes, totaltaskes);
 
 
 
 
       let fechaActual = new Date();
-      let fechaMin = solicitudes_f.reduce((min, solicitud) => {
-        const fechaCreacion = new Date(solicitud.created_at);
+      let fechaMin = taskes_f.reduce((min, task) => {
+        const fechaCreacion = new Date(task.created_at);
         fechaCreacion.setHours(fechaCreacion.getHours() + 4);
 
         return fechaCreacion < min ? fechaCreacion : min;
@@ -567,14 +567,14 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
         }
       }
 
-      const UsuariosSolicitudesMes = {};
-      const totalSolicitudes_mes = meses.reduce((obj, mes) => {
+      const UsuariostaskesMes = {};
+      const totaltaskes_mes = meses.reduce((obj, mes) => {
         obj[mes] = 0;
         return obj;
       }, {});
 
-      solicitudes_f.forEach((solicitud) => {
-        const fechaCreacion = new Date(solicitud.created_at);
+      taskes_f.forEach((task) => {
+        const fechaCreacion = new Date(task.created_at);
         fechaCreacion.setHours(fechaCreacion.getHours() + 4);
 
         const mes = fechaCreacion.getMonth() + 1;
@@ -582,15 +582,15 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
         const fecha = mes + "/" + anio;
        
        
-        if(solicitud.user_asignado && solicitud.status_id > 4){
+        if(task.user_asignado && task.status_id > 4){
 
-          if (!UsuariosSolicitudesMes[solicitud.user_asignado.name]) {
-            UsuariosSolicitudesMes[solicitud.user_asignado.name] = {};
-            meses.forEach(mes => UsuariosSolicitudesMes[solicitud.user_asignado.name][mes] = 0);
+          if (!UsuariostaskesMes[task.user_asignado.name]) {
+            UsuariostaskesMes[task.user_asignado.name] = {};
+            meses.forEach(mes => UsuariostaskesMes[task.user_asignado.name][mes] = 0);
           }
 
-          UsuariosSolicitudesMes[solicitud.user_asignado.name][fecha]++;
-          totalSolicitudes_mes[fecha]++;
+          UsuariostaskesMes[task.user_asignado.name][fecha]++;
+          totaltaskes_mes[fecha]++;
 
         }
        
@@ -598,18 +598,18 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
       });
 
 
-      const result = Object.keys(UsuariosSolicitudesMes).map((userName) => {
+      const result = Object.keys(UsuariostaskesMes).map((userName) => {
         return {
           name: userName,
-          data: Object.values(UsuariosSolicitudesMes[userName]),
+          data: Object.values(UsuariostaskesMes[userName]),
         };
       });
 
-      solicitudes_usuarios(result, Object.values(totalSolicitudes_mes), meses);
+      taskes_usuarios(result, Object.values(totaltaskes_mes), meses);
 
     }
 
-  }, [solicitudes_f, showPercentages]);
+  }, [taskes_f, showPercentages]);
 
   useEffect(() => {
     setRenderizado(true)
@@ -635,9 +635,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                     <img className='w-full h-full' src="/assets/svg/todo2.svg" alt="icon documento" />
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Total Solicitudes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Total taskes</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.total_solicitudes}
+                      {indicadores.total_taskes}
                       <span className="text-green-500">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -655,9 +655,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                     <img className='w-full h-full' src="/assets/svg/todo.svg" alt="icon documento" />
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Solicitudes pendientes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">taskes pendientes</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.solicitudes_pendientes}
+                      {indicadores.taskes_pendientes}
                       <span className="text-pink-500">
                         <i className="fas fa-exchange-alt" />
                       </span>
@@ -675,9 +675,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                     <img className='w-full h-full' src="/assets/svg/todo3.svg" alt="icon documento" />
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Nuevas Solicitudes - ultimo mes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Nuevas taskes - ultimo mes</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.solicitudes_ultimo_mes}
+                      {indicadores.taskes_ultimo_mes}
                       <span className="text-yellow-600">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -728,9 +728,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Promedio Solicitudes por cliente</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Promedio taskes por cliente</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.promedio_solicitudes_por_cliente}
+                      {indicadores.promedio_taskes_por_cliente}
                       <span className="text-red-500">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -786,7 +786,7 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
 
             <div className='flex gap-8'>
               <label className="flex  flex-col "  >
-                <span className='font-semibold'> Tipo Solicitudes:</span>
+                <span className='font-semibold'> Tipo taskes:</span>
 
                 <select
                   required
@@ -797,9 +797,9 @@ export default function documentos({ auth, tipo_solicitudes, clientes, estados, 
                   className="p-0 px-2 w-fit rounded-md h-8"
                 >
                   <option value={0} select>Todas</option>
-                  {tipo_solicitudes.map((solicitud) => (
-                    <option key={solicitud.id} value={solicitud.id}>
-                      {solicitud.nombre}
+                  {tipo_taskes.map((task) => (
+                    <option key={task.id} value={task.id}>
+                      {task.nombre}
                     </option>
                   ))}
                 </select>

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\NotificacionController;
 use App\Models\Notificacion;
-use App\Models\Solicitud;
+use App\Models\task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -42,16 +42,16 @@ class HandleInertiaRequests extends Middleware
         if ($authUser) {
             if ($authUser->rol_id == 2) {
                 $user = $authUser->load(
-                    'solicitudes.tipo',
-                    'solicitudes.status',
-                    'solicitudes.user',
-                    'solicitudes.files.user',
-                    'solicitudes.comentarios',
-                    'solicitudes.userAsignado'
+                    'taskes.tipo',
+                    'taskes.status',
+                    'taskes.user',
+                    'taskes.files.user',
+                    'taskes.comentarios',
+                    'taskes.userAsignado'
                 );
             } else {
                 $user = auth()->user();
-                $user['solicitudes'] = Solicitud::all()->load('tipo', 'status', 'user', 'files.user', 'comentarios', 'userAsignado');
+                $user['taskes'] = task::all()->load('tipo', 'status', 'user', 'files.user', 'comentarios', 'userAsignado');
             }
         }
 
@@ -59,7 +59,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
-                'countNotificaciones' => NotificacionController::countNotification()
+             
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

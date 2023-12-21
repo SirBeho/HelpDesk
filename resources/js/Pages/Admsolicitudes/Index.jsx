@@ -1,21 +1,21 @@
 import React, { useEffect, useReducer, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { Solicitud } from "@/Components/Solicitud";
+import { task } from "@/Components/task";
 import { format } from "date-fns";
 import Modal from "@/Components/Modal";
 
 
-export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_id, statusList }) {
+export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }) {
 
 
 
-    const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id > 2);
+    const taskes = auth.user.taskes.filter(task => task.tipo_id > 2);
 
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
-    const [datos_f, setDatos_f] = useState(solicitudes);
+    const [datos_f, setDatos_f] = useState(taskes);
     const [edit, setEdit] = useState(false);
     const { data, setData, post } = useForm(null);
     const [show, setShow] = useState(msj != null);
@@ -30,16 +30,16 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
     });
 
     useEffect(() => {
-        setDatos_f(solicitudes);
+        setDatos_f(taskes);
         if (open) {
-            const solicitudSeleccionada = solicitudes.find(
-                (solicitud) => solicitud.id === open
+            const taskSeleccionada = taskes.find(
+                (task) => task.id === open
             );
-            setdato(solicitudSeleccionada);
-            setData(solicitudSeleccionada);
+            setdato(taskSeleccionada);
+            setData(taskSeleccionada);
         }
 
-    }, [auth.user.solicitudes]);
+    }, [auth.user.taskes]);
 
     useEffect(() => {
         if (msj?.error == null || msj?.error == []) {
@@ -51,17 +51,17 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
     useEffect(() => {
         
-        if (solicitud_id && !open) {
+        if (task_id && !open) {
           
-            abrir(parseInt(solicitud_id));
+            abrir(parseInt(task_id));
         }
-    }, [solicitud_id]);
+    }, [task_id]);
 
 
     useEffect(() => {
 
 
-        const filtered = solicitudes.filter((soli) => {
+        const filtered = taskes.filter((soli) => {
 
            
             if (filtro.estado && soli.status_id !== filtro.estado) {
@@ -83,9 +83,9 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
     }, [filtro]);
 
-    const abrir = (solicitudId) => {
+    const abrir = (taskId) => {
       
-        if (open == solicitudId) {
+        if (open == taskId) {
           
             setOpen(0);
             setTimeout(() => setdato(null), 500);
@@ -93,12 +93,12 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
         } else {
            
-            setOpen(solicitudId);
-            const solicitudSeleccionada = solicitudes.find(
-                (solicitud) => solicitud.id === solicitudId
+            setOpen(taskId);
+            const taskSeleccionada = taskes.find(
+                (task) => task.id === taskId
             );
-            setdato(solicitudSeleccionada);
-            setData(solicitudSeleccionada);
+            setdato(taskSeleccionada);
+            setData(taskSeleccionada);
         }
     };
 
@@ -134,7 +134,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         e.preventDefault();
         
 
-        post(route("solicitud.update"));
+        post(route("task.update"));
     };
 
 
@@ -142,11 +142,11 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
         <AuthenticatedLayout user={auth.user}
             msj={msj}
             countNotificaciones={auth.countNotificaciones}
-            solicitud_id={open}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de solicitudes</h2>}
+            task_id={open}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de taskes</h2>}
 
         >
-            <Head title="Solicitudes" />
+            <Head title="taskes" />
 
             <div className=" pb-1  ">
                 <div className=" m-5 h-full bg-white shadow-lg   rounded-md gap-10 p-10 pt-4">
@@ -189,7 +189,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
 
                                 <label className=' relative inline-flex gap-2 cursor-pointer select-none items-center '>
 
-                                    <span className="whitespace-nowrap">Mostras Completas: </span>
+                                    <span className="whitespace-nowrap">Mostrar Completas: </span>
                                     <input type='checkbox' name='autoSaver' className='sr-only' checked={filtro.todas}
                                         onChange={(e) => setFiltro({ ...filtro, todas: e.target.checked })} />
                                     <span className={` mr-3 flex h-[24px] w-[43px] items-center rounded-full p-1 duration-200  ${filtro.todas ? 'bg-blue-500' : 'bg-[#CCCCCE]'}`} >
@@ -204,15 +204,15 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                     <div className="flex  gap-16">
                         <ul className="flex flex-col col gap-4 overflow-hidden overflow-y-scroll  h-full max-h-[740px] p-2 rounded-md pe-8  ">
 
-                            {datos_f?.length ? (datos_f.map((solicitud) => (
-                                <Solicitud
+                            {datos_f?.length ? (datos_f.map((task) => (
+                                <task
                                     adm={auth.user.id != 2}
-                                    key={solicitud.id}
-                                    data={solicitud}
-                                    click={() => abrir(solicitud.id)}
+                                    key={task.id}
+                                    data={task}
+                                    click={() => abrir(task.id)}
                                     open={open}
                                 />
-                            ))) : (<h1>No hay Solicitudes</h1>)}
+                            ))) : (<h1>No hay taskes</h1>)}
                         </ul>
 
                         <div className={`flex flex-col gap-3  ${open ? "w-[600px]" : "w-0 opacity-0 "}   p-4 bg-gray-200 rounded-md shadow-xl ms-4    overflow-hidden transition-all duration-500 `}>
@@ -246,7 +246,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             <tbody >
                                                 <tr className="w-fit p-6">
                                                     <td className="font-bold w-44 py-2">
-                                                        Número solicitud
+                                                        Número task
                                                     </td>
                                                     <td>{dato.numero}</td>
                                                 </tr>
@@ -345,7 +345,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                         {(auth.user.rol_id != 2) &&
                                             <div className="flex justify-between w-full gap-5">
                                                 <span className="w-20">Tesoria:</span><input value={comentario} onChange={(e) => setComentario(e.target.value)} type="text" className="h-8 w-full rounded-md" />
-                                                <label onClick={() => post(route("comentario.create", { solicitud_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit cursor-pointer"> Agregar</label>
+                                                <label onClick={() => post(route("comentario.create", { task_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit cursor-pointer"> Agregar</label>
                                             </div>}
 
                                         <div className="flex flex-wrap gap-1">
@@ -455,7 +455,7 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                         <form onSubmit={submit} className="flex flex-col w-full gap-4 text-textgray p-4">
 
                                             <label htmlFor="nombre" className="text-xs flex flex-col ">
-                                                Numero de Solicitud
+                                                Numero de task
                                                 <input
                                                     disabled
                                                     type="text"
@@ -471,17 +471,17 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
                                             <div className="flex gap-4 justify-between ">
 
                                                 <label className="text-xs flex flex-col  w-full">
-                                                    Solicitud
+                                                    task
                                                     <select
                                                         required
-                                                        name="solicitud_id"
-                                                        id="solicitud_id"
+                                                        name="task_id"
+                                                        id="task_id"
                                                         value={data.tipo_id}
                                                         onChange={(e) => setData("tipo_id", e.target.value)}
                                                         className="h-9 rounded-md  outline-none px-2"
                                                     >
                                                         <option value="">Seleccione servicio</option>
-                                                        {tipoSolicitudes.map((tipo) =>
+                                                        {tipotaskes.map((tipo) =>
                                                         (<option key={tipo.id} value={tipo.id}>
                                                             {tipo.nombre}
                                                         </option>)
@@ -575,11 +575,11 @@ export default function admsolicitudes({ auth, tipoSolicitudes, msj, solicitud_i
             <Modal show={isOpenModalStatus} maxWidth="sm">
 
                 <div className="flex flex-col items-center gap-5 relative  ">
-                    <h1 className="font-semibold text-xl">Cambiar estado de solicitud</h1>
+                    <h1 className="font-semibold text-xl">Cambiar estado de task</h1>
 
                     <select
-                        name="statusSolicitud"
-                        id="statusSolicitud"
+                        name="statustask"
+                        id="statustask"
                         defaultValue={dato?.status.id}
                         onChange={(e) => setData("status_id", e.target.value)}
                         className="w-60 h-9 rounded-md  outline-none"

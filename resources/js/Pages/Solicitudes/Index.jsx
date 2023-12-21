@@ -4,9 +4,9 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 import React from "react";
 
-export default function Solicitudes({ auth, datos, msj }) {
+export default function taskes({ auth, datos, msj }) {
 
-    const [solicitudes, setSolicitudes] = useState(datos);
+    const [taskes, settaskes] = useState(datos);
     const [show, setShow] = useState(msj != null);
     useEffect(() => {
         console.log(msj)
@@ -23,20 +23,20 @@ export default function Solicitudes({ auth, datos, msj }) {
     const filtrarPorTipo = (tipo) => {
         if (esTipo == tipo) {
             setEsTipo(0);
-            setSolicitudes(datos);
+            settaskes(datos);
         } else {
             setEsTipo(tipo);
-            const solicitudesFiltradas = datos.filter(
+            const taskesFiltradas = datos.filter(
                 (item) => item.tipo === tipo
             );
-            setSolicitudes(solicitudesFiltradas);
+            settaskes(taskesFiltradas);
         }
     };
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("solicitud.create"));
+        post(route("task.create"));
 
     };
 
@@ -51,11 +51,11 @@ export default function Solicitudes({ auth, datos, msj }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Solicitudes
+                    taskes
                 </h2>
             }
         >
-            <Head title="Solicitudes" />
+            <Head title="taskes" />
 
             <Modal show={show} maxWidth="sm" onClose={rediret}>
                 <img
@@ -68,7 +68,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                     <h1 className="mt-14 mb-8 font-semibold">{msj?.success || msj?.error}</h1>
                     {msj?.success && (
                          <div className="hover:scale-110">
-                        <Link href={route("admsolicitudes", { id: msj.id })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
+                        <Link href={route("admtaskes", { id: msj.id })} className="bg-green-600 rounded-lg px-3 py-1     text-lg font-bold text-white  " >
                             Ver
                         </Link>
                     </div>)}
@@ -159,16 +159,16 @@ export default function Solicitudes({ auth, datos, msj }) {
                             className=" p-3 w-full bg-white rounded-md outline-none"
                         >
                             <option defaultValue={""}>Ningun sercicio seleccionado</option>
-                            {solicitudes.map((solicitud) => (
-                                <option key={solicitud.id} value={solicitud.id}>
-                                    {solicitud.nombre}
+                            {taskes.map((task) => (
+                                <option key={task.id} value={task.id}>
+                                    {task.nombre}
                                 </option>
                             ))}
                         </select>
                     </label>
 
                     <div className="flex flex-col">
-                        <label htmlFor="descripcion" className=" text-xl" >Favor detalle su solicitud:</label>
+                        <label htmlFor="descripcion" className=" text-xl" >Favor detalle su task:</label>
 
                         <textarea
                             required
@@ -188,7 +188,7 @@ export default function Solicitudes({ auth, datos, msj }) {
                             </div>
                    
                     <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-end justify-end mr-5 mt-5">
-                        Enviar solicitud
+                        Enviar task
                     </button>
                 </form>
             </div>

@@ -29,7 +29,7 @@ class NotificacionController extends Controller
             $notificaciones = [];
         } else {
             $data = Notificacion::with('emisor')
-                ->where('receptor_id', null) //verificar esta funcion creando solicitudes en el clientes deben cargarse en el admin
+                ->where('receptor_id', null) //verificar esta funcion creando taskes en el clientes deben cargarse en el admin
                 ->where('status', 0)
                 ->get();
             $notificaciones = [];
@@ -41,7 +41,7 @@ class NotificacionController extends Controller
                 'id' => $value->id,
                 'mensaje' => $value->message,
                 'emisor' => $value->emisor->name,
-                'solicitud_id' => $value->solicitud_id,
+                'task_id' => $value->task_id,
                 'date' => $value->created_at
             ];
         }
@@ -107,10 +107,10 @@ class NotificacionController extends Controller
             $notificacion->status = 1;
             $notificacion->save();
 
-            return redirect()->route('admsolicitudes')->with('solicitud_id', $request->id);
+            return redirect()->route('admtaskes')->with('task_id', $request->id);
         } catch (ModelNotFoundException $e) {
 
-            return redirect()->route('admsolicitudes');
+            return redirect()->route('admtaskes');
         }
     }
 

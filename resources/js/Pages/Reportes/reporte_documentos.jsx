@@ -101,10 +101,10 @@ export default function Reporte({ documentos_f, datos,empresa }) {
                 Tipo Documento
               </th>
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
-                # Solicitud
+                # task
               </th>
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
-                Tipo Solicitud
+                Tipo task
               </th>
               <th className="px-5 py-3 border-b-2  text-left text-base font-semibold  uppercase tracking-wider">
                 Nombre
@@ -121,8 +121,8 @@ export default function Reporte({ documentos_f, datos,empresa }) {
                   <td className="px-6 py-4 whitespace-no-wrap">{formato_0(documento.id, 4)}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.nombre}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.extencion}</td>
-                  <td className="px-6 py-4 whitespace-no-wrap">{documento.solicitud.numero}</td>
-                  <td className="px-6 py-4 whitespace-no-wrap">{documento.solicitud.tipo.nombre}</td>
+                  <td className="px-6 py-4 whitespace-no-wrap">{documento.task.numero}</td>
+                  <td className="px-6 py-4 whitespace-no-wrap">{documento.task.tipo.nombre}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">{documento.user.name}</td>
                   <td className="px-6 py-4 whitespace-no-wrap">
                     {documento.created_at && format(new Date(documento.created_at), "dd/MM/yyyy hh:mm:ss a")}

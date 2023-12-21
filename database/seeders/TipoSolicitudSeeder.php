@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\TipoSolicitud;
+use App\Models\Tipotask;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TipoSolicitudSeeder extends Seeder
+class TipotaskSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -50,7 +50,7 @@ class TipoSolicitudSeeder extends Seeder
         
        
         foreach ($elementos as $elemento) {
-            TipoSolicitud::factory()->create($elemento);
+            Tipotask::factory()->create($elemento);
         }
     }
 }

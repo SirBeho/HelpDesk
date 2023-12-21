@@ -7,7 +7,7 @@ import Modal from "@/Components/Modal";
 import Loading from "./Loading";
 import { copyStringIntoBuffer } from "pdf-lib";
 
-export default function NavBar({ user, solicitud_id, countNotificaciones, msj }) {
+export default function NavBar({ user, task_id, countNotificaciones, msj }) {
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,15 +17,9 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
     nombre: [],
     extencion: [],
     confidencial: [],
-    solicitud_id: solicitud_id
+    task_id: task_id
   });
 
-  useEffect(() => {
-    setData("solicitud_id", solicitud_id)
-
-    const soli = user.solicitudes.find((soli) => soli.id == solicitud_id);
-
-  }, [solicitud_id]);
 
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -78,7 +72,7 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
       nombre: [],
       extencion: [],
       confidencial: [],
-      solicitud_id: solicitud_id
+      task_id: task_id
     });
 
   };
@@ -204,38 +198,38 @@ export default function NavBar({ user, solicitud_id, countNotificaciones, msj })
               <form onSubmit={submit} className="flex flex-col w-full gap-4 text-textgray p-4">
                 <div className="flex gap-4 justify-between ">
                   <label className="text-xs flex flex-col  w-full">
-                    {isfactura ? "Factura" : "Solicitud"}
+                    {isfactura ? "Factura" : "task"}
                     <select
                       required
-                      name="solicitud_id"
-                      id="solicitud_id"
-                      value={data.solicitud_id}
-                      onChange={(e) => setData("solicitud_id", e.target.value)}
+                      name="task_id"
+                      id="task_id"
+                      value={data.task_id}
+                      onChange={(e) => setData("task_id", e.target.value)}
                       className="h-9 rounded-md  outline-none px-2"
                     >
 
 
-                      <option value="">Seleccione la {isfactura ? "factura" : "solicitud"}  </option>
+                      <option value="">Seleccione la {isfactura ? "factura" : "task"}  </option>
 
 
 
-                      {user.solicitudes.sort((a, b) => {
+                      {user.taskes.sort((a, b) => {
                         return new Date(a.created_at) - new Date(b.created_at);
-                      }).map((solicitud) => {
-                        if (solicitud.status_id < 4) {
+                      }).map((task) => {
+                        if (task.status_id < 4) {
 
 
 
-                          if (solicitud.tipo_id < 3 && isfactura) {
+                          if (task.tipo_id < 3 && isfactura) {
                             return (
-                              <option key={solicitud.id} value={solicitud.id}>
-                                Facturas {solicitud.descripcion}{solicitud.tipo_id == 1 ? " - Compras" : " - ventas"}
+                              <option key={task.id} value={task.id}>
+                                Facturas {task.descripcion}{task.tipo_id == 1 ? " - Compras" : " - ventas"}
                               </option>
                             );
                           } else if (!isfactura) {
                             return (
-                              <option key={solicitud.id} value={solicitud.id}>
-                                {solicitud.numero} - {solicitud.tipo.nombre}
+                              <option key={task.id} value={task.id}>
+                                {task.numero} - {task.tipo.nombre}
                               </option>
                             );
                           }

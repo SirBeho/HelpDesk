@@ -10,29 +10,29 @@ export default function Panel({ auth, msj, clientes }) {
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(0);
     const [showEdit, setShowEdit] = useState(0);
-    const solicitudes = auth.user.solicitudes.filter(solicitud => solicitud.tipo_id < 3);
+    const taskes = auth.user.taskes.filter(task => task.tipo_id < 3);
 
 
-    solicitudes.sort((a, b) => {
+    taskes.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
 
     const [opencliente, setOpenCliente] = useState(auth.user);
 
-    const datos_f = solicitudes.reduce((solicitudesPorTipo, solicitud) => {
-        const year = new Date(solicitud.created_at).getFullYear();
+    const datos_f = taskes.reduce((taskesPorTipo, task) => {
+        const year = new Date(task.created_at).getFullYear();
 
-        if (solicitud.tipo_id === 1 && solicitud.user_id == opencliente?.id) {
+        if (task.tipo_id === 1 && task.user_id == opencliente?.id) {
 
-            solicitudesPorTipo.tipo1[year] = solicitudesPorTipo.tipo1[year] || [];
-            solicitudesPorTipo.tipo1[year].push(solicitud);
-        } else if (solicitud.tipo_id === 2 && solicitud.user_id == opencliente?.id) {
+            taskesPorTipo.tipo1[year] = taskesPorTipo.tipo1[year] || [];
+            taskesPorTipo.tipo1[year].push(task);
+        } else if (task.tipo_id === 2 && task.user_id == opencliente?.id) {
 
-            solicitudesPorTipo.tipo2[year] = solicitudesPorTipo.tipo2[year] || [];
-            solicitudesPorTipo.tipo2[year].push(solicitud);
+            taskesPorTipo.tipo2[year] = taskesPorTipo.tipo2[year] || [];
+            taskesPorTipo.tipo2[year].push(task);
         }
 
-        return solicitudesPorTipo;
+        return taskesPorTipo;
     }, { tipo1: {}, tipo2: {} });
 
 
@@ -123,7 +123,7 @@ export default function Panel({ auth, msj, clientes }) {
         console.log(data)
 
         setLoading(true);
-        post(route('solicitud.create', showAlert), {
+        post(route('task.create', showAlert), {
             onSuccess: () => {
 
                 setLoading(false);
@@ -160,7 +160,7 @@ export default function Panel({ auth, msj, clientes }) {
     function destroy() {
 
         setLoading(true);
-        post(route('solicitud.destroy', showAlert), {
+        post(route('task.destroy', showAlert), {
             onSuccess: () => {
                 setShowAlert(0)
                 setLoading(false);
@@ -173,7 +173,7 @@ export default function Panel({ auth, msj, clientes }) {
         e.preventDefault();
 
         setLoading(true);
-        post(route('solicitud.update', { id: showEdit.id }), {
+        post(route('task.update', { id: showEdit.id }), {
             onSuccess: () => {
                
                 setLoading(false);
@@ -183,23 +183,23 @@ export default function Panel({ auth, msj, clientes }) {
     }
 
 
-    function setDefaultEditData(solicitud_) {
+    function setDefaultEditData(task_) {
 
         setData({
             ...data,
-            'month': format(new Date(solicitud_.created_at), "MM"),
-            'year': format(new Date(solicitud_.created_at), "yyyy"),
-            'tipo_id': solicitud_.tipo_id
+            'month': format(new Date(task_.created_at), "MM"),
+            'year': format(new Date(task_.created_at), "yyyy"),
+            'tipo_id': task_.tipo_id
         })
 
-        setShowEdit(solicitud_);
+        setShowEdit(task_);
     };
 
 
 
     return (
         <AuthenticatedLayout
-            solicitud_id={openmonth}
+            task_id={openmonth}
             msj={msj}
             countNotificaciones={auth.countNotificaciones}
             user={auth.user}
@@ -295,23 +295,23 @@ export default function Panel({ auth, msj, clientes }) {
                                         </thead>
 
                                         <div key={"t1" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "1" + year ? 'h-[400px]' : "h-0"}  `}>
-                                            {datos_f.tipo1[year].map((solicitud, index) => (
-                                                <div key={solicitud.id}>
-                                                    <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
-                                                        <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
+                                            {datos_f.tipo1[year].map((task, index) => (
+                                                <div key={task.id}>
+                                                    <div onClick={() => setOpenmonth(task.id)} className='cursor-pointer flex justify-between'>
+                                                        <div className="p-2 h-10">{task.descripcion} ({task.files?.length})</div>
                                                         <div className='flex items-center'>
                                                             {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
                                                             {auth.user.rol_id == 1 && (
-                                                                <div className="p-2 h-10" onClick={() => { setDefaultEditData(solicitud) }}>
+                                                                <div className="p-2 h-10" onClick={() => { setDefaultEditData(task) }}>
                                                                     <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                         <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
                                                                     </svg>
 
                                                                 </div>)}
 
-                                                            {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && solicitud.files.length === 0)) && (
-                                                                <div className="p-2 h-10" onClick={() => setShowAlert(solicitud)}>
+                                                            {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && task.files.length === 0)) && (
+                                                                <div className="p-2 h-10" onClick={() => setShowAlert(task)}>
 
                                                                     <svg className="w-7 h-7 text-blue-400 hover:text-red-600">
                                                                         <use xlinkHref={"/assets/svg/delete.svg" + '#delete'} />
@@ -323,9 +323,9 @@ export default function Panel({ auth, msj, clientes }) {
                                                         </div>
                                                     </div>
 
-                                                    <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
-                                                        {solicitud.files ? (
-                                                            solicitud.files.map((archivo) => {
+                                                    <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == task.id ? `` : "hidden "}`}>
+                                                        {task.files ? (
+                                                            task.files.map((archivo) => {
                                                                 const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
                                                                 return (
                                                                     <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
@@ -386,25 +386,25 @@ export default function Panel({ auth, msj, clientes }) {
 
                                             <div key={"tb2" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "2" + year ? 'h-[400px]' : "h-0"}  `}>
 
-                                                {datos_f.tipo2[year].map((solicitud) => (
-                                                    <div key={solicitud.id} >
-                                                        <div onClick={() => setOpenmonth(solicitud.id)} className='cursor-pointer flex justify-between'>
+                                                {datos_f.tipo2[year].map((task) => (
+                                                    <div key={task.id} >
+                                                        <div onClick={() => setOpenmonth(task.id)} className='cursor-pointer flex justify-between'>
 
-                                                            <div className="p-2 h-10">{solicitud.descripcion} ({solicitud.files?.length})</div>
+                                                            <div className="p-2 h-10">{task.descripcion} ({task.files?.length})</div>
 
                                                             <div className='flex items-center'>
                                                                 {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
                                                                 {auth.user.rol_id == 2 && (
-                                                                    <div className="p-2 h-10" onClick={() => { setDefaultEditData(solicitud) }}>
+                                                                    <div className="p-2 h-10" onClick={() => { setDefaultEditData(task) }}>
                                                                         <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                             <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
                                                                         </svg>
 
                                                                     </div>)}
 
-                                                                {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && solicitud.files.length === 0)) && (
-                                                                    <div className="p-2 h-10" onClick={() => setShowAlert(solicitud)}>
+                                                                {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && task.files.length === 0)) && (
+                                                                    <div className="p-2 h-10" onClick={() => setShowAlert(task)}>
 
                                                                         <svg className="w-7 h-7 text-blue-400 hover:text-red-600">
                                                                             <use xlinkHref={"/assets/svg/delete.svg" + '#delete'} />
@@ -414,10 +414,10 @@ export default function Panel({ auth, msj, clientes }) {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == solicitud.id ? `` : "hidden "}`}>
+                                                        <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == task.id ? `` : "hidden "}`}>
 
-                                                            {solicitud.files ? (
-                                                                solicitud.files.map((archivo) => {
+                                                            {task.files ? (
+                                                                task.files.map((archivo) => {
                                                                     const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
                                                                     return (
                                                                         <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">

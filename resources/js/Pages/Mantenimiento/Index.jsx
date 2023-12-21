@@ -1,11 +1,11 @@
 
 import { DataTable } from '@/Components/DataTable';
 import DeleteUser from '@/Components/DeleteUser';
-import { EditTipoSolicitud } from '@/Components/EditTipoSolicitud';
+import { EditTipotask } from '@/Components/EditTipotask';
 import Empresa from '@/Components/Empresa';
 import Loading from '@/Components/Loading';
 import Modal from '@/Components/Modal';
-import { NewTipoSolicitud } from '@/Components/NewTipoSolicitud';
+import { NewTipotask } from '@/Components/NewTipotask';
 import { SuccessAlert } from '@/Components/SuccessAlert';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from "@inertiajs/react";
@@ -13,12 +13,12 @@ import { useEffect, useState } from 'react';
 
 
 
-export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
-  const [currentData, setCurrentData] = useState(tipoSolicitudes);
+export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
+  const [currentData, setCurrentData] = useState(tipotaskes);
   const [modalDestroy, setModalDestroy] = useState(false)
   const [newTipoSilicitud, setNewTipoSilicitud] = useState(false)
   const [editTipoSilicitud, setEditTipoSilicitud] = useState(false)
-  const [tipoSolicitudData, setTipoSolicitudData] = useState();
+  const [tipotaskData, setTipotaskData] = useState();
   const [succesAlert, setSuccesAlert] = useState(msj?.success);
   const [loading, setLoading] = useState(false)
 
@@ -31,58 +31,58 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
   }, [msj]);
 
   useEffect(() => {
-    if (tipoSolicitudes) {
-      const dataList = tipoSolicitudes.map(tipoSolicitud => {
+    if (tipotaskes) {
+      const dataList = tipotaskes.map(tipotask => {
 
-        delete tipoSolicitud.created_at;
-        delete tipoSolicitud.updated_at;
+        delete tipotask.created_at;
+        delete tipotask.updated_at;
 
 
-        if (tipoSolicitud.tipo === 1) {
-          tipoSolicitud['categoria'] = 'Servicios';
+        if (tipotask.tipo === 1) {
+          tipotask['categoria'] = 'Servicios';
 
-          return tipoSolicitud;
+          return tipotask;
         }
-        if (tipoSolicitud.tipo === 2) {
-          tipoSolicitud['categoria'] = 'Certificaciones';
+        if (tipotask.tipo === 2) {
+          tipotask['categoria'] = 'Certificaciones';
 
-          return tipoSolicitud;
+          return tipotask;
         }
-        if (tipoSolicitud.tipo === 3) {
-          tipoSolicitud['categoria'] = 'Estados Financieros';
+        if (tipotask.tipo === 3) {
+          tipotask['categoria'] = 'Estados Financieros';
 
-          return tipoSolicitud;
+          return tipotask;
         }
-        if (tipoSolicitud.tipo === 4) {
-          tipoSolicitud['categoria'] = 'Reportes Generales';
+        if (tipotask.tipo === 4) {
+          tipotask['categoria'] = 'Reportes Generales';
 
-          return tipoSolicitud;
+          return tipotask;
         }
 
       })
       setCurrentData(dataList);
     }
-  }, [tipoSolicitudes]);
+  }, [tipotaskes]);
 
   const tbStructure = {
-    'Tipo de Solicitud': 'nombre',
+    'Tipo de task': 'nombre',
     'Categoria': 'categoria',
     'Status': 'status'
   }
 
-  function getTipoSolicitudData(id) {
-    const data = tipoSolicitudes.filter(tipoSolicitud => tipoSolicitud.id === id);
-    setTipoSolicitudData(data[0]);
+  function getTipotaskData(id) {
+    const data = tipotaskes.filter(tipotask => tipotask.id === id);
+    setTipotaskData(data[0]);
   }
 
   const deleteModal = (id) => {
-    getTipoSolicitudData(id)
+    getTipotaskData(id)
     setModalDestroy(true)
 
   }
 
   const editModal = (id) => {
-    getTipoSolicitudData(id)
+    getTipotaskData(id)
     setEditTipoSilicitud(true)
   }
 
@@ -91,7 +91,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
     setModalDestroy(false)
     setLoading(true);
 
-    post(route('tipoSolicitud.delete', tipoSolicitudData.id), {
+    post(route('tipotask.delete', tipotaskData.id), {
       onSuccess: () => {
         setLoading(false);
       }
@@ -114,7 +114,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
               <Link href={route('empresa.index')}className={`inline-block p-4 rounded-t-lg ${empresa ? 'activeTab': 'NoactiveTab'}`}>Empresa</Link>
             </li>
             <li className="me-2">
-              <Link href={route('tipoSolicitud.index')} aria-current="page" className={` inline-block p-4 rounded-t-lg    ${tipoSolicitudes ? 'activeTab' : 'NoactiveTab'}`}>Solicitudes</Link>
+              <Link href={route('tipotask.index')} aria-current="page" className={` inline-block p-4 rounded-t-lg    ${tipotaskes ? 'activeTab' : 'NoactiveTab'}`}>taskes</Link>
             </li>
 
             
@@ -134,7 +134,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
           }
 
           {newTipoSilicitud &&
-            <NewTipoSolicitud
+            <NewTipotask
               show={newTipoSilicitud}
               hideModal={() => setNewTipoSilicitud(false)}
               setLoading={setLoading}
@@ -142,9 +142,9 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
           }
 
           {editTipoSilicitud &&
-            <EditTipoSolicitud
+            <EditTipotask
               show={editTipoSilicitud}
-              tipoSolicitudData={tipoSolicitudData}
+              tipotaskData={tipotaskData}
               hideModal={() => setEditTipoSilicitud(false)}
               setLoading={setLoading}
             />
@@ -165,7 +165,7 @@ export default function Mantenimiento({ auth, tipoSolicitudes, msj, empresa }) {
             <DeleteUser
               hideModal={() => setModalDestroy(false)}
               destroy={destroy}
-              selectedUser={tipoSolicitudData}
+              selectedUser={tipotaskData}
             />
 
           </Modal>

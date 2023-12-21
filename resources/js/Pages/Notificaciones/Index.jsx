@@ -32,7 +32,7 @@ export default function Notificaciones({ auth, notificaciones }) {
                                 emisor={notificacion.emisor}
                                 mensaje={notificacion.mensaje}
                                 date={notificacion.date}
-                                selectNotification={() => selectNotification(notificacion.solicitud_id, notificacion.id)}
+                                selectNotification={() => selectNotification(notificacion.task_id, notificacion.id)}
                                 conf={false}
                             />
                         ))

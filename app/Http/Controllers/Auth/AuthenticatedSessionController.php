@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        unset($request->user()->solicitudes);
+        unset($request->user()->taskes);
         
         Auth::guard('web')->logout();
 

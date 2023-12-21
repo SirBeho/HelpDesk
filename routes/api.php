@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\FileController;
-use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\taskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

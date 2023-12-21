@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LogSolicitud extends Model
+class Logtask extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = "log_solicitudes";
+    protected $table = "log_taskes";
     protected $fillable = [
        
-        'solicitud_id',
+        'task_id',
         'user_id',
         'descripcion', 
         'status',
@@ -26,9 +26,9 @@ class LogSolicitud extends Model
         return $this->BelongsTo(User::class,'user_id');
     }
 
-    public function solicitud(): BelongsTo
+    public function task(): BelongsTo
     {
-        return $this->BelongsTo(Solicitud::class,'solicitud_id');
+        return $this->BelongsTo(task::class,'task_id');
     }
 
     

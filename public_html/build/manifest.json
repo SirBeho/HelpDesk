@@ -129,7 +129,7 @@
     "isDynamicEntry": true,
     "src": "resources/js/Pages/AccessDenied.jsx"
   },
-  "resources/js/Pages/Admsolicitudes/Index.jsx": {
+  "resources/js/Pages/Admtaskes/Index.jsx": {
     "file": "assets/Index-5648ea8e.js",
     "imports": [
       "resources/js/app.jsx",
@@ -140,7 +140,7 @@
       "_typeof-7fd5df1e.js"
     ],
     "isDynamicEntry": true,
-    "src": "resources/js/Pages/Admsolicitudes/Index.jsx"
+    "src": "resources/js/Pages/Admtaskes/Index.jsx"
   },
   "resources/js/Pages/Auth/ConfirmPassword.jsx": {
     "file": "assets/ConfirmPassword-f22c1fda.js",
@@ -351,7 +351,7 @@
       "resources/js/app.jsx",
       "_AuthenticatedLayout-3f74296c.js",
       "_jspdf.es.min-2a9d7818.js",
-      "resources/js/Pages/Reportes/reporte_solicitudes.jsx",
+      "resources/js/Pages/Reportes/reporte_taskes.jsx",
       "resources/js/Pages/Reportes/reporte_documentos.jsx",
       "_index-af05e076.js",
       "_transition-13535cd8.js",
@@ -371,17 +371,17 @@
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Reportes/reporte_documentos.jsx"
   },
-  "resources/js/Pages/Reportes/reporte_solicitudes.jsx": {
-    "file": "assets/reporte_solicitudes-cd5c978b.js",
+  "resources/js/Pages/Reportes/reporte_taskes.jsx": {
+    "file": "assets/reporte_taskes-cd5c978b.js",
     "imports": [
       "resources/js/app.jsx",
       "_index-af05e076.js",
       "_typeof-7fd5df1e.js"
     ],
     "isDynamicEntry": true,
-    "src": "resources/js/Pages/Reportes/reporte_solicitudes.jsx"
+    "src": "resources/js/Pages/Reportes/reporte_taskes.jsx"
   },
-  "resources/js/Pages/Solicitudes/Index.jsx": {
+  "resources/js/Pages/taskes/Index.jsx": {
     "file": "assets/Index-d6c24387.js",
     "imports": [
       "resources/js/app.jsx",
@@ -390,7 +390,7 @@
       "_transition-13535cd8.js"
     ],
     "isDynamicEntry": true,
-    "src": "resources/js/Pages/Solicitudes/Index.jsx"
+    "src": "resources/js/Pages/taskes/Index.jsx"
   },
   "resources/js/Pages/Subir/Index.jsx": {
     "file": "assets/Index-070fceba.js",
@@ -446,7 +446,7 @@
     ],
     "dynamicImports": [
       "resources/js/Pages/AccessDenied.jsx",
-      "resources/js/Pages/Admsolicitudes/Index.jsx",
+      "resources/js/Pages/Admtaskes/Index.jsx",
       "resources/js/Pages/Auth/ConfirmPassword.jsx",
       "resources/js/Pages/Auth/ForgotPassword.jsx",
       "resources/js/Pages/Auth/Login.jsx",
@@ -465,8 +465,8 @@
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.jsx",
       "resources/js/Pages/Reportes/Index.jsx",
       "resources/js/Pages/Reportes/reporte_documentos.jsx",
-      "resources/js/Pages/Reportes/reporte_solicitudes.jsx",
-      "resources/js/Pages/Solicitudes/Index.jsx",
+      "resources/js/Pages/Reportes/reporte_taskes.jsx",
+      "resources/js/Pages/taskes/Index.jsx",
       "resources/js/Pages/Subir/Index.jsx",
       "resources/js/Pages/Usuarios/Index.jsx",
       "resources/js/Pages/Welcome.jsx",

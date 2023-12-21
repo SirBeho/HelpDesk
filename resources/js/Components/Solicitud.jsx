@@ -2,7 +2,7 @@ import React from 'react'
 import { format } from 'date-fns';
 
 
-export const Solicitud = ({data,click,open,adm}) => {
+export const task = ({data,click,open,adm}) => {
     
     const formattedDate = format(new Date(data.created_at),'dd/MM/yyyy hh:mm:ss a')
     const tipo = ["bg-blue-500","bg-[#EAB308]","bg-cyan-500","bg-blue-800"];
@@ -20,7 +20,7 @@ export const Solicitud = ({data,click,open,adm}) => {
                          <span>#{data.numero}</span>
                      </div>
             ): ( <span>
-                Solicitud: {data.numero}
+                task: {data.numero}
             </span>)}
                
 

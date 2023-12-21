@@ -51,9 +51,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
   
-   public function solicitudes(): HasMany
+   public function taskes(): HasMany
     {
-        return $this->hasMany(Solicitud::class,'user_id');
+        return $this->hasMany(task::class,'user_id');
     }
 
     public function files(): HasMany

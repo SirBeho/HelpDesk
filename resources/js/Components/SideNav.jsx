@@ -13,8 +13,8 @@ const navItems = [
     {
         id: 2,
         icon: "/assets/svg/soli.svg",
-        title: "Administración de solicitudes",
-        route: route('admsolicitudes'),
+        title: "Administración de taskes",
+        route: route('admtaskes'),
         rol: [1,2,3]
       
     },
@@ -30,8 +30,8 @@ const navItems = [
     {
         id: 5,
         icon: "/assets/svg/file.svg",
-        title: "SOLICITUDES",
-        route: route('solicitudes'),
+        title: "taskES",
+        route: route('taskes'),
         rol: [2]
     },
 

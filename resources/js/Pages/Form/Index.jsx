@@ -71,7 +71,7 @@ export default function form({ auth }) {
 
 
                     <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-end justify-end mr-5 mt-5">
-                        Enviar solicitud
+                        Enviar task
                     </button>
                 </form>
 
