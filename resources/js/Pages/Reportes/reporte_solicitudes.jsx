@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-export default function Reporte({ taskes_f, datos,empresa }) {
+export default function Reporte({ Tasks_f, datos,empresa }) {
 
   return (
     <div className=" mx-10 bg-white ">
@@ -56,7 +56,7 @@ export default function Reporte({ taskes_f, datos,empresa }) {
             {datos?.tipo ? (
               <td className="flex w-1/2">
                 <h1 className="w-20  font-medium ">Tipo:</h1>
-                {taskes_f[0].tipo.nombre}
+                {Tasks_f[0].tipo.name}
               </td>
                 ) : null}
 
@@ -64,7 +64,7 @@ export default function Reporte({ taskes_f, datos,empresa }) {
               {datos?.cliente ? (
               <td className="flex w-1/2">
                 <h1 className="w-20  font-medium ">Cliente:</h1>
-                {taskes_f[0].user.name}
+                {Tasks_f[0].user.name}
               </td>
                 ) : null}
 
@@ -72,7 +72,7 @@ export default function Reporte({ taskes_f, datos,empresa }) {
           {!(datos?.tipo && datos?.cliente) && datos?.estado ? (
               <td className="flex w-1/2">
                 <h1 className="w-20  font-medium ">Estado:</h1>
-                {taskes_f[0].status.nombre}
+                {Tasks_f[0].status.name}
               </td>
               
                 ) : null}
@@ -83,8 +83,8 @@ export default function Reporte({ taskes_f, datos,empresa }) {
             {datos?.tipo && datos?.cliente && datos?.estado ? (
               <tr>
               <td className="flex w-1/2">
-                <h1 className="w-20  font-medium ">Estado de task:</h1>
-                {taskes_f[0].status.nombre}
+                <h1 className="w-20  font-medium ">Estado de Task:</h1>
+                {Tasks_f[0].status.name}
               </td>
               </tr>
               
@@ -96,14 +96,14 @@ export default function Reporte({ taskes_f, datos,empresa }) {
       </table>
       
         <div className=" relative w-full h-14  mt-1 bg-gray-300 text-[35px] ">
-          <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de taskes</h1>
+          <h1 className="absolute bottom-3 right-1/2 translate-x-1/2">Reporte de Tasks</h1>
         </div>
 
         <table className="min-w-full w-full">
           <thead >
             <tr className="bg-darkblue   text-left">
               <th className="pb-3 text-white uppercase tracking-wider">
-                #task
+                #Task
               </th>
               <th className="pb-3 text-white uppercase tracking-wider">
                 Tipo
@@ -126,17 +126,17 @@ export default function Reporte({ taskes_f, datos,empresa }) {
             </tr>
           </thead>
           <tbody>
-            {taskes_f &&
-              taskes_f.map((user, i) => (
+            {Tasks_f &&
+              Tasks_f.map((user, i) => (
                 <tr key={i} className={i % 2 === 0 ? "bg-gray-100" : "bg-white"}>
                   <td className="pb-4 pt-2 h-fit whitespace-no-wrap">{user.numero}</td>
-                  <td className="pb-4 pt-2 whitespace-no-wrap">{user.tipo.nombre}</td>
+                  <td className="pb-4 pt-2 whitespace-no-wrap">{user.tipo.name}</td>
                   <td className="pb-4 pt-2 whitespace-no-wrap">{user.user.name}</td>
                   <td className="pb-4 pt-2 whitespace-no-wrap">{user.user.rnc}</td>
                   <td className="pb-4 pt-2 whitespace-no-wrap">
                     {format(new Date(user.created_at), "dd/MM/yyyy hh:mm:ss a")}
                   </td>
-                  <td className=" whitespace-no-wrap">{user.status.nombre}</td>
+                  <td className=" whitespace-no-wrap">{user.status.name}</td>
                   <td className=" whitespace-no-wrap">{user.user.email}</td>
                 </tr>
               ))
@@ -144,7 +144,7 @@ export default function Reporte({ taskes_f, datos,empresa }) {
 
             <tr className="bg-gray-300 mt-2 text-black ">
               <td className="pb-4 ">
-                Total de taskes: {taskes_f?.length || 0}
+                Total de Tasks: {Tasks_f?.length || 0}
               </td>
             </tr>
 

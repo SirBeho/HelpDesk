@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Estadotask extends Model
+class TaskStat extends Model
 {
     use HasFactory;
-    protected $table = "estado_taskes";
+    protected $table = "estado_Tasks";
 
     protected $fillable = [
-        'nombre',
+        'name',
         'status',
     ];
 }

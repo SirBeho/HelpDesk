@@ -17,8 +17,9 @@ class CreateTransitionStatsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('state_from_id');
             $table->unsignedBigInteger('state_to_id');
-            $table->foreign('state_from_id')->references('id')->on('task_status');
-            $table->foreign('state_to_id')->references('id')->on('task_status');
+            $table->foreign('state_from_id')->references('id')->on('Task_status');
+            $table->foreign('state_to_id')->references('id')->on('Task_status');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

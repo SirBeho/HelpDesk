@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
     {
 
         $mensajes = [
-            'name' => 'El nombre es invalido',
+            'name' => 'El name es invalido',
             'email.required' => 'El email no puede estar en blanco',
             'email.email' => 'Email no valido',
             'email.unique' => 'Ya existe una cuenta con este email'

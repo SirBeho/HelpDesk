@@ -16,7 +16,7 @@ class EmpresaSeeder extends Seeder
       
        Empresa::factory()->create([
         'RNC'=> '132706498',
-        'empresa'=> 'TESORIA SRL',
+        'empresa'=> 'Task Assignment SRL',
         'direccion'=> 'C/22A apto N1, Embrujo III, Santiago Rep. Dom.',
         'telefono'=> '809-805-7566',
         'telefono2'=> null

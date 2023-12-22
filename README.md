@@ -2,7 +2,7 @@
 
 Desarrollo de una aplicación web para el acceso y gestión
 de usuarios internos y clientes, con funcionalidades de autenticación, gestión de
-documentos, paneles de notificaciones, administración de taskes y reportes,
+documentos, paneles de notificaciones, administración de Tasks y reportes,
 entre otros.
 
 
@@ -64,7 +64,7 @@ Asegúrate de tener instalado lo siguiente en tu sistema antes de comenzar:
 7. (Opcional) Corre los datos de prueva (seeders)
 8. Inicia el servidor de desarrollo de Laravel junto a su dependencia react:
         
-        git clone https://github.com/Joregesosa/Tesoria
+        git clone https://github.com/Joregesosa/Task Assignment
         composer install
         cp .env.example .env
         php artisan key:generate
@@ -84,7 +84,7 @@ Asegúrate de tener instalado lo siguiente en tu sistema antes de comenzar:
 ## Autores
 
 
-- **Jorge Sosa**: [LinkedIn](https://github.com/Joregesosa/Tesoria)
+- **Jorge Sosa**: [LinkedIn](https://github.com/Joregesosa/Task Assignment)
 <<<<<<< HEAD
 - **Benjamin Tavarez**: [LinkedIn](https://www.linkedin.com/in/benjamin-tavarez-cruceta-052aa623b/)
 =======

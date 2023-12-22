@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class TaskType extends Model
 {
     use HasFactory;
-    protected $table = "task_types";
+    protected $table = "TaskTypes";
 }

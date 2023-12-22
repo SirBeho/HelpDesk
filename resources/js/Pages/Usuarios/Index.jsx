@@ -300,7 +300,7 @@ export default function Usuarios({ auth, users, roles, msj }) {
                         </td>
 
                         <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                          <p className="text-gray-900 whitespace-no-wrap">{user.rol.nombre}</p>
+                          <p className="text-gray-900 whitespace-no-wrap">{user.rol.name}</p>
                         </td>
                         <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>

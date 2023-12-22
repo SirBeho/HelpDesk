@@ -29,14 +29,14 @@ class AppServiceProvider extends ServiceProvider
 
 
         Validator::extend('unique_name', function ($attribute, $value, $parameters, $validator) {
-            $nombres = $validator->getData()['nombre'];
-            $count = array_count_values($nombres)[$value] ?? 0;
+            $names = $validator->getData()['name'];
+            $count = array_count_values($names)[$value] ?? 0;
             
         if ($count > 1) {
             return false; 
         }
         
-            return !File::where('nombre', $value)->where('user_id', auth()->user()->id)->exists();
+            return !File::where('name', $value)->where('user_id', auth()->user()->id)->exists();
         });
     }
 }

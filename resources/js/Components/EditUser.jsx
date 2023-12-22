@@ -10,7 +10,7 @@ export default function EditUser({ roles, changeRol, hideModal, update, selected
             <div className='flex gap-8'>
                 <div className="flex flex-col w-3/5">
                     <label htmlFor="name" className="text-xs">
-                        Nombre Completo
+                        name Completo
                     </label>
                     <input type="text" name="name" id="name" className="h-9 rounded-md w-full outline-none"
                         value={data.name || selectedUser.name} required
@@ -44,7 +44,7 @@ export default function EditUser({ roles, changeRol, hideModal, update, selected
                         </option>
                         {roles.map(rol => (
                             <option value={rol.id} key={rol.id}>
-                                {rol.nombre}
+                                {rol.name}
                             </option>
                         ))}
                     </select>

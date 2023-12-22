@@ -15,7 +15,7 @@ class KPISeeder extends Seeder
     public function run()
     {
         KPI::factory()->create([
-            'name' => 'tasks on time',
+            'name' => 'Tasks on time',
         ]);
 
         KPI::factory()->create([

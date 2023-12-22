@@ -14,25 +14,25 @@ class NotificacionSeeder extends Seeder
     public function run(): void
     {
         Notificacion::factory()->create([
-            'task_id' => 3,
+            'Task_id' => 3,
             'emisor_id' => 2,
             'receptor_id' => 1,
             'status' => 0, 
-            'message' => 'El estado de la task ha cambiado'
+            'message' => 'El estado de la Task ha cambiado'
         ]);
         Notificacion::factory()->create([
-            'task_id' => 1,
+            'Task_id' => 1,
             'emisor_id' => 2,
             'receptor_id' => 1,
             'status' => 0, 
-            'message' => 'El estado de la task ha cambiado'
+            'message' => 'El estado de la Task ha cambiado'
         ]);
         Notificacion::factory()->create([
-            'task_id' => 2,
+            'Task_id' => 2,
             'emisor_id' => 2,
             'receptor_id' => 1,
             'status' => 0, 
-            'message' => 'El estado de la task ha cambiado'
+            'message' => 'El estado de la Task ha cambiado'
         ]);
     }
 }

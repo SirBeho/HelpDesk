@@ -4,7 +4,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 
 
-export default function subir({auth,file,taskes}) {
+export default function subir({auth,file,Tasks}) {
 
 
 
@@ -45,13 +45,13 @@ export default function subir({auth,file,taskes}) {
 
                        
                     <div className="flex gap-4 ">
-                    <label  className="text-xs flex flex-col ">task
+                    <label  className="text-xs flex flex-col ">Task
                     <select name="services" id="services" className="h-9 rounded-md  outline-none px-2">
                     
                     <option value="">Seleccione servicio</option>
-                    {taskes.map((task) => (
-                        <option key={task.id} value={task.id}>
-                            {task.numero}-{task.tipo.nombre}
+                    {Tasks.map((Task) => (
+                        <option key={Task.id} value={Task.id}>
+                            {Task.numero}-{Task.tipo.name}
                         </option>
 
                     ))}
@@ -66,7 +66,7 @@ export default function subir({auth,file,taskes}) {
 
                     <div className="flex flex-col">
                         <label htmlFor="name" className="text-xs">
-                            Nombre solicitante
+                            name solicitante
                         </label>
                         <input type="text" name="name" id="name" value={auth.user.name} className="h-9 rounded-md w-4/5 outline-none px-2" />
                     </div>
@@ -96,7 +96,7 @@ export default function subir({auth,file,taskes}) {
 
 
                     <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-end justify-end mr-5 mt-5">
-                        Enviar task
+                        Enviar Task
                     </button>
                 </form>
 

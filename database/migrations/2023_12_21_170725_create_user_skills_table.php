@@ -20,6 +20,7 @@ class CreateUserSkillsTable extends Migration
             $table->integer('level')->default(0);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('skill')->references('id')->on('skills');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

@@ -13,17 +13,17 @@ import 'moment-timezone';
 
 
 
-export default function documentos({ auth, tipo_taskes, clientes, estados, task, indicadores }) {
+export default function documentos({ auth, TaskTypes, clientes, estados, Task, indicadores }) {
 
-  const taskes = task.filter(task => task.tipo_id > 2);
+  const Tasks = Task.filter(Task => Task.tipo_id > 2);
 
   const documentos = [];
-  taskes.forEach((task) => {
-    if (task.files && task.files.length > 0) {
-      documentos.push(...task.files);
+  Tasks.forEach((Task) => {
+    if (Task.files && Task.files.length > 0) {
+      documentos.push(...Task.files);
     }
   });
-  const [taskes_f, settaskes_f] = useState(taskes);
+  const [Tasks_f, setTasks_f] = useState(Tasks);
   const [datos, setDatos] = useState({
     inicio: 0,
     fin: 0,
@@ -46,11 +46,11 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
   const clienteChartRef = useRef(null);
   const usuarioChartRef = useRef(null);
 
-  const taskes_tipo = (tipos, totaltaskes) => {
+  const Tasks_tipo = (tipos, totalTasks) => {
 
     const options = {
       series: [{
-        name: 'taskes',
+        name: 'Tasks',
         data: Object.values(tipos),
       }],
       chart: {
@@ -85,7 +85,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          return showPercentages ? (value / totaltaskes * 100).toFixed(0) + '%' : value;
+          return showPercentages ? (value / totalTasks * 100).toFixed(0) + '%' : value;
         },
         style: {
           fontSize: '12px'
@@ -124,7 +124,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
       },
       title: {
-        text: 'taskes por tipo',
+        text: 'Tasks por tipo',
         floating: false,
 
         align: 'center',
@@ -145,7 +145,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
   }
 
-  const taskes_estatus = (tipos, totaltaskes) => {
+  const Tasks_estatus = (tipos, totalTasks) => {
 
     const options = {
       series: Object.values(tipos),
@@ -184,7 +184,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          return showPercentages ? value.toFixed(1) + "%" : Math.round(totaltaskes * value / 100).toString();
+          return showPercentages ? value.toFixed(1) + "%" : Math.round(totalTasks * value / 100).toString();
         },
         style: {
           fontSize: '12px'
@@ -212,7 +212,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
       labels: Object.keys(tipos),
 
       title: {
-        text: 'taskes por estado',
+        text: 'Tasks por estado',
         floating: false,
 
         align: 'center',
@@ -245,11 +245,11 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
   }
 
 
-  const taskes_clientes = (tipos, totaltaskes) => {
+  const Tasks_clientes = (tipos, totalTasks) => {
 
     const options = {
       series: [{
-        name: 'taskes',
+        name: 'Tasks',
         data: Object.values(tipos),
       }],
       chart: {
@@ -284,7 +284,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
       dataLabels: {
         enabled: true,
         formatter: (value, context) => {
-          return showPercentages ? (value / totaltaskes * 100).toFixed(0) + '%' : value;
+          return showPercentages ? (value / totalTasks * 100).toFixed(0) + '%' : value;
         },
         style: {
           fontSize: '12px'
@@ -323,7 +323,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
       },
       title: {
-        text: 'taskes por Clientes',
+        text: 'Tasks por Clientes',
         floating: false,
 
         align: 'center',
@@ -345,7 +345,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
   }
 
-  const taskes_usuarios = (tipos, totaltaskes, meses) => {
+  const Tasks_usuarios = (tipos, totalTasks, meses) => {
 
     const options = {
       series: tipos,
@@ -382,7 +382,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
         enabled: true,
         formatter: (value, context) => {
 
-          const totalSoli = totaltaskes[context.dataPointIndex];
+          const totalSoli = totalTasks[context.dataPointIndex];
           const percentage = totalSoli !== 0 ? (value / totalSoli * 100).toFixed(0) : 0; // Calculate the percentage or return 0 if totalSoli is 0
 
           return showPercentages ? percentage + '%' : value;
@@ -424,7 +424,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
       },
       title: {
-        text: 'taskes por Usuarios',
+        text: 'Tasks por Usuarios',
         floating: false,
 
         align: 'center',
@@ -452,7 +452,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
     const fin = new Date(datos.fin + ' 23:59:59');
 
 
-    const taskes_filtradas = taskes.filter((soli) => {
+    const Tasks_filtradas = Tasks.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
 
@@ -495,7 +495,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
     });
 
 
-    settaskes_f(taskes_filtradas);
+    setTasks_f(Tasks_filtradas);
 
   };
 
@@ -510,47 +510,47 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
     if (renderizado) {
 
-      const tipotaskes = {};
-      let totaltaskes = 0;
+      const Tasktypes = {};
+      let totalTasks = 0;
      
-      taskes_f.forEach((task) => {
-        totaltaskes++;
-        if (tipotaskes[task.tipo.nombre]) {
-          tipotaskes[task.tipo.nombre]++;
+      Tasks_f.forEach((Task) => {
+        totalTasks++;
+        if (Tasktypes[Task.tipo.name]) {
+          Tasktypes[Task.tipo.name]++;
         } else {
-          tipotaskes[task.tipo.nombre] = 1;
+          Tasktypes[Task.tipo.name] = 1;
         }
       });
-      taskes_tipo(tipotaskes, totaltaskes);
+      Tasks_tipo(Tasktypes, totalTasks);
 
 
-      const estadostaskes = {};
-      taskes_f.forEach((task) => {
-        if (estadostaskes[task.status.nombre]) {
-          estadostaskes[task.status.nombre]++;
+      const estadosTasks = {};
+      Tasks_f.forEach((Task) => {
+        if (estadosTasks[Task.status.name]) {
+          estadosTasks[Task.status.name]++;
         } else {
-          estadostaskes[task.status.nombre] = 1;
+          estadosTasks[Task.status.name] = 1;
         }
       });
-      taskes_estatus(estadostaskes, totaltaskes);
+      Tasks_estatus(estadosTasks, totalTasks);
 
 
-      const clientestaskes = {};
-      taskes_f.forEach((task) => {
-        if (clientestaskes[task.user.name]) {
-          clientestaskes[task.user.name]++;
+      const clientesTasks = {};
+      Tasks_f.forEach((Task) => {
+        if (clientesTasks[Task.user.name]) {
+          clientesTasks[Task.user.name]++;
         } else {
-          clientestaskes[task.user.name] = 1;
+          clientesTasks[Task.user.name] = 1;
         }
       });
-      taskes_clientes(clientestaskes, totaltaskes);
+      Tasks_clientes(clientesTasks, totalTasks);
 
 
 
 
       let fechaActual = new Date();
-      let fechaMin = taskes_f.reduce((min, task) => {
-        const fechaCreacion = new Date(task.created_at);
+      let fechaMin = Tasks_f.reduce((min, Task) => {
+        const fechaCreacion = new Date(Task.created_at);
         fechaCreacion.setHours(fechaCreacion.getHours() + 4);
 
         return fechaCreacion < min ? fechaCreacion : min;
@@ -567,14 +567,14 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
         }
       }
 
-      const UsuariostaskesMes = {};
-      const totaltaskes_mes = meses.reduce((obj, mes) => {
+      const UsuariosTasksMes = {};
+      const totalTasks_mes = meses.reduce((obj, mes) => {
         obj[mes] = 0;
         return obj;
       }, {});
 
-      taskes_f.forEach((task) => {
-        const fechaCreacion = new Date(task.created_at);
+      Tasks_f.forEach((Task) => {
+        const fechaCreacion = new Date(Task.created_at);
         fechaCreacion.setHours(fechaCreacion.getHours() + 4);
 
         const mes = fechaCreacion.getMonth() + 1;
@@ -582,15 +582,15 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
         const fecha = mes + "/" + anio;
        
        
-        if(task.user_asignado && task.status_id > 4){
+        if(Task.user_asignado && Task.status_id > 4){
 
-          if (!UsuariostaskesMes[task.user_asignado.name]) {
-            UsuariostaskesMes[task.user_asignado.name] = {};
-            meses.forEach(mes => UsuariostaskesMes[task.user_asignado.name][mes] = 0);
+          if (!UsuariosTasksMes[Task.user_asignado.name]) {
+            UsuariosTasksMes[Task.user_asignado.name] = {};
+            meses.forEach(mes => UsuariosTasksMes[Task.user_asignado.name][mes] = 0);
           }
 
-          UsuariostaskesMes[task.user_asignado.name][fecha]++;
-          totaltaskes_mes[fecha]++;
+          UsuariosTasksMes[Task.user_asignado.name][fecha]++;
+          totalTasks_mes[fecha]++;
 
         }
        
@@ -598,18 +598,18 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
       });
 
 
-      const result = Object.keys(UsuariostaskesMes).map((userName) => {
+      const result = Object.keys(UsuariosTasksMes).map((userName) => {
         return {
           name: userName,
-          data: Object.values(UsuariostaskesMes[userName]),
+          data: Object.values(UsuariosTasksMes[userName]),
         };
       });
 
-      taskes_usuarios(result, Object.values(totaltaskes_mes), meses);
+      Tasks_usuarios(result, Object.values(totalTasks_mes), meses);
 
     }
 
-  }, [taskes_f, showPercentages]);
+  }, [Tasks_f, showPercentages]);
 
   useEffect(() => {
     setRenderizado(true)
@@ -635,9 +635,9 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
                     <img className='w-full h-full' src="/assets/svg/todo2.svg" alt="icon documento" />
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Total taskes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Total Tasks</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.total_taskes}
+                      {indicadores.total_Tasks}
                       <span className="text-green-500">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -655,9 +655,9 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
                     <img className='w-full h-full' src="/assets/svg/todo.svg" alt="icon documento" />
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">taskes pendientes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Tasks pendientes</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.taskes_pendientes}
+                      {indicadores.Tasks_pendientes}
                       <span className="text-pink-500">
                         <i className="fas fa-exchange-alt" />
                       </span>
@@ -675,9 +675,9 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
                     <img className='w-full h-full' src="/assets/svg/todo3.svg" alt="icon documento" />
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Nuevas taskes - ultimo mes</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Nuevas Tasks - ultimo mes</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.taskes_ultimo_mes}
+                      {indicadores.Tasks_ultimo_mes}
                       <span className="text-yellow-600">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -728,9 +728,9 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
                   </div>
                   <div className="flex-1 text-right md:text-center">
-                    <h2 className="font-bold uppercase text-gray-600">Promedio taskes por cliente</h2>
+                    <h2 className="font-bold uppercase text-gray-600">Promedio Tasks por cliente</h2>
                     <p className="font-bold text-2xl">
-                      {indicadores.promedio_taskes_por_cliente}
+                      {indicadores.promedio_Tasks_por_cliente}
                       <span className="text-red-500">
                         <i className="fas fa-caret-up" />
                       </span>
@@ -786,7 +786,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
 
             <div className='flex gap-8'>
               <label className="flex  flex-col "  >
-                <span className='font-semibold'> Tipo taskes:</span>
+                <span className='font-semibold'> Tipo Tasks:</span>
 
                 <select
                   required
@@ -797,9 +797,9 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
                   className="p-0 px-2 w-fit rounded-md h-8"
                 >
                   <option value={0} select>Todas</option>
-                  {tipo_taskes.map((task) => (
-                    <option key={task.id} value={task.id}>
-                      {task.nombre}
+                  {TaskTypes.map((Task) => (
+                    <option key={Task.id} value={Task.id}>
+                      {Task.name}
                     </option>
                   ))}
                 </select>
@@ -820,7 +820,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, task,
                   <option value={''} select>Todos</option>
                   {estados.map((estado) => (
                     <option key={estado.id} value={estado.id}>
-                      {estado.nombre}
+                      {estado.name}
                     </option>
                   ))}
                 </select>

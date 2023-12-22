@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\TaskType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -27,8 +28,12 @@ class DatabaseSeeder extends Seeder
         $this->call(UserKPISeeder::class);
         $this->call(UserSkillSeeder::class);
         
+        $this->call(PrioritySeeder::class);
+        $this->call(TaskTypeSeeder::class);
+        $this->call(TaskTypeSkillSeeder::class);
+        $this->call(TaskStatSeeder::class);
+        $this->call(TransitionStatSeeder::class);
 
-        
         
     }
 }

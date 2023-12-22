@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <h1>Bienvenido a Tesoria</h1>
+    <h1>Bienvenido a Task Assignment</h1>
 
     <p>Tu cuenta ha sido creada exitosamente.</p>
 

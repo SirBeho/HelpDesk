@@ -7,17 +7,17 @@ import Modal from "@/Components/Modal";
 import Loading from "./Loading";
 import { copyStringIntoBuffer } from "pdf-lib";
 
-export default function NavBar({ user, task_id, countNotificaciones, msj }) {
+export default function NavBar({ user, Task_id, countNotificaciones, msj }) {
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isfactura, setIsfactura] = useState(window.location.pathname == "/panel");
   const { data, setData, post, processing, errors, reset } = useForm({
     file: [],
-    nombre: [],
+    name: [],
     extencion: [],
     confidencial: [],
-    task_id: task_id
+    Task_id: Task_id
   });
 
 
@@ -33,7 +33,7 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
 
       setArchivo_error(msj.error.archivo_error);
       if (msj?.error.duplicados) {
-        setErrorMessage([...msj?.error.error, "Algunos nombres están duplicados"])
+        setErrorMessage([...msj?.error.error, "Algunos names están duplicados"])
       } else {
         setErrorMessage(msj?.error?.error);
       }
@@ -69,10 +69,10 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
     setErrorMessage([]);
     setData({
       file: [],
-      nombre: [],
+      name: [],
       extencion: [],
       confidencial: [],
-      task_id: task_id
+      Task_id: Task_id
     });
 
   };
@@ -82,12 +82,12 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
   const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`; // Formatea la fecha como dd/mm/yyyy
 
   return (
-    <header className='flex items-center w-full bg-nav fixed top-0 z-10 h-16'>
+    <header className='flex items-center w-full bg-indigo-900 fixed top-0 z-10 h-16'>
 
-      <div className='flex items-center w-3/4'>
-        <img className='p-4' src={logo} width={120} height={120} alt='logo' />
+      <div className='flex items-center w-3/4 '>
+        <img className='p-4' src={logo} width={100} height={100} alt='logo' />
 
-        <label htmlFor="file" onClick={() => setShow(true)} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-white cursor-pointer'>
+       {/*  <label htmlFor="file" onClick={() => setShow(true)} className='flex h-9 px-2 gap-2 bg-upload items-center rounded-lg text-white cursor-pointer'>
           Cargar documento
 
           <input
@@ -100,7 +100,7 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
             name="file"
             onChange={(e) => {
               const newFiles = Array.from(e.target.files);
-              const newNombres = newFiles.map((file) => file.name.split('.')[0]);
+              const newnames = newFiles.map((file) => file.name.split('.')[0]);
               const newExtensiones = newFiles.map((file) => file.name.split('.').pop());
               const newConfidencial = newFiles.map((file) => false);
 
@@ -108,7 +108,7 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
               setData({
                 ...data,
                 file: [...data.file, ...newFiles],
-                nombre: [...data.nombre, ...newNombres],
+                name: [...data.name, ...newnames],
                 extencion: [...data.extencion, ...newExtensiones],
                 confidencial: [...data.confidencial, ...newConfidencial],
               });
@@ -120,7 +120,7 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
           </span>
-        </label>
+        </label> */}
 
 
 
@@ -128,7 +128,7 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
 
       </div>
 
-      <div className='flex justify-end px-10 text-gray-300 '>
+      <div className='flex justify-end px-10 text-gray-300  '>
         <Link href={route('notificaciones')} className='relative cursor-pointer'>
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
@@ -198,38 +198,38 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
               <form onSubmit={submit} className="flex flex-col w-full gap-4 text-textgray p-4">
                 <div className="flex gap-4 justify-between ">
                   <label className="text-xs flex flex-col  w-full">
-                    {isfactura ? "Factura" : "task"}
+                    {isfactura ? "Factura" : "Task"}
                     <select
                       required
-                      name="task_id"
-                      id="task_id"
-                      value={data.task_id}
-                      onChange={(e) => setData("task_id", e.target.value)}
+                      name="Task_id"
+                      id="Task_id"
+                      value={data.Task_id}
+                      onChange={(e) => setData("Task_id", e.target.value)}
                       className="h-9 rounded-md  outline-none px-2"
                     >
 
 
-                      <option value="">Seleccione la {isfactura ? "factura" : "task"}  </option>
+                      <option value="">Seleccione la {isfactura ? "factura" : "Task"}  </option>
 
 
 
-                      {user.taskes.sort((a, b) => {
+                      {user.Tasks.sort((a, b) => {
                         return new Date(a.created_at) - new Date(b.created_at);
-                      }).map((task) => {
-                        if (task.status_id < 4) {
+                      }).map((Task) => {
+                        if (Task.status_id < 4) {
 
 
 
-                          if (task.tipo_id < 3 && isfactura) {
+                          if (Task.tipo_id < 3 && isfactura) {
                             return (
-                              <option key={task.id} value={task.id}>
-                                Facturas {task.descripcion}{task.tipo_id == 1 ? " - Compras" : " - ventas"}
+                              <option key={Task.id} value={Task.id}>
+                                Facturas {Task.descripcion}{Task.tipo_id == 1 ? " - Compras" : " - ventas"}
                               </option>
                             );
                           } else if (!isfactura) {
                             return (
-                              <option key={task.id} value={task.id}>
-                                {task.numero} - {task.tipo.nombre}
+                              <option key={Task.id} value={Task.id}>
+                                {Task.numero} - {Task.tipo.name}
                               </option>
                             );
                           }
@@ -272,16 +272,16 @@ export default function NavBar({ user, task_id, countNotificaciones, msj }) {
                                 {data.confidencial[index] ? (<img src={`assets/confidencial.png`} className="absolute top-0 left-0 " alt=" " />) : null}
                               </div>
                               
-                              <label htmlFor="nombre" className={`bg-white flex gap-2 items-center overflow-hidden border-2 rounded-md focus-within:border-blue-600 ${archivo_error && archivo_error.includes(data.nombre[index]) ? 'border-red-500 bg-red-300 text-black' : ''}`}>
+                              <label htmlFor="name" className={`bg-white flex gap-2 items-center overflow-hidden border-2 rounded-md focus-within:border-blue-600 ${archivo_error && archivo_error.includes(data.name[index]) ? 'border-red-500 bg-red-300 text-black' : ''}`}>
                                 <input
-                                  id="nombre"
+                                  id="name"
                                   type="text"
                                   className={`h-full py-1 border-none focus:ring-0 ` }
-                                  value={data.nombre[index]}
+                                  value={data.name[index]}
                                   onChange={(e) => {
-                                    const newNombres = [...data.nombre];
-                                    newNombres[index] = e.target.value;
-                                    setData({ ...data, nombre: newNombres });
+                                    const newnames = [...data.name];
+                                    newnames[index] = e.target.value;
+                                    setData({ ...data, name: newnames });
                                   }}
                                   style={{ outline: 'none' }}
                                 />

@@ -4,13 +4,13 @@ USE GESTION_TAREAS;
 -- Crear la tabla accesos
 CREATE TABLE accesos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_acceso VARCHAR(50)
+    name_acceso VARCHAR(50)
 );
  
 -- Crear la tabla roles
 CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_rol VARCHAR(50)
+    name_rol VARCHAR(50)
 );
 
 -- Crear la tabla roles_accesos
@@ -25,7 +25,7 @@ CREATE TABLE roles_accesos (
 -- Crear la tabla terceros
 CREATE TABLE terceros (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
+    name VARCHAR(50),
     apellido VARCHAR(50),
     correo_electronico VARCHAR(100) UNIQUE,
     telefono VARCHAR(15),
@@ -36,7 +36,7 @@ CREATE TABLE terceros (
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_persona INT,
-    nombre_usuario VARCHAR(100) UNIQUE,
+    name_usuario VARCHAR(100) UNIQUE,
     contrasenia VARCHAR(100),
     rol_id INT,
     FOREIGN KEY (id_persona) REFERENCES terceros(id),
@@ -46,13 +46,13 @@ CREATE TABLE usuarios (
 -- Tabla Habilidades
 CREATE TABLE Habilidades (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    NombreHabilidad VARCHAR(50)
+    nameHabilidad VARCHAR(50)
 );
 
 -- Tabla Conocimientos
 CREATE TABLE Conocimientos (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    NombreConocimiento VARCHAR(50)
+    nameConocimiento VARCHAR(50)
 );
 
 -- Tabla Usuarios_Habilidades (Relación entre Usuarios y Habilidades)
@@ -76,26 +76,26 @@ CREATE TABLE Usuarios_Conocimientos (
 -- Crear la tabla prioridades
 CREATE TABLE prioridades (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_prioridad VARCHAR(20)
+    name_prioridad VARCHAR(20)
 );
 
 -- Crear la tabla estados_tareas
 CREATE TABLE estados_tareas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_estado_tarea VARCHAR(20)
+    name_estado_tarea VARCHAR(20)
 );
 
 -- Crear la tabla tipos_de_tarea
 CREATE TABLE tipos_de_tarea (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_tipo VARCHAR(50),
+    name_tipo VARCHAR(50),
     tiempo_promedio INT
 );
 
 -- Crear la tabla tareas---------------------------------------------------------
 CREATE TABLE tareas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_tarea VARCHAR(100),
+    name_tarea VARCHAR(100),
     descripcion_detallada TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_vencimiento DATE,
@@ -142,7 +142,7 @@ CREATE TABLE detalle_metrica_estados (
 -- Crear la tabla etiquetas
 CREATE TABLE etiquetas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_etiqueta VARCHAR(50)
+    name_etiqueta VARCHAR(50)
 );
 
 -- Crear la tabla tareas_etiquetas
@@ -169,7 +169,7 @@ CREATE TABLE comentarios (
 CREATE TABLE archivos_adjuntos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tarea_id INT,
-    nombre_archivo VARCHAR(100),
+    name_archivo VARCHAR(100),
     ruta_archivo VARCHAR(255),
     FOREIGN KEY (tarea_id) REFERENCES tareas(id)
 );
@@ -230,13 +230,13 @@ CREATE TABLE log_cambios (
 -- Crear la tabla recursos_categorias
 CREATE TABLE recursos_categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_categoria VARCHAR(50)
+    name_categoria VARCHAR(50)
 );
 
 -- Crear la tabla recursos
 CREATE TABLE recursos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_recurso VARCHAR(50),
+    name_recurso VARCHAR(50),
     almacenable BOOLEAN,
     categoria_recurso_id INT,
     FOREIGN KEY (categoria_recurso_id) REFERENCES recursos_categorias(id)
@@ -260,7 +260,7 @@ CREATE TABLE tareas_recursos (
 -- Crear la tabla kpis_categorias
 CREATE TABLE kpis_categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_categoria VARCHAR(50)
+    name_categoria VARCHAR(50)
 );
 
 -- Crear la tabla kpis_historial

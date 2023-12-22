@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\TaskType;
+use App\Models\TaskTypeSkill;
 use Illuminate\Database\Seeder;
 
 class TaskTypeSkillSeeder extends Seeder
@@ -13,6 +15,6 @@ class TaskTypeSkillSeeder extends Seeder
      */
     public function run()
     {
-        //
+        TaskTypeSkill::factory(50)->create();
     }
 }

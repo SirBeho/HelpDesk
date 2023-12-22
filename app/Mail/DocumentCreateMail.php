@@ -13,11 +13,11 @@ class DocumentCreateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $numero_task;
-    public $nombre_documento;
-    public function __construct($numero_task)
+    public $numero_Task;
+    public $name_documento;
+    public function __construct($numero_Task)
     {
-        $this->numero_task = $numero_task;
+        $this->numero_Task = $numero_Task;
     }
 
     public function build()

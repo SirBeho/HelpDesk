@@ -20,9 +20,9 @@ class UserController extends Controller
                 Session::forget('msj');
             }
 
-            $users = User::select('id', 'name', 'telefono', 'email', 'empresa', 'rnc', 'status', 'rol_id')->with('rol')->get();
+            $users = User::select('id', 'name', 'telefono', 'email', 'status', 'rol_id')->with('rol')->get();
 
-            $roles = Rol::select('id', 'nombre')->where('status', 1)->get();
+            $roles = Rol::select('id', 'name')->where('status', 1)->get();
 
             return Inertia::render('Usuarios/Index', [
                 'users' => $users,
@@ -42,8 +42,8 @@ class UserController extends Controller
             $request->name != null && $user->name = $request->name;
             $request->email != null && $user->email = $request->email;
             $request->password != null && $user->password = $request->password;
-            $request->empresa != null && $user->empresa = $request->empresa;
-            $request->rnc != null && $user->rnc = $request->rnc;
+           
+          
             $request->rol_id != null && $user->rol_id = $request->rol_id;
             $request->status != null && $user->status = $request->status;
             $request->telefono != null && $user->telefono = $request->telefono;

@@ -22,7 +22,7 @@ class UserCreatedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Bienvenido a Tesoria')
+        return $this->subject('Bienvenido a Task Assignment')
             ->view('emails-templates.user-created');
             
     }

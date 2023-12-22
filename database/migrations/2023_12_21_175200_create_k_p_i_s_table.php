@@ -17,6 +17,7 @@ class CreateKPISTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->default('');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

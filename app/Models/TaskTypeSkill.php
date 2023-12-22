@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TaskTypeSkill extends Model
 {
     use HasFactory;
-    protected $table = "task_type_skills";
+    protected $table = "Task_type_skills";
     
 }

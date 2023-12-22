@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\NotificacionController;
 use App\Models\Notificacion;
-use App\Models\task;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -42,16 +42,16 @@ class HandleInertiaRequests extends Middleware
         if ($authUser) {
             if ($authUser->rol_id == 2) {
                 $user = $authUser->load(
-                    'taskes.tipo',
-                    'taskes.status',
-                    'taskes.user',
-                    'taskes.files.user',
-                    'taskes.comentarios',
-                    'taskes.userAsignado'
+                    'Tasks.tipo',
+                    'Tasks.status',
+                    'Tasks.user',
+                    'Tasks.files.user',
+                    'Tasks.comentarios',
+                    'Tasks.userAsignado'
                 );
             } else {
                 $user = auth()->user();
-                $user['taskes'] = task::all()->load('tipo', 'status', 'user', 'files.user', 'comentarios', 'userAsignado');
+                $user['Tasks'] = Task::all()->load('tipo', 'status', 'user', 'files.user', 'comentarios', 'userAsignado');
             }
         }
 

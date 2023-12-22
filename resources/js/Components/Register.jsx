@@ -7,7 +7,7 @@ export default function Register({ roles, setData, isCliente, data, submit, chan
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-3/5">
                         <label htmlFor="name" className="text-xs">
-                            Nombre Completo
+                            name Completo
                         </label>
                         <input type="text" name="name" id="name" className="h-9 rounded-md w-full outline-none"
                             value={data.name} required
@@ -50,7 +50,7 @@ export default function Register({ roles, setData, isCliente, data, submit, chan
                             </option>
                             {roles.map(rol => (
                                 <option key={rol.id} value={rol.id}>
-                                    {rol.nombre}
+                                    {rol.name}
                                 </option>
 
                             ))}

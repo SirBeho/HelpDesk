@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Priority extends Model
 {
     use HasFactory;
-    protected $table = "priorites";
+    protected $table = "priorities";
 }

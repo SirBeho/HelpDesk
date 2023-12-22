@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Notificacion;
-use App\Models\task;
+use App\Models\Task;
 use App\Models\User;
 use App\Notifications\NewDocumentsNotification;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -26,14 +26,14 @@ class FileController extends Controller
             'file.*.mimes' => 'El archivo debe ser una imagen o un archivo PDF, Word o Exel.',
             'file.*.max' => 'El archivo no debe ser mayor de 2MB.',
             'file.*.uploaded' => 'El archivo no es valido.',
-            'task_id.exists' => 'La task no existe.',
-            // 'nombre.*.unique_name' => 'El nombre esta duplicado.',
+            'Task_id.exists' => 'La Task no existe.',
+            // 'name.*.unique_name' => 'El name esta duplicado.',
         ];
 
         $validator = validator($request->all(), [
             'file.*' => 'required|file|mimes:xlsx,jpeg,jpg,png,docx,pdf|max:2048',
-            'nombre.*' => 'required|unique_name',
-            'task_id' => 'required|exists:taskes,id',
+            'name.*' => 'required|unique_name',
+            'Task_id' => 'required|exists:Tasks,id',
         ], $mensajes);
 
         if ($validator->fails()) {
@@ -43,16 +43,16 @@ class FileController extends Controller
 
                 if ($value[0] == "validation.unique_name") {
                     $index = substr($key, 7);
-                    var_dump("nombre duplicado");
-                    $nombre = $request->nombre[$index];
+                    var_dump("name duplicado");
+                    $name = $request->name[$index];
                     $formattedErrors["duplicados"] = true;
-                    $formattedErrors["archivo_error"][] =  $nombre;
+                    $formattedErrors["archivo_error"][] =  $name;
                 } elseif (substr($key, 0, 4) == 'file') {
                     $index = substr($key, 5);
                     var_dump("file");
-                    $nombre = $request->nombre[$index];
+                    $name = $request->name[$index];
                     $formattedErrors["error"][] =  "(" . ($index + 1) . ")-> " . $value[0];
-                    $formattedErrors["archivo_error"][] =  $nombre;
+                    $formattedErrors["archivo_error"][] =  $name;
                 } else {
                     $formattedErrors["error"][] = $value[0];
                 }
@@ -60,11 +60,11 @@ class FileController extends Controller
 
             session()->put('msj', ['error' => $formattedErrors]);
 
-            if (task::findOrFail($request->task_id)->tipo_id < 3) {
+            if (Task::findOrFail($request->Task_id)->tipo_id < 3) {
                 return redirect('panel');
             }
 
-            return redirect('admtaskes');
+            return redirect('AdmTasks');
         }
 
 
@@ -72,7 +72,7 @@ class FileController extends Controller
         $mensajesErrores = null;
 
         try {
-            $task_numero = task::findOrFail($request->task_id)->numero;
+            $Task_numero = Task::findOrFail($request->Task_id)->numero;
 
             foreach ($request->file('file') as $index => $file) {
 
@@ -82,13 +82,13 @@ class FileController extends Controller
                         $extension = $file->getClientOriginalExtension();
                         $encryptedData = Crypt::encrypt(file_get_contents($file->getPathname()));
 
-                        $referencia = time() . "_" . $index . $task_numero;
+                        $referencia = time() . "_" . $index . $Task_numero;
                         $name = $referencia . "." . $extension;
 
                         $data = [
-                            'nombre' => $request->nombre[$index],
+                            'name' => $request->name[$index],
                             'confidencial' => $request->confidencial[$index],
-                            'task_id' => $request->task_id,
+                            'Task_id' => $request->Task_id,
                             'referencia' => $referencia,
                             'extencion' => $extension,
                             'user_id' => Auth::user()->id,
@@ -101,7 +101,7 @@ class FileController extends Controller
 
                         //$file->storeAs('uploads', $name, 'public');
 
-                        $mensajesExitosos[] = "Archivo " . $request->nombre[$index] . " subido con éxito.";
+                        $mensajesExitosos[] = "Archivo " . $request->name[$index] . " subido con éxito.";
                     } catch (QueryException $e) {
                         $errormsj = $e->getMessage();
 
@@ -109,7 +109,7 @@ class FileController extends Controller
                             preg_match("/Duplicate entry '(.*?)' for key '(.*?)'/", $errormsj, $matches);
                             $duplicateValue = $matches[1] ?? '';
                             $duplicateKey = $matches[2] ?? '';
-                            $mensajesErrores[] = "Error al subir el archivo $duplicateValue: nombre duplicado";
+                            $mensajesErrores[] = "Error al subir el archivo $duplicateValue: name duplicado";
                         } else {
 
                             $mensajesErrores[] = "Error al subir el archivo:";
@@ -130,21 +130,21 @@ class FileController extends Controller
 
 
             if ($mensajesExitosos) :
-                $user_id = task::find($request->task_id)->user_id;
+                $user_id = Task::find($request->Task_id)->user_id;
                 $user = User::find($user_id);
 
                 if (auth()->user()->rol_id == 2) :
 
-                    $recipientEmail = 'contacto@tesoriard.com';
+                    $recipientEmail = 'contacto@Task Assignmentrd.com';
 
                     Notificacion::create(
                         [
-                            'task_id' => $request->task_id,
+                            'Task_id' => $request->Task_id,
                             'emisor_id' => Auth::user()->id,
-                            'message' => "Has recibido un nuevo documentos en la task: $task_numero"
+                            'message' => "Has recibido un nuevo documentos en la Task: $Task_numero"
                         ]
                     );
-                    $user->notify(new NewDocumentsNotification($recipientEmail, $task_numero));
+                    $user->notify(new NewDocumentsNotification($recipientEmail, $Task_numero));
 
                 else :
 
@@ -152,13 +152,13 @@ class FileController extends Controller
 
                     Notificacion::create(
                         [
-                            'task_id' => $request->task_id,
+                            'Task_id' => $request->Task_id,
                             'emisor_id' => Auth::user()->id,
                             'receptor_id' => $user_id,
-                            'message' =>  "Has recibido un nuevos documentos en la task: $task_numero"
+                            'message' =>  "Has recibido un nuevos documentos en la Task: $Task_numero"
                         ]
                     );
-                    $user->notify(new NewDocumentsNotification($recipientEmail, $task_numero));
+                    $user->notify(new NewDocumentsNotification($recipientEmail, $Task_numero));
                 endif;
 
 
@@ -169,11 +169,11 @@ class FileController extends Controller
             session()->put('msj', ['error' => 'Error en la acción realizada ']);
         }
 
-        if (task::findOrFail($request->task_id)->tipo_id < 3) {
+        if (Task::findOrFail($request->Task_id)->tipo_id < 3) {
             return redirect('panel');
         }
 
-        return redirect('admtaskes');
+        return redirect('AdmTasks');
     }
 
     public function download(Request $request)

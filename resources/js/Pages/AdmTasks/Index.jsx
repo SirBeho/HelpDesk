@@ -1,21 +1,21 @@
 import React, { useEffect, useReducer, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { task } from "@/Components/task";
+import { Task } from "@/Components/Task";
 import { format } from "date-fns";
 import Modal from "@/Components/Modal";
 
 
-export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }) {
+export default function AdmTasks({ auth, Tasktypes, msj, Task_id, statusList }) {
 
 
 
-    const taskes = auth.user.taskes.filter(task => task.tipo_id > 2);
+    const Tasks = auth.user.Tasks.filter(Task => Task.tipo_id > 2);
 
     const [dato, setdato] = useState(null);
     const [open, setOpen] = useState(0);
     const [select, setSelet] = useState(0);
-    const [datos_f, setDatos_f] = useState(taskes);
+    const [datos_f, setDatos_f] = useState(Tasks);
     const [edit, setEdit] = useState(false);
     const { data, setData, post } = useForm(null);
     const [show, setShow] = useState(msj != null);
@@ -30,16 +30,16 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
     });
 
     useEffect(() => {
-        setDatos_f(taskes);
+        setDatos_f(Tasks);
         if (open) {
-            const taskSeleccionada = taskes.find(
-                (task) => task.id === open
+            const TaskSeleccionada = Tasks.find(
+                (Task) => Task.id === open
             );
-            setdato(taskSeleccionada);
-            setData(taskSeleccionada);
+            setdato(TaskSeleccionada);
+            setData(TaskSeleccionada);
         }
 
-    }, [auth.user.taskes]);
+    }, [auth.user.Tasks]);
 
     useEffect(() => {
         if (msj?.error == null || msj?.error == []) {
@@ -51,17 +51,17 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
     useEffect(() => {
         
-        if (task_id && !open) {
+        if (Task_id && !open) {
           
-            abrir(parseInt(task_id));
+            abrir(parseInt(Task_id));
         }
-    }, [task_id]);
+    }, [Task_id]);
 
 
     useEffect(() => {
 
 
-        const filtered = taskes.filter((soli) => {
+        const filtered = Tasks.filter((soli) => {
 
            
             if (filtro.estado && soli.status_id !== filtro.estado) {
@@ -83,9 +83,9 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
     }, [filtro]);
 
-    const abrir = (taskId) => {
+    const abrir = (TaskId) => {
       
-        if (open == taskId) {
+        if (open == TaskId) {
           
             setOpen(0);
             setTimeout(() => setdato(null), 500);
@@ -93,12 +93,12 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
         } else {
            
-            setOpen(taskId);
-            const taskSeleccionada = taskes.find(
-                (task) => task.id === taskId
+            setOpen(TaskId);
+            const TaskSeleccionada = Tasks.find(
+                (Task) => Task.id === TaskId
             );
-            setdato(taskSeleccionada);
-            setData(taskSeleccionada);
+            setdato(TaskSeleccionada);
+            setData(TaskSeleccionada);
         }
     };
 
@@ -113,7 +113,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
     const handleDownload = (archivo) => {
         const id = archivo.id;
-        const filename = archivo.nombre + '.' + archivo.extencion;
+        const filename = archivo.name + '.' + archivo.extencion;
 
         axios
             .post('/download', { id }, { responseType: 'blob' })
@@ -134,7 +134,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
         e.preventDefault();
         
 
-        post(route("task.update"));
+        post(route("Task.update"));
     };
 
 
@@ -142,11 +142,11 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
         <AuthenticatedLayout user={auth.user}
             msj={msj}
             countNotificaciones={auth.countNotificaciones}
-            task_id={open}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de taskes</h2>}
+            Task_id={open}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Administración de Tasks</h2>}
 
         >
-            <Head title="taskes" />
+            <Head title="Tasks" />
 
             <div className=" pb-1  ">
                 <div className=" m-5 h-full bg-white shadow-lg   rounded-md gap-10 p-10 pt-4">
@@ -181,7 +181,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                         <option value={0} select>Todas</option>
                                         {statusList.map((estado) => (
                                             <option key={estado.id} value={estado.id}>
-                                                {estado.nombre}
+                                                {estado.name}
                                             </option>
                                         ))}
                                     </select>
@@ -204,15 +204,15 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                     <div className="flex  gap-16">
                         <ul className="flex flex-col col gap-4 overflow-hidden overflow-y-scroll  h-full max-h-[740px] p-2 rounded-md pe-8  ">
 
-                            {datos_f?.length ? (datos_f.map((task) => (
-                                <task
+                            {datos_f?.length ? (datos_f.map((Task) => (
+                                <Task
                                     adm={auth.user.id != 2}
-                                    key={task.id}
-                                    data={task}
-                                    click={() => abrir(task.id)}
+                                    key={Task.id}
+                                    data={Task}
+                                    click={() => abrir(Task.id)}
                                     open={open}
                                 />
-                            ))) : (<h1>No hay taskes</h1>)}
+                            ))) : (<h1>No hay Tasks</h1>)}
                         </ul>
 
                         <div className={`flex flex-col gap-3  ${open ? "w-[600px]" : "w-0 opacity-0 "}   p-4 bg-gray-200 rounded-md shadow-xl ms-4    overflow-hidden transition-all duration-500 `}>
@@ -224,7 +224,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                         <tbody className=" bg-white py-2 p-4 rounded-md flex justify-between " >
                                             <tr className="w-full">
                                                 <td className="font-bold w-44 py-2 whitespace-nowrap">
-                                                    Nombre solicitante
+                                                    name solicitante
                                                 </td>
                                                 <td className="">
                                                     {dato.user.name}
@@ -246,7 +246,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                             <tbody >
                                                 <tr className="w-fit p-6">
                                                     <td className="font-bold w-44 py-2">
-                                                        Número task
+                                                        Número Task
                                                     </td>
                                                     <td>{dato.numero}</td>
                                                 </tr>
@@ -266,13 +266,13 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                                     <td className="font-bold w-44 py-2">
                                                         Tramite
                                                     </td>
-                                                    <td>{dato.tipo.nombre}</td>
+                                                    <td>{dato.tipo.name}</td>
                                                 </tr>
                                                 {auth.user.rol_id !== 2 && (
                                                     <>
                                                         <tr className="w-fit">
                                                             <td className="font-bold w-44 py-2">
-                                                                Nombre empresa
+                                                                name empresa
                                                             </td>
                                                             <td>{dato.user.empresa}</td>
                                                         </tr>
@@ -301,7 +301,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                                         Estatus
                                                     </td>
                                                     <td className="flex gap-2 py-2">
-                                                        {dato.status.nombre}
+                                                        {dato.status.name}
                                                         {auth.user.rol_id != 2 && (<span onClick={() => setIsOpenModalStatus(true)}
                                                             className="cursor-pointer text-blue-600">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
@@ -344,8 +344,8 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                         </div>
                                         {(auth.user.rol_id != 2) &&
                                             <div className="flex justify-between w-full gap-5">
-                                                <span className="w-20">Tesoria:</span><input value={comentario} onChange={(e) => setComentario(e.target.value)} type="text" className="h-8 w-full rounded-md" />
-                                                <label onClick={() => post(route("comentario.create", { task_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit cursor-pointer"> Agregar</label>
+                                                <span className="w-20">Task Assignment:</span><input value={comentario} onChange={(e) => setComentario(e.target.value)} type="text" className="h-8 w-full rounded-md" />
+                                                <label onClick={() => post(route("comentario.create", { Task_id: dato.id, comentario: comentario }))} className="bg-blue-500 px-2 py-1 rounded-lg font-semibold text-white min-w-fit cursor-pointer"> Agregar</label>
                                             </div>}
 
                                         <div className="flex flex-wrap gap-1">
@@ -355,7 +355,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                                 <div key={comentario.id} className="flex gap-3 w-full group ">
                                                     <div className="flex flex-col justify-between">
                                                         <div className="flex flex-col">
-                                                            <span className="w-20">Tesoria:</span>
+                                                            <span className="w-20">Task Assignment:</span>
                                                             <span className="hidden text-sm group-hover:block "> {comentario.created_at && format(new Date(comentario.created_at), 'dd/MM/yyyy')}</span>
                                                         </div>
                                                         <span className='hidden  mt-2 group-hover:block cursor-pointer self' onClick={() => post(route("comentario.destroy", { comentario_id: comentario.id }))}>
@@ -400,7 +400,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
                                                         </div>
                                                         <span className=" left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                            {archivo.nombre}
+                                                            {archivo.name}
                                                         </span>
 
                                                     </div>
@@ -435,7 +435,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                                         ) : null}
                                                     </div>
                                                     <span className=" left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                        {archivo.nombre}
+                                                        {archivo.name}
                                                     </span>
                                                 </div>
                                             ))}
@@ -454,13 +454,13 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
                                         <form onSubmit={submit} className="flex flex-col w-full gap-4 text-textgray p-4">
 
-                                            <label htmlFor="nombre" className="text-xs flex flex-col ">
-                                                Numero de task
+                                            <label htmlFor="name" className="text-xs flex flex-col ">
+                                                Numero de Task
                                                 <input
                                                     disabled
                                                     type="text"
-                                                    id="nombre"
-                                                    name="nombre"
+                                                    id="name"
+                                                    name="name"
                                                     value={data.numero}
 
                                                     className="h-9 rounded-md  outline-none px-2"
@@ -471,19 +471,19 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
                                             <div className="flex gap-4 justify-between ">
 
                                                 <label className="text-xs flex flex-col  w-full">
-                                                    task
+                                                    Task
                                                     <select
                                                         required
-                                                        name="task_id"
-                                                        id="task_id"
+                                                        name="Task_id"
+                                                        id="Task_id"
                                                         value={data.tipo_id}
                                                         onChange={(e) => setData("tipo_id", e.target.value)}
                                                         className="h-9 rounded-md  outline-none px-2"
                                                     >
                                                         <option value="">Seleccione servicio</option>
-                                                        {tipotaskes.map((tipo) =>
+                                                        {Tasktypes.map((tipo) =>
                                                         (<option key={tipo.id} value={tipo.id}>
-                                                            {tipo.nombre}
+                                                            {tipo.name}
                                                         </option>)
                                                         )
                                                         }
@@ -575,11 +575,11 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
             <Modal show={isOpenModalStatus} maxWidth="sm">
 
                 <div className="flex flex-col items-center gap-5 relative  ">
-                    <h1 className="font-semibold text-xl">Cambiar estado de task</h1>
+                    <h1 className="font-semibold text-xl">Cambiar estado de Task</h1>
 
                     <select
-                        name="statustask"
-                        id="statustask"
+                        name="statusTask"
+                        id="statusTask"
                         defaultValue={dato?.status.id}
                         onChange={(e) => setData("status_id", e.target.value)}
                         className="w-60 h-9 rounded-md  outline-none"
@@ -587,7 +587,7 @@ export default function admtaskes({ auth, tipotaskes, msj, task_id, statusList }
 
                         {statusList.map((tipo) =>
                         (<option key={tipo.id} value={tipo.id}>
-                            {tipo.nombre}
+                            {tipo.name}
                         </option>)
                         )
                         }

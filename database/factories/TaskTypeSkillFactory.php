@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 class TaskTypeSkillFactory extends Factory
 {
@@ -13,8 +14,17 @@ class TaskTypeSkillFactory extends Factory
      */
     public function definition()
     {
+
+      
+        
         return [
-            //
+            'task_type_id' => function () {
+                return DB::table('TaskTypes')->inRandomOrder()->first()->id;
+            },
+            'skill_id' => function () {
+                return DB::table('skills')->inRandomOrder()->first()->id;
+            },
+            'level' => $this->faker->numberBetween(0, 5),
         ];
     }
 }

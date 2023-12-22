@@ -38,11 +38,10 @@ export default function Login({ status, canResetPassword }) {
             <div className="w-9/12 h-4/5 bg-softgray grid grid-cols-2 p-10">
 
                 <div className="flex flex-col justify-center p-20">
-                    <h1 className="text-darkblue font-bold text-3xl px-5" >Bienvenidos a Tesoria Online</h1>
+                    <h1 className="text-darkblue font-bold text-3xl px-5" >Bienvenidos a Task Assignment Online</h1>
                     <p className="text-textgray w-96 p-5">
-                        Tu destino en linea para hacer negocios con tesoria
+                        Tu destino en linea para hacer negocios con Task Assignment
                     </p>
-                    <a className='ms-5 hover:underline' href="https://tesoria.online/">← Ir a Tesoria</a>
                 </div>
 
                 <div className="flex items-center justify-center">

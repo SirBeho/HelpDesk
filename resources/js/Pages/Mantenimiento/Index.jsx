@@ -1,11 +1,11 @@
 
 import { DataTable } from '@/Components/DataTable';
 import DeleteUser from '@/Components/DeleteUser';
-import { EditTipotask } from '@/Components/EditTipotask';
+import { EditTaskType } from '@/Components/EditTaskType';
 import Empresa from '@/Components/Empresa';
 import Loading from '@/Components/Loading';
 import Modal from '@/Components/Modal';
-import { NewTipotask } from '@/Components/NewTipotask';
+import { NewTaskType } from '@/Components/NewTaskType';
 import { SuccessAlert } from '@/Components/SuccessAlert';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from "@inertiajs/react";
@@ -13,12 +13,12 @@ import { useEffect, useState } from 'react';
 
 
 
-export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
-  const [currentData, setCurrentData] = useState(tipotaskes);
+export default function Mantenimiento({ auth, Tasktypes, msj, empresa }) {
+  const [currentData, setCurrentData] = useState(Tasktypes);
   const [modalDestroy, setModalDestroy] = useState(false)
   const [newTipoSilicitud, setNewTipoSilicitud] = useState(false)
   const [editTipoSilicitud, setEditTipoSilicitud] = useState(false)
-  const [tipotaskData, setTipotaskData] = useState();
+  const [TaskTypeData, setTaskTypeData] = useState();
   const [succesAlert, setSuccesAlert] = useState(msj?.success);
   const [loading, setLoading] = useState(false)
 
@@ -31,58 +31,58 @@ export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
   }, [msj]);
 
   useEffect(() => {
-    if (tipotaskes) {
-      const dataList = tipotaskes.map(tipotask => {
+    if (Tasktypes) {
+      const dataList = Tasktypes.map(TaskType => {
 
-        delete tipotask.created_at;
-        delete tipotask.updated_at;
+        delete TaskType.created_at;
+        delete TaskType.updated_at;
 
 
-        if (tipotask.tipo === 1) {
-          tipotask['categoria'] = 'Servicios';
+        if (TaskType.tipo === 1) {
+          TaskType['categoria'] = 'Servicios';
 
-          return tipotask;
+          return TaskType;
         }
-        if (tipotask.tipo === 2) {
-          tipotask['categoria'] = 'Certificaciones';
+        if (TaskType.tipo === 2) {
+          TaskType['categoria'] = 'Certificaciones';
 
-          return tipotask;
+          return TaskType;
         }
-        if (tipotask.tipo === 3) {
-          tipotask['categoria'] = 'Estados Financieros';
+        if (TaskType.tipo === 3) {
+          TaskType['categoria'] = 'Estados Financieros';
 
-          return tipotask;
+          return TaskType;
         }
-        if (tipotask.tipo === 4) {
-          tipotask['categoria'] = 'Reportes Generales';
+        if (TaskType.tipo === 4) {
+          TaskType['categoria'] = 'Reportes Generales';
 
-          return tipotask;
+          return TaskType;
         }
 
       })
       setCurrentData(dataList);
     }
-  }, [tipotaskes]);
+  }, [Tasktypes]);
 
   const tbStructure = {
-    'Tipo de task': 'nombre',
+    'Tipo de Task': 'name',
     'Categoria': 'categoria',
     'Status': 'status'
   }
 
-  function getTipotaskData(id) {
-    const data = tipotaskes.filter(tipotask => tipotask.id === id);
-    setTipotaskData(data[0]);
+  function getTaskTypeData(id) {
+    const data = Tasktypes.filter(TaskType => TaskType.id === id);
+    setTaskTypeData(data[0]);
   }
 
   const deleteModal = (id) => {
-    getTipotaskData(id)
+    getTaskTypeData(id)
     setModalDestroy(true)
 
   }
 
   const editModal = (id) => {
-    getTipotaskData(id)
+    getTaskTypeData(id)
     setEditTipoSilicitud(true)
   }
 
@@ -91,7 +91,7 @@ export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
     setModalDestroy(false)
     setLoading(true);
 
-    post(route('tipotask.delete', tipotaskData.id), {
+    post(route('TaskType.delete', TaskTypeData.id), {
       onSuccess: () => {
         setLoading(false);
       }
@@ -114,7 +114,7 @@ export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
               <Link href={route('empresa.index')}className={`inline-block p-4 rounded-t-lg ${empresa ? 'activeTab': 'NoactiveTab'}`}>Empresa</Link>
             </li>
             <li className="me-2">
-              <Link href={route('tipotask.index')} aria-current="page" className={` inline-block p-4 rounded-t-lg    ${tipotaskes ? 'activeTab' : 'NoactiveTab'}`}>taskes</Link>
+              <Link href={route('TaskType.index')} aria-current="page" className={` inline-block p-4 rounded-t-lg    ${Tasktypes ? 'activeTab' : 'NoactiveTab'}`}>Tasks</Link>
             </li>
 
             
@@ -134,7 +134,7 @@ export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
           }
 
           {newTipoSilicitud &&
-            <NewTipotask
+            <NewTaskType
               show={newTipoSilicitud}
               hideModal={() => setNewTipoSilicitud(false)}
               setLoading={setLoading}
@@ -142,9 +142,9 @@ export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
           }
 
           {editTipoSilicitud &&
-            <EditTipotask
+            <EditTaskType
               show={editTipoSilicitud}
-              tipotaskData={tipotaskData}
+              TaskTypeData={TaskTypeData}
               hideModal={() => setEditTipoSilicitud(false)}
               setLoading={setLoading}
             />
@@ -165,7 +165,7 @@ export default function Mantenimiento({ auth, tipotaskes, msj, empresa }) {
             <DeleteUser
               hideModal={() => setModalDestroy(false)}
               destroy={destroy}
-              selectedUser={tipotaskData}
+              selectedUser={TaskTypeData}
             />
 
           </Modal>

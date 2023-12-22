@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class TaskStat extends Model
 {
     use HasFactory;
-    protected $table = "task_status";
+    protected $table = "Task_status";
 }

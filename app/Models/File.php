@@ -14,11 +14,11 @@ class File extends Model
     protected $table = "files";
     protected $fillable = [
         'referencia',
-        'nombre',
+        'name',
         'extencion', 
         'confidencial', 
         'user_id', 
-        'task_id', 
+        'Task_id', 
     ];
 
 

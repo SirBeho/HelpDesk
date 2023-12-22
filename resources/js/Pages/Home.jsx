@@ -38,7 +38,7 @@ export default function Dashboard({ auth }) {
                     </h1>
 
                     <p className="font-bold text-4xl w-full">
-                        Descubre el máximo potencial de tu negocio con Tesoria!
+                        Descubre el máximo potencial de tu negocio con Task Assignment!
                     </p>
 
                     <p className="font-medium text-lg w-96 py-6">

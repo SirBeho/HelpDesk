@@ -2,7 +2,7 @@ import React from 'react'
 import { format } from 'date-fns';
 
 
-export const task = ({data,click,open,adm}) => {
+export const Task = ({data,click,open,adm}) => {
     
     const formattedDate = format(new Date(data.created_at),'dd/MM/yyyy hh:mm:ss a')
     const tipo = ["bg-blue-500","bg-[#EAB308]","bg-cyan-500","bg-blue-800"];
@@ -20,12 +20,12 @@ export const task = ({data,click,open,adm}) => {
                          <span>#{data.numero}</span>
                      </div>
             ): ( <span>
-                task: {data.numero}
+                Task: {data.numero}
             </span>)}
                
 
                 <p className="font-medium text-sm">
-                {data.tipo.nombre}
+                {data.tipo.name}
                 {data.tipo_id == 1 ? " "+data.descripcion : ""}
                 </p>
                     
@@ -34,7 +34,7 @@ export const task = ({data,click,open,adm}) => {
                         {formattedDate}
                     </span>
                     <span className="text-xs">
-                        {data.status.nombre}
+                        {data.status.name}
                     </span>
                 </div>
                 

@@ -3,24 +3,24 @@ import { useState, useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import jsPDF from 'jspdf';
 import { format } from "date-fns";
-import Reporte_soli from "./reporte_taskes"
+import Reporte_soli from "./reporte_Tasks"
 import Reporte_doc from "./reporte_documentos"
 import { createRoot } from 'react-dom/client';
 
-export default function documentos({ auth, tipo_taskes, clientes, estados, empresa }) {
+export default function documentos({ auth, TaskTypes, clientes, estados, empresa }) {
 
 
 
-  const taskes = auth.user.taskes.filter(task => task.tipo_id > 2);
+  const Tasks = auth.user.Tasks.filter(Task => Task.tipo_id > 2);
 
 
   const documentos = [];
-  taskes.forEach((task) => {
-    if (task.files && task.files.length > 0) {
-      task.files.forEach((documento) => {
-        const soli = task;
+  Tasks.forEach((Task) => {
+    if (Task.files && Task.files.length > 0) {
+      Task.files.forEach((documento) => {
+        const soli = Task;
         delete soli.files;
-        documento.task = soli;
+        documento.Task = soli;
         documentos.push(documento);
       });
     }
@@ -28,7 +28,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
 
   
   const [documentos_f, setDocumentos_f] = useState(documentos);
-  const [taskes_f, settaskes_f] = useState(taskes);
+  const [Tasks_f, setTasks_f] = useState(Tasks);
   const [reportes, setReportes] = useState(0);
   const [datos, setDatos] = useState({
     inicio: 0,
@@ -54,7 +54,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
     const fin = new Date(datos.fin + ' 23:59:59');
 
 
-    const taskes_filtradas = taskes.filter((soli) => {
+    const Tasks_filtradas = Tasks.filter((soli) => {
 
       const fechaCreacion = new Date(soli.created_at);
       if (datos.inicio && fechaCreacion < inicio) {
@@ -96,7 +96,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
     });
 
     if (reportes == 0) {
-      settaskes_f(taskes_filtradas);
+      setTasks_f(Tasks_filtradas);
     } else {
       setDocumentos_f(documentos_filtrados);
     };
@@ -116,7 +116,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
 
     document.body.appendChild(container);
     if (reporte == 0) {
-      root.render(<Reporte_soli taskes_f={taskes_f} datos={data} empresa={empresa} />);
+      root.render(<Reporte_soli Tasks_f={Tasks_f} datos={data} empresa={empresa} />);
 
     } else if (reporte == 1) {
       root.render(<Reporte_doc documentos_f={documentos_f} datos={datos} empresa={empresa} />);
@@ -146,12 +146,12 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
 
     const data = [{
       ruta: '/reportes/generar/soli',
-      nombre: 'reporte_taskes.xlsx',
+      name: 'reporte_Tasks.xlsx',
       datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
-      taskes_f: taskes_f,
+      Tasks_f: Tasks_f,
     }, {
       ruta: '/reportes/generar/docu',
-      nombre: 'reporte_documentos.xlsx',
+      name: 'reporte_documentos.xlsx',
       datos: { ...datos, inicio: datos.inicio ? format(new Date(datos.inicio), "dd/MM/yyyy") : "Inicio", fin: datos.fin ? format(new Date(datos.fin), "dd/MM/yyyy") : "Fin" },
       documentos_f: documentos_f,
     }
@@ -165,7 +165,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', data[reportes].nombre);
+        link.setAttribute('download', data[reportes].name);
         document.body.appendChild(link);
         link.click();
       })
@@ -190,7 +190,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
               className={` rounded-t-2xl cursor-pointer flex items-center gap-2 h-10 p-2 bg-gray-300  ${reportes == 0 ? "bg-white " : ""
                 }  font-semibold text-base `}>
               <img src="/assets/svg/export2.svg" width={30} height={30} alt="icon documento" />
-              taskes
+              Tasks
             </button>
 
             <button
@@ -247,7 +247,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
             {reportes == 0 && (
               <div className='flex gap-8'>
                 <label className="flex  flex-col "  >
-                  <span className='font-semibold'> Tipo taskes:</span>
+                  <span className='font-semibold'> Tipo Tasks:</span>
 
                   <select
                     required
@@ -258,9 +258,9 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
                     className="p-0 px-2 w-fit rounded-md h-8"
                   >
                     <option value={0} select>Todas</option>
-                    {tipo_taskes.map((task) => (
-                      <option key={task.id} value={task.id}>
-                        {task.nombre}
+                    {TaskTypes.map((Task) => (
+                      <option key={Task.id} value={Task.id}>
+                        {Task.name}
                       </option>
                     ))}
                   </select>
@@ -281,7 +281,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
                     <option value={''} select>Todos</option>
                     {estados.map((estado) => (
                       <option key={estado.id} value={estado.id}>
-                        {estado.nombre}
+                        {estado.name}
                       </option>
                     ))}
                   </select>
@@ -324,7 +324,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
 
                       <tr>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          # task
+                          # Task
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Tipo
@@ -347,15 +347,15 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
                       </tr>
                     </thead>
                     <tbody>
-                      {taskes_f && (
-                        taskes_f.map((user, i) => (
+                      {Tasks_f && (
+                        Tasks_f.map((user, i) => (
                           <tr key={i}>
 
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.numero}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{user.tipo.nombre}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{user.tipo.name}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.user.name}</p>
@@ -367,7 +367,7 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
                               <p className="text-gray-900 whitespace-no-wrap">{format(new Date(user.created_at), "dd/MM/yyyy hh:mm:ss a")}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{user.status.nombre}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{user.status.name}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{user.user.email}</p>
@@ -409,16 +409,16 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
                           ID
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Nombre
+                          name
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Tipo Documento
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                           # task            
+                           # Task            
                               </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Tipo task
+                          Tipo Task
                         </th>
                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           Usuario
@@ -437,16 +437,16 @@ export default function documentos({ auth, tipo_taskes, clientes, estados, empre
                               {documento.id}
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{documento.nombre}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.name}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{documento.extencion}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{documento.task.numero}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.Task.numero}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">{documento.task.tipo.nombre}</p>
+                              <p className="text-gray-900 whitespace-no-wrap">{documento.Task.tipo.name}</p>
                             </td>
                             <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                               <p className="text-gray-900 whitespace-no-wrap">{documento.user.name}</p>

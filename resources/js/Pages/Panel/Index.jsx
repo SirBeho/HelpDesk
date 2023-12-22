@@ -10,29 +10,29 @@ export default function Panel({ auth, msj, clientes }) {
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(0);
     const [showEdit, setShowEdit] = useState(0);
-    const taskes = auth.user.taskes.filter(task => task.tipo_id < 3);
+    const Tasks = auth.user.Tasks.filter(Task => Task.tipo_id < 3);
 
 
-    taskes.sort((a, b) => {
+    Tasks.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
 
     const [opencliente, setOpenCliente] = useState(auth.user);
 
-    const datos_f = taskes.reduce((taskesPorTipo, task) => {
-        const year = new Date(task.created_at).getFullYear();
+    const datos_f = Tasks.reduce((TasksPorTipo, Task) => {
+        const year = new Date(Task.created_at).getFullYear();
 
-        if (task.tipo_id === 1 && task.user_id == opencliente?.id) {
+        if (Task.tipo_id === 1 && Task.user_id == opencliente?.id) {
 
-            taskesPorTipo.tipo1[year] = taskesPorTipo.tipo1[year] || [];
-            taskesPorTipo.tipo1[year].push(task);
-        } else if (task.tipo_id === 2 && task.user_id == opencliente?.id) {
+            TasksPorTipo.tipo1[year] = TasksPorTipo.tipo1[year] || [];
+            TasksPorTipo.tipo1[year].push(Task);
+        } else if (Task.tipo_id === 2 && Task.user_id == opencliente?.id) {
 
-            taskesPorTipo.tipo2[year] = taskesPorTipo.tipo2[year] || [];
-            taskesPorTipo.tipo2[year].push(task);
+            TasksPorTipo.tipo2[year] = TasksPorTipo.tipo2[year] || [];
+            TasksPorTipo.tipo2[year].push(Task);
         }
 
-        return taskesPorTipo;
+        return TasksPorTipo;
     }, { tipo1: {}, tipo2: {} });
 
 
@@ -84,7 +84,7 @@ export default function Panel({ auth, msj, clientes }) {
 
     const handleDownload = (archivo) => {
         const id = archivo.id;
-        const filename = archivo.nombre + '.' + archivo.extencion;
+        const filename = archivo.name + '.' + archivo.extencion;
         axios
             .post('/download', { id }, { responseType: 'blob' })
             .then((response) => {
@@ -123,7 +123,7 @@ export default function Panel({ auth, msj, clientes }) {
         console.log(data)
 
         setLoading(true);
-        post(route('task.create', showAlert), {
+        post(route('Task.create', showAlert), {
             onSuccess: () => {
 
                 setLoading(false);
@@ -160,7 +160,7 @@ export default function Panel({ auth, msj, clientes }) {
     function destroy() {
 
         setLoading(true);
-        post(route('task.destroy', showAlert), {
+        post(route('Task.destroy', showAlert), {
             onSuccess: () => {
                 setShowAlert(0)
                 setLoading(false);
@@ -173,7 +173,7 @@ export default function Panel({ auth, msj, clientes }) {
         e.preventDefault();
 
         setLoading(true);
-        post(route('task.update', { id: showEdit.id }), {
+        post(route('Task.update', { id: showEdit.id }), {
             onSuccess: () => {
                
                 setLoading(false);
@@ -183,23 +183,23 @@ export default function Panel({ auth, msj, clientes }) {
     }
 
 
-    function setDefaultEditData(task_) {
+    function setDefaultEditData(Task_) {
 
         setData({
             ...data,
-            'month': format(new Date(task_.created_at), "MM"),
-            'year': format(new Date(task_.created_at), "yyyy"),
-            'tipo_id': task_.tipo_id
+            'month': format(new Date(Task_.created_at), "MM"),
+            'year': format(new Date(Task_.created_at), "yyyy"),
+            'tipo_id': Task_.tipo_id
         })
 
-        setShowEdit(task_);
+        setShowEdit(Task_);
     };
 
 
 
     return (
         <AuthenticatedLayout
-            task_id={openmonth}
+            Task_id={openmonth}
             msj={msj}
             countNotificaciones={auth.countNotificaciones}
             user={auth.user}
@@ -237,12 +237,12 @@ export default function Panel({ auth, msj, clientes }) {
 
                             <div>
                                 <div className="flex items-center ">
-                                    <div className="font-bold w-44 py-2">Nombre solicitante</div>
+                                    <div className="font-bold w-44 py-2">name solicitante</div>
                                     <div>{opencliente.name}</div>
                                 </div>
 
                                 <div className="flex items-center ">
-                                    <div className="font-bold w-44 py-2">Nombre empresa</div>
+                                    <div className="font-bold w-44 py-2">name empresa</div>
                                     <div>{opencliente.empresa}</div>
 
                                 </div>
@@ -295,23 +295,23 @@ export default function Panel({ auth, msj, clientes }) {
                                         </thead>
 
                                         <div key={"t1" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "1" + year ? 'h-[400px]' : "h-0"}  `}>
-                                            {datos_f.tipo1[year].map((task, index) => (
-                                                <div key={task.id}>
-                                                    <div onClick={() => setOpenmonth(task.id)} className='cursor-pointer flex justify-between'>
-                                                        <div className="p-2 h-10">{task.descripcion} ({task.files?.length})</div>
+                                            {datos_f.tipo1[year].map((Task, index) => (
+                                                <div key={Task.id}>
+                                                    <div onClick={() => setOpenmonth(Task.id)} className='cursor-pointer flex justify-between'>
+                                                        <div className="p-2 h-10">{Task.descripcion} ({Task.files?.length})</div>
                                                         <div className='flex items-center'>
                                                             {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
                                                             {auth.user.rol_id == 1 && (
-                                                                <div className="p-2 h-10" onClick={() => { setDefaultEditData(task) }}>
+                                                                <div className="p-2 h-10" onClick={() => { setDefaultEditData(Task) }}>
                                                                     <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                         <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
                                                                     </svg>
 
                                                                 </div>)}
 
-                                                            {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && task.files.length === 0)) && (
-                                                                <div className="p-2 h-10" onClick={() => setShowAlert(task)}>
+                                                            {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && Task.files.length === 0)) && (
+                                                                <div className="p-2 h-10" onClick={() => setShowAlert(Task)}>
 
                                                                     <svg className="w-7 h-7 text-blue-400 hover:text-red-600">
                                                                         <use xlinkHref={"/assets/svg/delete.svg" + '#delete'} />
@@ -323,9 +323,9 @@ export default function Panel({ auth, msj, clientes }) {
                                                         </div>
                                                     </div>
 
-                                                    <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == task.id ? `` : "hidden "}`}>
-                                                        {task.files ? (
-                                                            task.files.map((archivo) => {
+                                                    <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == Task.id ? `` : "hidden "}`}>
+                                                        {Task.files ? (
+                                                            Task.files.map((archivo) => {
                                                                 const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
                                                                 return (
                                                                     <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
@@ -340,7 +340,7 @@ export default function Panel({ auth, msj, clientes }) {
 
                                                                         </div>
                                                                         <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                                            {archivo.nombre}
+                                                                            {archivo.name}
                                                                         </span>
 
                                                                     </div>
@@ -386,25 +386,25 @@ export default function Panel({ auth, msj, clientes }) {
 
                                             <div key={"tb2" + year} className={`block overflow-auto duration-500  transition-all ${openyear == "2" + year ? 'h-[400px]' : "h-0"}  `}>
 
-                                                {datos_f.tipo2[year].map((task) => (
-                                                    <div key={task.id} >
-                                                        <div onClick={() => setOpenmonth(task.id)} className='cursor-pointer flex justify-between'>
+                                                {datos_f.tipo2[year].map((Task) => (
+                                                    <div key={Task.id} >
+                                                        <div onClick={() => setOpenmonth(Task.id)} className='cursor-pointer flex justify-between'>
 
-                                                            <div className="p-2 h-10">{task.descripcion} ({task.files?.length})</div>
+                                                            <div className="p-2 h-10">{Task.descripcion} ({Task.files?.length})</div>
 
                                                             <div className='flex items-center'>
                                                                 {auth.user.rol_id == 2 && (<div className="p-2 h-10"><label htmlFor="file" className="bg-upload px-2 pb-1 rounded-lg font-semibold text-white"> + </label></div>)}
 
                                                                 {auth.user.rol_id == 2 && (
-                                                                    <div className="p-2 h-10" onClick={() => { setDefaultEditData(task) }}>
+                                                                    <div className="p-2 h-10" onClick={() => { setDefaultEditData(Task) }}>
                                                                         <svg className="w-7 h-7  text-cyan-600 hover:text-blue-600">
                                                                             <use xlinkHref={"/assets/svg/editar.svg" + '#editar'} />
                                                                         </svg>
 
                                                                     </div>)}
 
-                                                                {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && task.files.length === 0)) && (
-                                                                    <div className="p-2 h-10" onClick={() => setShowAlert(task)}>
+                                                                {(auth.user.rol_id == 1 || (auth.user.rol_id == 2 && Task.files.length === 0)) && (
+                                                                    <div className="p-2 h-10" onClick={() => setShowAlert(Task)}>
 
                                                                         <svg className="w-7 h-7 text-blue-400 hover:text-red-600">
                                                                             <use xlinkHref={"/assets/svg/delete.svg" + '#delete'} />
@@ -414,10 +414,10 @@ export default function Panel({ auth, msj, clientes }) {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == task.id ? `` : "hidden "}`}>
+                                                        <div className={` bg-white ms-5 rounded-sm p-1 flex duration-1000 transition-all ${openmonth == Task.id ? `` : "hidden "}`}>
 
-                                                            {task.files ? (
-                                                                task.files.map((archivo) => {
+                                                            {Task.files ? (
+                                                                Task.files.map((archivo) => {
                                                                     const acceso = auth.user.rol_id == 1 || auth.user.id == archivo.user.id;
                                                                     return (
                                                                         <div key={archivo.id} onClick={() => put(archivo.id)} className="text-center w-16 group relative cursor-pointer">
@@ -432,7 +432,7 @@ export default function Panel({ auth, msj, clientes }) {
 
                                                                             </div>
                                                                             <span className="text-sm left-1/2 transform -translate-x-1/2  relative overflow-hidden text-ellipsis whitespace-nowrap rounded-md block w-16 group-hover:bg-gray-200 group-hover:px-1 group-hover:overflow-visible group-hover:w-fit group-hover:z-10">
-                                                                                {archivo.nombre}
+                                                                                {archivo.name}
                                                                             </span>
 
                                                                         </div>

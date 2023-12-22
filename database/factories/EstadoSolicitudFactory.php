@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Estadotask>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TaskStat>
  */
-class EstadotaskFactory extends Factory
+class TaskStatFactory extends Factory
 {
     /**
      * Define the model's default state.

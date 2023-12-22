@@ -24,8 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'empresa',
-        'rnc',
+  
         'rol_id',
         'status',
         'telefono'
@@ -51,9 +50,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
   
-   public function taskes(): HasMany
+   public function Tasks(): HasMany
     {
-        return $this->hasMany(task::class,'user_id');
+        return $this->hasMany(Task::class,'user_id');
     }
 
     public function files(): HasMany
@@ -63,7 +62,7 @@ class User extends Authenticatable
 
     public function rol(): BelongsTo
     {
-        return $this->BelongsTo(Rol::class)->select('id', 'nombre');
+        return $this->BelongsTo(Rol::class)->select('id', 'name');
     }
 
     

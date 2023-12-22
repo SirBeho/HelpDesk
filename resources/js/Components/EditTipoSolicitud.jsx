@@ -3,7 +3,7 @@ import Modal from './Modal';
 import { useForm } from "@inertiajs/react";
 
 
-export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading }) {
+export function EditTaskType({ hideModal, show, msj, TaskTypeData, setLoading }) {
     const [mensaje, setMensaje] = useState(msj);
 
     useEffect(() => {
@@ -11,7 +11,7 @@ export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading })
        
     }, [msj])
     
-    const categorytask = [
+    const categoryTask = [
         { id: 1, category: 'Servicios' },
         { id: 2, category: 'Certificaciones' },
         { id: 3, category: 'Estados Financieros' },
@@ -19,10 +19,10 @@ export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading })
     ]
 
     const { data, setData, post, reset } = useForm({
-        id: tipotaskData?.id,
-        nombre: tipotaskData?.nombre,
-        tipo: tipotaskData?.tipo,
-        status: tipotaskData?.status
+        id: TaskTypeData?.id,
+        name: TaskTypeData?.name,
+        tipo: TaskTypeData?.tipo,
+        status: TaskTypeData?.status
     });
 
     function submit(e) {
@@ -30,7 +30,7 @@ export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading })
         hideModal()
         setLoading(true);
 
-        post(route('tipotask.update', tipotaskData.id), {
+        post(route('TaskType.update', TaskTypeData.id), {
             onSuccess: () => {
                 reset()
                 setLoading(false);
@@ -43,19 +43,19 @@ export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading })
     return (
 
         <Modal show={show} maxWidth='md'>
-            <h1 className='w-100% py-4 text-lg text-center font-bold'>Editar Tipo de task</h1>'
+            <h1 className='w-100% py-4 text-lg text-center font-bold'>Editar Tipo de Task</h1>'
 
             <form className="flex flex-col gap-4 text-textgray">
 
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-full">
                         <label htmlFor="name" className="text-xs">
-                            Nombre de la task
+                            name de la Task
                         </label>
                         <input type="text" name="name" id="name" required className="h-9 rounded-md w-full outline-none"
-                            value={data.nombre}
+                            value={data.name}
                             placeholder='Diseño Web'
-                            onChange={(e) => setData('nombre', e.target.value)}
+                            onChange={(e) => setData('name', e.target.value)}
                         />
                     </div>
                 </div>
@@ -64,7 +64,7 @@ export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading })
 
                     <div className="flex flex-col w-3/5">
                         <label htmlFor="tipo" className="text-xs">
-                            Categoria de la task
+                            Categoria de la Task
                         </label>
 
                         <select name="tipo" id="tipo" className="w-full py-1 px-2 bg-white rounded-md outline-none"
@@ -76,7 +76,7 @@ export function EditTipotask({ hideModal, show, msj, tipotaskData, setLoading })
                             <option value="">
                                 Selecionar Categoria
                             </option>
-                            {categorytask.map(category => (
+                            {categoryTask.map(category => (
                                 <option key={category.id} value={category.id}>
                                     {category.category}
                                 </option>

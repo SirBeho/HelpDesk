@@ -13,11 +13,12 @@ class CreateTaskTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_types', function (Blueprint $table) {
+        Schema::create('TaskTypes', function (Blueprint $table) {
             $table->id();
-            $table->string('type_name');
-            $table->text('description');
+            $table->string('name');
+            $table->string('description')->default('');
             $table->integer('estimated_time')->default(1);
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTaskTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_types');
+        Schema::dropIfExists('TaskTypes');
     }
 }

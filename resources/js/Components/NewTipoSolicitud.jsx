@@ -3,9 +3,9 @@ import Modal from './Modal';
 import { useForm } from "@inertiajs/react";
 
 
-export function NewTipotask({ submit, hideModal, show, msj, setLoading }) {
+export function NewTaskType({ submit, hideModal, show, msj, setLoading }) {
     const [mensaje, setMensaje] = useState(msj);
-    const categorytask = [
+    const categoryTask = [
         { id: 1, category: 'Servicios' },
         { id: 2, category: 'Certificacioens' },
         { id: 3, category: 'Estados Financieros' },
@@ -13,7 +13,7 @@ export function NewTipotask({ submit, hideModal, show, msj, setLoading }) {
     ]
     const { data, setData, post, reset } = useForm({
         id: 0,
-        nombre: '',
+        name: '',
         tipo: ''
     });
 
@@ -26,7 +26,7 @@ export function NewTipotask({ submit, hideModal, show, msj, setLoading }) {
         }
         setLoading(true)
         hideModal(true)
-        post(route('tipotask.create'), {
+        post(route('TaskType.create'), {
             onSuccess: () => {
                 setLoading(false)
             }
@@ -37,17 +37,17 @@ export function NewTipotask({ submit, hideModal, show, msj, setLoading }) {
     return (
 
         <Modal show={show} >
-            <h1 className='w-100% py-4 text-lg text-center'>Nuevo Tipo de task</h1>'
+            <h1 className='w-100% py-4 text-lg text-center'>Nuevo Tipo de Task</h1>'
 
             <form onSubmit={submit} className="flex flex-col gap-4 text-textgray">
                 <div className='flex gap-8'>
                     <div className="flex flex-col w-3/5">
                         <label htmlFor="name" className="text-xs">
-                            Tipo de la task
+                            Tipo de la Task
                         </label>
                         <input type="text" name="name" id="name" required className="h-9 rounded-md w-full outline-none"
-                            placeholder='Nombre del tipo'
-                            onChange={(e) => setData('nombre', e.target.value)}
+                            placeholder='name del tipo'
+                            onChange={(e) => setData('name', e.target.value)}
                         />
                     </div>
 
@@ -55,7 +55,7 @@ export function NewTipotask({ submit, hideModal, show, msj, setLoading }) {
 
                     <div className="flex flex-col w-2/5">
                         <label htmlFor="tipo" className="text-xs">
-                            Categoria de la task
+                            Categoria de la Task
                         </label>
 
                         <select name="tipo" id="tipo" className="w-full py-1 px-2 bg-white rounded-md outline-none"
@@ -66,7 +66,7 @@ export function NewTipotask({ submit, hideModal, show, msj, setLoading }) {
                             <option value="">
                                 Selecionar Categoria
                             </option>
-                            {categorytask.map(category => (
+                            {categoryTask.map(category => (
                                 <option key={category.id} value={category.id}>
                                     {category.category}
                                 </option>

@@ -71,8 +71,8 @@ requisitos_tarea = {'Requisito_PHP': 3, 'Requisito_SO': 4, 'Requisito_Grafico': 
 
 # Supongamos que tienes una lista de usuarios con sus habilidades
 usuarios = [
-    {'Nombre': 'Usuario1', 'Habilidad_PHP': 4, 'Habilidad_SO': 3, 'Habilidad_Grafico': 5,'Prom_Resultado_Anterior': 3,'Horas_Asignadas': 3,'Horas_Completada': 3},
-    {'Nombre': 'Usuario2', 'Habilidad_PHP': 2, 'Habilidad_SO': 5, 'Habilidad_Grafico': 2,'Prom_Resultado_Anterior': 4,'Horas_Asignadas': 3,'Horas_Completada': 3},
+    {'name': 'Usuario1', 'Habilidad_PHP': 4, 'Habilidad_SO': 3, 'Habilidad_Grafico': 5,'Prom_Resultado_Anterior': 3,'Horas_Asignadas': 3,'Horas_Completada': 3},
+    {'name': 'Usuario2', 'Habilidad_PHP': 2, 'Habilidad_SO': 5, 'Habilidad_Grafico': 2,'Prom_Resultado_Anterior': 4,'Horas_Asignadas': 3,'Horas_Completada': 3},
 ]
 
 

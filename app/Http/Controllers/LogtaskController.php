@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Logtask;
-use App\Models\task;
+use App\Models\LogTask;
+use App\Models\Task;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
-class LogtaskController extends Controller
+class LogTaskController extends Controller
 {
     /**
      * Display a listing of the resource. 
@@ -19,7 +19,7 @@ class LogtaskController extends Controller
     public function index()
     {
 
-        return Logtask::with('user.rol', 'user.person')->get();
+        return LogTask::with('user.rol', 'user.person')->get();
 
     }
 
@@ -36,12 +36,12 @@ class LogtaskController extends Controller
         }
 
         try {
-            $Logtask = Logtask::findOrFail($id);
-            $Logtask->load('user');
+            $LogTask = LogTask::findOrFail($id);
+            $LogTask->load('user');
 
-            return $Logtask;
+            return $LogTask;
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Logtask ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El LogTask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
@@ -61,17 +61,17 @@ class LogtaskController extends Controller
                 
             }else if($request->status_ant){
                 $request->merge([
-                    'descripcion' => "Se ha actualizado la task ".$request->status_ant ."->". $request->status_id,
+                    'descripcion' => "Se ha actualizado la Task ".$request->status_ant ."->". $request->status_id,
                 ]);
             }else{
-                $soli = task::find($request->task_id);
+                $soli = Task::find($request->Task_id);
                 $request->merge([
-                    'descripcion' => "Se ha creado la task Numero: ".$soli->numero,
+                    'descripcion' => "Se ha creado la Task Numero: ".$soli->numero,
                 ]);
             }
 
             $validator = validator($request->all(), [
-                'task_id'=> 'required',
+                'Task_id'=> 'required',
                 'user_id'=> 'required|exists:users,id',
                 'descripcion'=> 'required'
             ]);
@@ -79,12 +79,12 @@ class LogtaskController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-            Logtask::create($request->all());
+            LogTask::create($request->all());
 
             return response()->json(['msj' =>  $request->descripcion], 200);
         
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'No se pudo registrar el Logtask'.$e->getMessage()], 404);
+            return response()->json(['error' => 'No se pudo registrar el LogTask'.$e->getMessage()], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la accion realizada' . $e->getMessage()], 500);
         }
@@ -106,15 +106,15 @@ class LogtaskController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $Logtask = Logtask::findOrFail($id);
-            $Logtask->update($request->all());
-            $Logtask->save();
+            $LogTask = LogTask::findOrFail($id);
+            $LogTask->update($request->all());
+            $LogTask->save();
 
            
 
-            return response()->json(['msj' => 'Logtask actualizado correctamente'], 200);
+            return response()->json(['msj' => 'LogTask actualizado correctamente'], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Logtask ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El LogTask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }
@@ -131,15 +131,15 @@ class LogtaskController extends Controller
         }
 
         try {
-            $Logtask = Logtask::findOrFail($id);
-            if ($Logtask->status) {
-                $Logtask->status = 0;
-                $Logtask->save();
-                return response()->json(['msj' => 'Logtask eliminado correctamente'], 200);
+            $LogTask = LogTask::findOrFail($id);
+            if ($LogTask->status) {
+                $LogTask->status = 0;
+                $LogTask->save();
+                return response()->json(['msj' => 'LogTask eliminado correctamente'], 200);
             }
-            return response()->json(['msj' => 'Este Logtask ya ha sido eliminado'], 200);
+            return response()->json(['msj' => 'Este LogTask ya ha sido eliminado'], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'El Logtask ' . $id . ' no existe no fue encontrado'], 404);
+            return response()->json(['error' => 'El LogTask ' . $id . ' no existe no fue encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error en la acción realizada'], 500);
         }

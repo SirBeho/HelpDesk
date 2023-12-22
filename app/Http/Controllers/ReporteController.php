@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
-use App\Models\Estadotask;
-use App\Models\task;
-use App\Models\Tipotask;
+use App\Models\TaskStat;
+use App\Models\Task;
+use App\Models\TaskType;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
@@ -18,42 +18,42 @@ class ReporteController extends Controller
     public function index()
     {
         return Inertia::render('Reportes/Index',[
-            'tipo_taskes' => Tipotask::where('status', '1')->get(),
+            'TaskTypes' => TaskType::where('status', '1')->get(),
             'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
-            'estados' => Estadotask::where('status', '1')->get(),
+            'estados' => TaskStat::where('status', '1')->get(),
             'empresa' => Empresa::first(),
         ]);
     }
     public function dashboard()
     { 
-        //total solicitures,solicitues pendientes, taskes en el ultimo mes,total clientes, nuevos clientes ultimo mes,promedio taskes por cliente
+        //total solicitures,solicitues pendientes, Tasks en el ultimo mes,total clientes, nuevos clientes ultimo mes,promedio Tasks por cliente
         $indicadores = [
-            'total_taskes' => task::where('status_id', '!=', '5')->where('tipo_id', '>', '2')->count(),
-            'taskes_pendientes' => task::where('status_id','<', '4')->where('tipo_id', '>', '2')->count(),
-            'taskes_ultimo_mes' => task::where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
+            'total_Tasks' => Task::where('status_id', '!=', '5')->where('tipo_id', '>', '2')->count(),
+            'Tasks_pendientes' => Task::where('status_id','<', '4')->where('tipo_id', '>', '2')->count(),
+            'Tasks_ultimo_mes' => Task::where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
             'total_clientes' => User::where('rol_id', '2')->count(),
             'nuevos_clientes_ultimo_mes' => User::where('rol_id', '2')->where('created_at', '>=', date('Y-m-d', strtotime('-1 month')))->count(),
-            'promedio_taskes_por_cliente' => number_format((task::where('status_id', '!=', '5')->where('tipo_id', '>', '2')->count() / User::where('rol_id', '2')->count()), 2, '.', ''),         
+            'promedio_Tasks_por_cliente' => number_format((Task::where('status_id', '!=', '5')->where('tipo_id', '>', '2')->count() / User::where('rol_id', '2')->count()), 2, '.', ''),         
             
         ];
        
         return Inertia::render('dashboard/Index',[
-            'tipo_taskes' => Tipotask::where('status', '1')->get(),
+            'TaskTypes' => TaskType::where('status', '1')->get(),
             'clientes' => User::where('status', '1')->where('rol_id', '2')->get(),
-            'estados' => Estadotask::where('status', '1')->get(),
-            'task' => task::all()->load('tipo', 'status', 'user','files.user','comentarios', 'userAsignado'),
+            'estados' => TaskStat::where('status', '1')->get(),
+            'Task' => Task::all()->load('tipo', 'status', 'user','files.user','comentarios', 'userAsignado'),
             'indicadores' => $indicadores,
         ]);
 
     }
 
-    public function taskes_exel(Request $request)
+    public function Tasks_exel(Request $request)
     {
 
-        $taskes = $request->data['taskes_f'];
+        $Tasks = $request->data['Tasks_f'];
     
       
-        $spreadsheet = IOFactory::load(storage_path('app/templates/taskes_x_fecha.xlsx'));
+        $spreadsheet = IOFactory::load(storage_path('app/templates/Tasks_x_fecha.xlsx'));
         $sheet = $spreadsheet->getActiveSheet();
         
         $filtro = 0;
@@ -75,7 +75,7 @@ class ReporteController extends Controller
             $sheet->insertNewRowBefore(9);
 
             $sheet->setCellValue($posiciones[$filtro][0] , 'Tipo:');
-            $sheet->setCellValue($posiciones[$filtro][1] , $taskes[0]['tipo']['nombre']);
+            $sheet->setCellValue($posiciones[$filtro][1] , $Tasks[0]['tipo']['name']);
             $filtro++;
         }
 
@@ -99,7 +99,7 @@ class ReporteController extends Controller
             }
 
             $sheet->setCellValue($posiciones[$filtro][0] , 'Estado:');
-            $sheet->setCellValue($posiciones[$filtro][1] , $taskes[0]['status']['nombre']);
+            $sheet->setCellValue($posiciones[$filtro][1] , $Tasks[0]['status']['name']);
            
 
             $filtro++;
@@ -112,22 +112,22 @@ class ReporteController extends Controller
         
         $fila = 12+ ($filtro/2);
        
-        foreach ($taskes as $registro) {
+        foreach ($Tasks as $registro) {
          
             $sheet->setCellValue('B' . $fila, $registro['numero']);
-            $sheet->setCellValue('C' . $fila, $registro['tipo']['nombre']);
+            $sheet->setCellValue('C' . $fila, $registro['tipo']['name']);
             $sheet->setCellValue('D' . $fila, $registro['user']['name']);
             $sheet->setCellValue('E' . $fila, $registro['user']['rnc']);
             $fechaHoraObjeto = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $registro['created_at']) ;
             $sheet->setCellValue('F' . $fila, $fechaHoraObjeto ? $fechaHoraObjeto->format('d-m-Y h:i:s A') : $registro['created_at'] );
-            $sheet->setCellValue('G' . $fila, $registro['status']['nombre']);
+            $sheet->setCellValue('G' . $fila, $registro['status']['name']);
             $sheet->setCellValue('H' . $fila, $registro['user']['email']);
             $sheet->insertNewRowBefore($fila+1);
             $fila++;
         }
 
       
-        $sheet->setCellValue('D' . $fila+1, count($taskes));
+        $sheet->setCellValue('D' . $fila+1, count($Tasks));
     
         // Crear el flujo de salida
         $writer = new Xlsx($spreadsheet);
@@ -147,7 +147,7 @@ class ReporteController extends Controller
     {
 
         
-        $taskes = $request->data['documentos_f'];
+        $Tasks = $request->data['documentos_f'];
     
       
         $spreadsheet = IOFactory::load(storage_path('app/templates/documentos_x_fecha.xlsx'));
@@ -182,13 +182,13 @@ class ReporteController extends Controller
         
         $fila = 12+ ($filtro/2);
        
-        foreach ($taskes as $registro) {
+        foreach ($Tasks as $registro) {
          
             $sheet->setCellValue('B' . $fila, $registro['id']);
-            $sheet->setCellValue('C' . $fila, $registro['nombre']);
+            $sheet->setCellValue('C' . $fila, $registro['name']);
             $sheet->setCellValue('D' . $fila, $registro['extencion']);
-            $sheet->setCellValue('E' . $fila, $registro['task']['numero']);
-            $sheet->setCellValue('F' . $fila, $registro['task']['tipo']['nombre']);
+            $sheet->setCellValue('E' . $fila, $registro['Task']['numero']);
+            $sheet->setCellValue('F' . $fila, $registro['Task']['tipo']['name']);
             $sheet->setCellValue('G' . $fila, $registro['user']['name']);
             $fechaHoraObjeto = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $registro['created_at']) ;
             $sheet->setCellValue('H' . $fila, $fechaHoraObjeto ? $fechaHoraObjeto->format('d-m-Y h:i:s A') : $registro['created_at'] );
@@ -197,7 +197,7 @@ class ReporteController extends Controller
         }
 
       
-        $sheet->setCellValue('D' . $fila+1, count($taskes));
+        $sheet->setCellValue('D' . $fila+1, count($Tasks));
     
         // Crear el flujo de salida
         $writer = new Xlsx($spreadsheet);

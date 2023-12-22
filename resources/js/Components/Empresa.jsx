@@ -30,7 +30,7 @@ export default function Empresa({ empresa, setLoading }) {
 
                 <div className="flex flex-col w-3/5">
                     <label htmlFor="name" className="text-xs">
-                        Nombre de la empresa
+                        name de la empresa
                     </label>
                     <input type="text" name="empresa" id="empresa" className="h-9 rounded-md w-full outline-none"
                         value={data.empresa}

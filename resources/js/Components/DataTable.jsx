@@ -44,7 +44,7 @@ export function DataTable({ data, action, tbStructure, onNew, onUpdate, onDelete
 
     const searchData = (searchValue) => {
         setCurrentPage(1)
-        const searchedData = data.filter(item => item.nombre.toLocaleLowerCase().includes(searchValue))
+        const searchedData = data.filter(item => item.name.toLocaleLowerCase().includes(searchValue))
         setFilteredData(searchedData);
     }
     useEffect(() => {
@@ -70,7 +70,7 @@ export function DataTable({ data, action, tbStructure, onNew, onUpdate, onDelete
                             </path>
                         </svg>
                     </span>
-                    <input placeholder="Buscar tipo de task"
+                    <input placeholder="Buscar tipo de Task"
                         className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
                         onChange={(e) => searchData((e.target.value).toLocaleLowerCase())}
                     />

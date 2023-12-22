@@ -10,7 +10,7 @@ class Comentario extends Model
     use HasFactory;
 
     protected $fillable = [
-        'task_id',
+        'Task_id',
         'comentario',
         'status'
     ];

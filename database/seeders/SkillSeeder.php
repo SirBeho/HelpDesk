@@ -44,14 +44,8 @@ class SkillSeeder extends Seeder
         ]);
 
         Skill::factory()->create([
-            'skill_name' => 'Agile Methodologies',
-        ]);
-
-        Skill::factory()->create([
             'skill_name' => 'Scrum',
         ]);
-
-        
-            
+     
     }
 }

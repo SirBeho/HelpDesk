@@ -13,9 +13,10 @@ class CreateTaskStatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_status', function (Blueprint $table) {
+        Schema::create('Task_status', function (Blueprint $table) {
             $table->id();
-            $table->string('task_name');
+            $table->string('name');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateTaskStatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_status');
+        Schema::dropIfExists('Task_status');
     }
 }

@@ -27,7 +27,7 @@ export default function form({ auth }) {
 
                     <div className="flex flex-col">
                         <label htmlFor="company" className="text-xs">
-                            Nombre empresa
+                            name empresa
                         </label>
                         <input type="text" name="company" id="company" className="h-9 rounded-md w-4/5 outline-none px-2" />
                     </div>
@@ -41,7 +41,7 @@ export default function form({ auth }) {
 
                     <div className="flex flex-col">
                         <label htmlFor="name" className="text-xs">
-                            Nombre solicitante
+                            name solicitante
                         </label>
                         <input type="text" name="name" id="name" className="h-9 rounded-md w-4/5 outline-none px-2" />
                     </div>
@@ -71,7 +71,7 @@ export default function form({ auth }) {
 
 
                     <button className="border py-1 w-36 rounded-xl bg-gray-300 hover:bg-gray-200 text-textgray self-end justify-end mr-5 mt-5">
-                        Enviar task
+                        Enviar Task
                     </button>
                 </form>
 

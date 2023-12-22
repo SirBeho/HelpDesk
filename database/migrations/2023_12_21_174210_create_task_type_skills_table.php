@@ -13,13 +13,14 @@ class CreateTaskTypeSkillsTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_type_skills', function (Blueprint $table) {
+        Schema::create('Task_type_skills', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('task_type_id');
             $table->unsignedBigInteger('skill_id');
-            $table->foreign('task_type_id')->references('id')->on('task_types');
+            $table->foreign('task_type_id')->references('id')->on('TaskTypes');
             $table->foreign('skill_id')->references('id')->on('skills');
-            $table->integer('skill_level');
+            $table->integer('level');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateTaskTypeSkillsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_type_skills');
+        Schema::dropIfExists('Task_type_skills');
     }
 }

@@ -52,7 +52,7 @@ class RolController extends Controller
         try {
 
             $validator = validator($request->all(), [
-                'nombre'=> 'required',
+                'name'=> 'required',
             ]);
     
             if ($validator->fails()) {
@@ -75,7 +75,7 @@ class RolController extends Controller
         
         try {
             $validator = validator($request->all(), [
-                'nombre'=> 'required',
+                'name'=> 'required',
             ]);
     
             if ($validator->fails()) {

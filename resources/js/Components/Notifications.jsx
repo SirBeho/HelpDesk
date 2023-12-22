@@ -17,7 +17,7 @@ export const Notifications = ({
                 
                 {(user.rol_id) == 2 ?
                 (<span>
-                    Tesoria
+                    Task Assignment
                 </span>) : ( <span>
                     De: {emisor}
                 </span>)
